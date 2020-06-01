@@ -1,17 +1,9 @@
 bioinformatics_project
 =========================================================================================
 |travis| |sonar_quality| |sonar_maintainability| |codacy|
-|code_climate_maintainability| |pip| |downloads|
+|code_climate_maintainability|
 
 Progetto di bioinformatica
-
-How do I install this package?
-----------------------------------------------
-As usual, just download it using pip:
-
-.. code:: shell
-
-    pip install bioinformatics_project
 
 Tests Coverage
 ----------------------------------------------
@@ -41,14 +33,6 @@ Progetto di bioinformatica
 .. |coveralls| image:: https://coveralls.io/repos/github/micheleantonazzi/bioinformatics-project/badge.svg?branch=master
     :target: https://coveralls.io/github/micheleantonazzi/bioinformatics-project?branch=master
     :alt: Coveralls Coverage
-
-.. |pip| image:: https://badge.fury.io/py/bioinformatics-project.svg
-    :target: https://badge.fury.io/py/bioinformatics-project
-    :alt: Pypi project
-
-.. |downloads| image:: https://pepy.tech/badge/bioinformatics-project
-    :target: https://pepy.tech/project/bioinformatics-project
-    :alt: Pypi total project downloads
 
 .. |codacy| image:: https://app.codacy.com/project/badge/Grade/c69883629644423db75f221e9470400e
     :target: https://www.codacy.com/manual/micheleantonazzi/bioinformatics-project?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=micheleantonazzi/bioinformatics-project&amp;utm_campaign=Badge_Grade
