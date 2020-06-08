@@ -71,7 +71,6 @@ setup(
                       "crr_labels",
                       "epigenomic_dataset",
                       "keras_tqdm",
-                      "keras_ding",
                       "ucsc_genomes_downloader",
                       "keras_bed_sequence",
                       "cache_decorator",
