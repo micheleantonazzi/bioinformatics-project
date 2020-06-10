@@ -7,3 +7,8 @@ def test_download_data():
     assert promoters_data['labels'].size == 99909
     assert enhancers_data['data'].size == 13542561
     assert enhancers_data['labels'].size == 65423
+
+
+def test_download_sequence_data():
+    hg19 = data_retrieval.download_sequence_data()
+    assert hg19.__sizeof__() == 32

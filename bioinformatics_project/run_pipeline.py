@@ -1,4 +1,5 @@
-import bioinformatics_project.data_retrieval_manipulation as data_retrieval
+from data_retrieval_manipulation import *
 
 if __name__ == '__main__':
-    data_retrieval.download_epigenomic_data()
+    download_epigenomic_data()
+    download_sequence_data()

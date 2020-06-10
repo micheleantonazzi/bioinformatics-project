@@ -1,4 +1,5 @@
 from epigenomic_dataset import load_epigenomes
+from ucsc_genomes_downloader import Genome
 
 
 def download_epigenomic_data(cell_line='HEK293', window_size=200):
@@ -23,3 +24,8 @@ def download_epigenomic_data(cell_line='HEK293', window_size=200):
 
     return promoters_data, enhancers_data
 
+
+def download_sequence_data(assembly='hg19'):
+    hg19 = Genome(assembly)
+    print('Data obtained: genome hg19 - ' + str(hg19))
+    return hg19
