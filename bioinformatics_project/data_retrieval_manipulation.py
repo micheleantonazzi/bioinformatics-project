@@ -1,6 +1,8 @@
 from epigenomic_dataset import load_epigenomes
 from ucsc_genomes_downloader import Genome
 import pandas
+import numpy
+from keras_bed_sequence import BedSequence
 
 
 def download_epigenomic_data(cell_line='HEK293', window_size=200):
@@ -31,3 +33,15 @@ def download_genome_data(assembly='hg19'):
 def extract_sequence_data(genome: Genome, data: pandas.DataFrame):
     res = genome.bed_to_sequence(data.reset_index()[data.index.names])
     return res
+
+
+def sequence_data_flat_one_not_encoded(genome: Genome, data: pandas.DataFrame, window_size: int,
+                          nucleotides: str = 'actg') -> numpy.ndarray:
+    one_not_encode = numpy.array(BedSequence(
+        genome,
+        bed=data.reset_index()[data.index.names],
+        nucleotides=nucleotides,
+        batch_size=1
+    ))
+
+    return one_not_encode.reshape(-1, window_size * 4).astype(int)
