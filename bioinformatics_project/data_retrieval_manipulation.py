@@ -1,7 +1,7 @@
 from epigenomic_dataset import load_epigenomes
 
 
-def download_data(cell_line='HEK293', window_size=200):
+def download_epigenomic_data(cell_line='HEK293', window_size=200):
     promoters_data, promoters_labels = load_epigenomes(
         cell_line=cell_line,
         dataset="fantom",
