@@ -36,7 +36,7 @@ def extract_sequence_data(genome: Genome, data: pandas.DataFrame):
 
 
 def sequence_data_flat_one_not_encoded(genome: Genome, data: pandas.DataFrame, window_size: int,
-                          nucleotides: str = 'actg') -> numpy.ndarray:
+                                       nucleotides: str = 'actg') -> numpy.ndarray:
     one_not_encode = numpy.array(BedSequence(
         genome,
         bed=data.reset_index()[data.index.names],
@@ -45,3 +45,8 @@ def sequence_data_flat_one_not_encoded(genome: Genome, data: pandas.DataFrame, w
     ))
 
     return one_not_encode.reshape(-1, window_size * 4).astype(int)
+
+
+def sequence_data_to_dataframe(array: numpy.ndarray, window_size: int, nucleotides: str = 'actg') -> pandas.DataFrame:
+    return pandas.DataFrame(array,
+                            columns=[f"{i}{nucleotide}" for i in range(window_size) for nucleotide in nucleotides])

@@ -14,16 +14,21 @@ def test_download_sequence_data():
     assert hg19.__sizeof__() == 32
 
 
-def test_extract_sequence_data():
+def test_extract_sequence_data_alphanumeric():
     promoters_data, enhancers_data = data_retrieval.download_epigenomic_data()
     hg19 = data_retrieval.download_genome_data()
     promoters_sequence_data = data_retrieval.extract_sequence_data(hg19, promoters_data["data"])
     assert promoters_sequence_data.size == 499545
 
 
-def test_flat_one_not_encoding():
+def test_extract_sequence_data_one_not_encoded():
     promoters_data, enhancers_data = data_retrieval.download_epigenomic_data()
     hg19 = data_retrieval.download_genome_data()
     promoters_sequence_one_not = data_retrieval.sequence_data_flat_one_not_encoded(hg19, promoters_data['data'], 200,
                                                                                    'actg')
-    assert len(promoters_sequence_one_not) == 99909
+    promoters_sequence_data = data_retrieval.sequence_data_to_dataframe(promoters_sequence_one_not, 200, 'actg')
+    assert len(promoters_sequence_data) == 99909
+
+
+
+
