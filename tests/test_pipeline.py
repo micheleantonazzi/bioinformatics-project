@@ -1,6 +1,5 @@
 import bioinformatics_project.data_retrieval_manipulation as data_retrieval
 
-
 def test_download_data():
     promoters_data, enhancers_data = data_retrieval.download_epigenomic_data()
     assert promoters_data['data'].size == 20681163
@@ -10,5 +9,12 @@ def test_download_data():
 
 
 def test_download_sequence_data():
-    hg19 = data_retrieval.download_sequence_data()
+    hg19 = data_retrieval.download_genome_data()
     assert hg19.__sizeof__() == 32
+
+
+def test_extract_sequence_data():
+    promoters_data, enhancers_data = data_retrieval.download_epigenomic_data()
+    hg19 = data_retrieval.download_genome_data()
+    promoters_sequence_data = data_retrieval.extract_sequence_data(hg19, promoters_data["data"])
+    assert promoters_sequence_data.size == 499545
