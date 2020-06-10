@@ -22,6 +22,3 @@ def download_data(cell_line='HEK293', window_size=200):
 
     return promoters_data, promoters_labels, enhancers_data, enhancers_labels
 
-
-if __name__ == "__main__":
-    download_data()
