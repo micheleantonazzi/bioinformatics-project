@@ -34,10 +34,10 @@ def test_extract_promoters_sequence_data():
     assert len(promoters_sequence_data) == 99909
 
 
-@pytest.mark.dependency(depends=['test_load_enhancers_epigenomic_data', 'test_load_genome_data'])
-def test_extract_enhancers_sequence_data():
-    enhancers_sequence_data = data_retrieval.extract_enhancers_sequence_data()
-    assert len(enhancers_sequence_data) == 65423
+#@pytest.mark.dependency(depends=['test_load_enhancers_epigenomic_data', 'test_load_genome_data'])
+#def test_extract_enhancers_sequence_data():
+    #enhancers_sequence_data = data_retrieval.extract_enhancers_sequence_data()
+    #assert len(enhancers_sequence_data) == 65423
 
 
 @pytest.mark.dependency(depends=['test_load_enhancers_epigenomic_data', 'test_load_promoters_epigenomic_data'])
