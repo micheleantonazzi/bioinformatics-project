@@ -18,6 +18,16 @@ The phenotype is a term used in genetics to define the set of observable traits 
 
 
 
+# Experimental setup
+
+## Data retrieval
+
+In this project it is analyzed a specific cell line, HEK293, in order to predict the activation of promoters and enhancers. We consider a set of regions of the cell line genome, 200 nucleotides long. Each region corresponds to a CRE (promoter or enhancer), which may be active or not, and it is characterized by both sequence and epigenomic data. In details, the sequence data is simply the nucleotide sequence and the epigenomic data refers to the level of interaction between proteins and genome. Starting from the epigenomic data, they comes from the [ENCODE](https://www.encodeproject.org/) project and the data considered are obtained by ChiP-sequencing technique. The labels of our data, that say if a region is active or inactive, are taken from FANTOM, which contain a wide collection of promoters and enhancers. The amount of data obtainable from ENCODE are extremely large and they must be querying with the FANTOM data to extract the interesting regions. Fortunately this task has been already done and the epigenomic data of promoters and enhancers can be found in this [repository](https://github.com/LucaCappelletti94/epigenomic_dataset), which offers also a python package to automatically download and use these data in a program. The sequence data instead requires the genome sequence of the cell line, obtainable from [UCSC Genome Browser](https://genome.ucsc.edu/index.html) with this python [utility](https://github.com/LucaCappelletti94/ucsc_genomes_downloader), which can be filtering in order to obtain the nucleotide sequences of promoters and enhancers. Subsequently, the sequence data are one-not encoded to make easier the next tasks.
+
+
+
+
+
 # Bibliography 
 
 [1] Yifeng Li, Wenqiang Shi, and Wyeth W. Wasserman. "Genome-wide prediction of cis-regulatory regions using supervised deep learning methods"
