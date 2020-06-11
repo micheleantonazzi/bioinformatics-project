@@ -21,7 +21,7 @@ class DataRetrieval:
                                                              self.key_labels: None}
         self._genome: Genome = None
 
-    def load_promoters_epogenomic_data(self) -> Dict[str, pandas.DataFrame]:
+    def load_promoters_epigenomic_data(self) -> Dict[str, pandas.DataFrame]:
         print(
             'Starting loading promoters epigenomic data of ' + self._cell_line +
             ' cell line with window size of ' + str(self._window_size))
@@ -63,15 +63,6 @@ class DataRetrieval:
         print(colored('\rData obtained: genome sequence of ' + str(self._genome), 'green'))
         return self._genome
 
-    def get_promoters_data(self) -> Dict[str, pandas.DataFrame]:
-        return self._promoters_data
-
-    def get_enhancers_data(self) -> Dict[str, pandas.DataFrame]:
-        return self._enhancers_data
-
-    def get_genome_data(self) -> Genome:
-        return self._genome
-
     def extract_promoters_sequence_data(self) -> pandas.DataFrame:
         print('Starting extracting promoters sequence data')
 
@@ -107,5 +98,26 @@ class DataRetrieval:
 
         print(colored('\rData loading: enhancers sequence data', 'green'))
         return self._enhancers_data[self.key_sequence]
+
+    def get_promoters_data(self) -> Dict[str, pandas.DataFrame]:
+        return self._promoters_data
+
+    def get_promoters_epigenomic_data(self) -> pandas.DataFrame:
+        return self._promoters_data[self.key_epigenomic]
+
+    def get_promoters_labels(self) -> pandas.DataFrame:
+        return self._promoters_data[self.key_labels]
+
+    def get_enhancers_data(self) -> Dict[str, pandas.DataFrame]:
+        return self._enhancers_data
+
+    def get_enhancers_epigenomic_data(self) -> pandas.DataFrame:
+        return self._enhancers_data[self.key_epigenomic]
+
+    def get_enhancers_labels(self) -> pandas.DataFrame:
+        return self._enhancers_data[self.key_labels]
+
+    def get_genome_data(self) -> Genome:
+        return self._genome
 
 

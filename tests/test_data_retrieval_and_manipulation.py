@@ -6,16 +6,18 @@ data_retrieval = DataRetrieval()
 
 @pytest.mark.dependency()
 def test_load_promoters_epigenomic_data():
-    promoters_data = data_retrieval.load_promoters_epogenomic_data()
-    assert len(promoters_data[data_retrieval.key_epigenomic]) == 99909
-    assert len(promoters_data[data_retrieval.key_labels]) == 99909
+    promoters_data = data_retrieval.load_promoters_epigenomic_data()
+    assert promoters_data == data_retrieval.get_promoters_data()
+    assert len(data_retrieval.get_promoters_epigenomic_data()) == 99909
+    assert len(data_retrieval.get_promoters_labels()) == 99909
 
 
 @pytest.mark.dependency()
 def test_load_enhancers_epigenomic_data():
     enhancers_data = data_retrieval.load_enhancers_epigenomic_data()
-    assert len(enhancers_data[data_retrieval.key_epigenomic]) == 65423
-    assert len(enhancers_data[data_retrieval.key_labels]) == 65423
+    assert enhancers_data == data_retrieval.get_enhancers_data()
+    assert len(data_retrieval.get_enhancers_labels()) == 65423
+    assert len(data_retrieval.get_enhancers_epigenomic_data()) == 65423
 
 
 @pytest.mark.dependency()
