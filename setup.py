@@ -76,6 +76,7 @@ setup(
                       "cache_decorator",
                       "encodeproject",
                       "pybwtool",
-                      "ray"],
+                      "ray",
+                      "termcolor"],
     extras_require=extras,
 )
