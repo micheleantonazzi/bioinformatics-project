@@ -63,12 +63,15 @@ class DataRetrieval:
         print(colored('\rData obtained: genome sequence of ' + str(self._genome), 'green'))
         return self._genome
 
-    def extract_promoters_sequence_data(self) -> pandas.DataFrame:
+    def extract_promoters_sequence_data(self, quantity: int = -1) -> pandas.DataFrame:
         print('Starting extracting promoters sequence data')
+
+        if self._promoters_data[self.key_epigenomic] is not None and quantity == -1:
+            quantity = len(self._promoters_data[self.key_epigenomic])
 
         one_not_encode = numpy.array(BedSequence(
             self._genome,
-            bed=self._promoters_data[self.key_epigenomic].reset_index()[self._promoters_data[self.key_epigenomic].index.names],
+            bed=self._promoters_data[self.key_epigenomic].reset_index()[self._promoters_data[self.key_epigenomic].index.names][:quantity],
             nucleotides='actg',
             batch_size=1
         ))
@@ -81,12 +84,15 @@ class DataRetrieval:
         print(colored('\rData loading: promoters sequence data', 'green'))
         return self._promoters_data[self.key_sequence]
 
-    def extract_enhancers_sequence_data(self) -> pandas.DataFrame:
+    def extract_enhancers_sequence_data(self, quantity: int = -1) -> pandas.DataFrame:
         print('Starting extracting enhancers sequence data')
+
+        if self._enhancers_data[self.key_epigenomic] is not None and quantity == -1:
+            quantity = len(self._enhancers_data[self.key_epigenomic])
 
         one_not_encode = numpy.array(BedSequence(
             self._genome,
-            bed=self._enhancers_data[self.key_epigenomic].reset_index()[self._enhancers_data[self.key_epigenomic].index.names],
+            bed=self._enhancers_data[self.key_epigenomic].reset_index()[self._enhancers_data[self.key_epigenomic].index.names][:quantity],
             nucleotides='actg',
             batch_size=1
         ))
