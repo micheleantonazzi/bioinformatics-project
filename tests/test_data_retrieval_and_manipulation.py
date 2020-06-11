@@ -1,4 +1,6 @@
 import pytest
+
+from bioinformatics_project.data_retrieval_and_manipulation.data_checking import DataChecking
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 
 data_retrieval = DataRetrieval()
@@ -36,3 +38,11 @@ def test_extract_promoters_sequence_data():
 def test_extract_enhancers_sequence_data():
     enhancers_sequence_data = data_retrieval.extract_enhancers_sequence_data()
     assert len(enhancers_sequence_data) == 65423
+
+
+@pytest.mark.dependency(depends=['test_load_enhancers_epigenomic_data', 'test_load_promoters_epigenomic_data'])
+def test_check_sample_features_imbalance():
+    try:
+        DataChecking(data_retrieval).check_sample_features_imbalance()
+    except:
+        pytest.fail('Unexpected exception')
