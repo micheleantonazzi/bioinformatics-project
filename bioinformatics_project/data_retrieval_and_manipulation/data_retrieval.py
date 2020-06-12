@@ -105,6 +105,10 @@ class DataRetrieval:
         print(colored('\rData loading: enhancers sequence data', 'green'))
         return self._enhancers_data[self.key_sequence]
 
+    def fill_nan_promoters_epigenomic_data(self) -> pandas.DataFrame:
+        self._promoters_data[self.key_epigenomic] = self._promoters_data[self.key_epigenomic].fillna(self._promoters_data[self.key_epigenomic].mean())
+        return self._promoters_data[self.key_epigenomic]
+
     def get_promoters_data(self) -> Dict[str, pandas.DataFrame]:
         return self._promoters_data
 
