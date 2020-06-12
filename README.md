@@ -26,6 +26,16 @@ In this project, it is analyzed a specific cell line, HEK293, in order to predic
 
 
 
+## Data checking
+
+In an machine learning project, it is very important to check the data to find errors or inconsistencies which could degrade the performance of the learning models. 
+
+### Sample features imbalance
+
+This control aim to verify if the rate between samples and features is high or not. Having a low rate means that the sample are few respect to the features and the learning machine isn't able to generalize on the real data. Fortunately, this isn't the case of this dataset, in particular the rate between sample and features for promoters is 482 and 316 for enhancers.
+
+
+
 
 
 # Bibliography 

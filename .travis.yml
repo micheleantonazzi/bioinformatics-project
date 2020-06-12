@@ -8,9 +8,9 @@ addons:
       secure: "z0TeKoC8WD/sJtPrtSPKxryCP32vJnEb+QBExCOsytZMtCXXqs1SnrXJNZc5KOJDJg6fe/WKyg/8psRMgML7yg6P/LxRiMMc2dAj7h6W1CJ8yznIgw8MddlJVPTToRaCAJdx2Uud8RVkiWqIVoO9t6wgwO4Qdni0XlFAPD22ldVL+2cGHL2GUa1VaL9FMEVICAeW3efLs1qh//WJ4JmcP9dTvb7tBsUIJ+dQCYHgX2rNwcw2OC1+0xKJSyNfvOgftnukaMFPmrwl2vEU5ilgq7iZaFb5FW4aXq5/Zhoyg62nMflKAJVBprscVk/R/4mOepkkbTkHW4HIx6hPJaVxVTnMwU10JBAKF7BmuHEkBuOkrJsrve4iGDVlJwCaYM7NLKk8RITPZlXJXfIzX5JQc7fhnWlM/KIEYmjSd9aVJuXo3n7jyZ9ZYrqdfe5QyWn9rOdD//ro1PcrHhPT9/VFs2u36Uv408D2JiZ/fZS9JdefqsrSRIgwczowUg6GsQJ+6gtoZepuGRk3EtAe1E+tFT0WhIni1U78B+VcASRY7tPgdfhtnaga1EYgNf/DytcqFgX7KSJyH9nTNmWBafTvBNa/hfmwK4ATjyhY+bJ6zFTj0d1t7jIgVczS2BLDRdtGnwxGQxhjSxcdBjxk1dbFz7BuWa+892ReOf4Ot71K+3c="
 language: python
 python:
-- '3.6'
+- '3.7'
 before_install:
-  - pip install --upgrade pip setuptools wheel numpy importlib
+  - pip install --upgrade pip setuptools wheel numpy
   - pip install --upgrade pytest
 
 install:
