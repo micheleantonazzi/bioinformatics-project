@@ -50,7 +50,17 @@ In some dataset could be features with the same value for each sample. This situ
 
 ### Z-scoring
 
-Z-scoring is a way to standardizing the data. The Z-score is the number of standard deviation by which the the value of a raw score is closed to the population mean, in particular it is positive if it is above the mean or it is negative otherwise. The Z-scoring is calculated by subtracting the average and dividing by the standard deviation and the new data are mean 0 and variance 1. This method has a problem related to the outliers and it has to be fixed by subtracting the median and dividing by the standard deviation between the interquantile range from 0.25 to 0.75.
+Z-scoring is a way to standardizing the data. The Z-score is the number of standard deviation by which the value of a raw score is closed to the population mean: it is positive if it is above the mean or it is negative otherwise. The Z-scoring is calculated by subtracting the average and dividing by the standard deviation and the new data are mean 0 and variance 1. This method has a problem related to the outliers and it has to be fixed by subtracting the median and dividing by the standard deviation between the interquartile range from 0.25 to 0.75.
+
+## Data correlation with output
+
+Another check which can be applied to the data is the correlation between features and output. If a feature isn't correlated with a specific output it is completely useless and it can be dropped. To do this, the Pearson and Spearman test are applied, which measure the monotonic and linear correlations respectively. After that, the candidate non-correlated features are tested with the MIC (Maximal information coefficient) that tests non-linear correlation between features and output. Only the features found with Pearson and Spearman methods are tested using MIC because it is computationally very complex.
+
+### The Pearson correlation coefficient
+
+The Pearson correlation method measures the linear correlation between two datasets. In particular, the Pearson coefficient has a value between -1 and +1, where -1 is total negative linear correlation, 0 implying no correlation and +1 is total positive linear correlation. It is important to specify that the Pearson result is significant if it is calculated over a large dataset, tipically with 1000 samples or more.
+
+
 
 
 
