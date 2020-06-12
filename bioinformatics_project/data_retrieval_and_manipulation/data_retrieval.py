@@ -137,3 +137,7 @@ class DataRetrieval:
     def get_epigenomic_data(self) -> Dict[str, pandas.DataFrame]:
         return {'promoters': self._promoters_data[self.key_epigenomic],
                 'enhancers': self._enhancers_data[self.key_epigenomic]}
+
+    def get_labels(self) -> Dict[str, pandas.DataFrame]:
+        return {'promoters': self._promoters_data[self.key_labels],
+                'enhancers': self._enhancers_data[self.key_labels]}
