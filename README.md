@@ -34,6 +34,14 @@ In an machine learning project, it is very important to check the data to find e
 
 This control aim to verify if the rate between samples and features is high or not. Having a low rate means that the sample are few respect to the features and the learning machine isn't able to generalize on the real data. Fortunately, this isn't the case of this dataset, in particular the rate between sample and features for promoters is 482 and 316 for enhancers.
 
+### NaN values checking
+
+In biology experiments, there are some practical cases where some data could be NaN. This situation, especially when the NaN values are many, is dangerous for the learning model. If it happens, there are a lot of different techniques to fix it. If there NaN values are concentrated in a single sample or in a single feature it is convenient to remove it. Otherwise, if the NaN values are scattered in all datasets, they could be replaced by empirical values, like the mean or the median. In the dataset of this project, there are only one NaN value in the enhancers epigenomic data and no one for the promoters.
+
+
+
+
+
 
 
 
