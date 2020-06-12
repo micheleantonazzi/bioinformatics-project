@@ -1,5 +1,6 @@
 import pandas
 from matplotlib.pyplot import subplots
+from sklearn.preprocessing import RobustScaler
 from termcolor import colored
 
 from .data_retrieval import DataRetrieval
@@ -65,3 +66,22 @@ class DataChecking:
             print(colored('Features in enhancers data are constant and had to be dropped', 'yellow', 'green'))
         else:
             print(colored('In enhancers data no constant features were found', 'green'))
+
+    def apply_z_scoring(self):
+        promoters_data = self._data.get_promoters_epigenomic_data()
+        self._data.set_promoters_epigenomic_data(
+            pandas.DataFrame(
+                RobustScaler().fit_transform(promoters_data.values),
+                columns=promoters_data.columns,
+                index=promoters_data.index
+            )
+        )
+
+        enhancers_data = self._data.get_enhancers_epigenomic_data()
+        self._data.set_enhancers_epigenomic_data(
+            pandas.DataFrame(
+                RobustScaler().fit_transform(enhancers_data.values),
+                columns=enhancers_data.columns,
+                index=enhancers_data.index
+            )
+        )

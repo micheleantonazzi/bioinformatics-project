@@ -69,3 +69,10 @@ def test_constant_features():
         fail('Unexpected exception')
 
 
+def test_z_scoring():
+    try:
+        DataChecking(data_retrieval).apply_z_scoring()
+    except:
+        fail('Unexpected exception')
+
+
