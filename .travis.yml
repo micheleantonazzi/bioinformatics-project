@@ -10,7 +10,6 @@ language: python
 python:
 - '3.6'
 before_install:
-  - pip install --upgrade pip setuptools wheel numpy
   - pip install --upgrade pytest
 
 install:
