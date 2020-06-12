@@ -50,8 +50,9 @@ def test_check_nan_values():
 
 def test_fill_nan():
     promoters_data = data_retrieval.get_promoters_epigenomic_data()
+    data_checking = DataChecking(data_retrieval)
     assert promoters_data.isna().values.sum() == 1
-    assert data_retrieval.fill_nan_promoters_epigenomic_data().isna().values.sum() == 0
+    assert data_checking.fill_nan_promoters_epigenomic_data().isna().values.sum() == data_retrieval.get_promoters_epigenomic_data().isna().values.sum() == 0
 
 
 def test_check_class_imbalance():

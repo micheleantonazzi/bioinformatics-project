@@ -1,3 +1,4 @@
+import pandas
 from matplotlib.pyplot import subplots
 from termcolor import colored
 
@@ -40,3 +41,9 @@ class DataChecking:
             y.hist(color='royalblue', ax=axis, bins=3)
             axis.set_title(f'Number of samples for {region}')
         fig.show()
+
+    def fill_nan_promoters_epigenomic_data(self) -> pandas.DataFrame:
+        promoters_epigenomic_data = self._data.get_promoters_epigenomic_data()
+        promoters_epigenomic_data = promoters_epigenomic_data.fillna(promoters_epigenomic_data.mean())
+        self._data.set_promoters_epigenomic_data(promoters_epigenomic_data)
+        return promoters_epigenomic_data

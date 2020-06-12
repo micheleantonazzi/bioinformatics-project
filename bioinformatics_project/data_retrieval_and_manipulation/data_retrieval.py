@@ -71,7 +71,8 @@ class DataRetrieval:
 
         one_not_encode = numpy.array(BedSequence(
             self._genome,
-            bed=self._promoters_data[self.key_epigenomic].reset_index()[self._promoters_data[self.key_epigenomic].index.names][:quantity],
+            bed=self._promoters_data[self.key_epigenomic].reset_index()[
+                    self._promoters_data[self.key_epigenomic].index.names][:quantity],
             nucleotides='actg',
             batch_size=1
         ))
@@ -92,7 +93,8 @@ class DataRetrieval:
 
         one_not_encode = numpy.array(BedSequence(
             self._genome,
-            bed=self._enhancers_data[self.key_epigenomic].reset_index()[self._enhancers_data[self.key_epigenomic].index.names][:quantity],
+            bed=self._enhancers_data[self.key_epigenomic].reset_index()[
+                    self._enhancers_data[self.key_epigenomic].index.names][:quantity],
             nucleotides='actg',
             batch_size=1
         ))
@@ -105,9 +107,8 @@ class DataRetrieval:
         print(colored('\rData loading: enhancers sequence data', 'green'))
         return self._enhancers_data[self.key_sequence]
 
-    def fill_nan_promoters_epigenomic_data(self) -> pandas.DataFrame:
-        self._promoters_data[self.key_epigenomic] = self._promoters_data[self.key_epigenomic].fillna(self._promoters_data[self.key_epigenomic].mean())
-        return self._promoters_data[self.key_epigenomic]
+    def set_promoters_epigenomic_data(self, new_data: pandas.DataFrame):
+        self._promoters_data[self.key_epigenomic] = new_data
 
     def get_promoters_data(self) -> Dict[str, pandas.DataFrame]:
         return self._promoters_data
@@ -129,5 +130,3 @@ class DataRetrieval:
 
     def get_genome_data(self) -> Genome:
         return self._genome
-
-
