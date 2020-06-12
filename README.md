@@ -44,7 +44,13 @@ In some real dataset, especially in biology, there could be a strong imbalance b
 
 ![](images/plot_class_imbalance.png)
 
+### Constant feature
 
+In some dataset could be features with the same value for each sample. This situation doesn't help the learning machine and the these features can be removed. This is not the case of the data used in this projet. every features has different values in at most one sample.
+
+### Z-scoring
+
+Z-scoring is a way to standardizing the data. The Z-score is the number of standard deviation by which the the value of a raw score is closed to the population mean, in particular it is positive if it is above the mean or it is negative otherwise. The Z-scoring is calculated by subtracting the average and dividing by the standard deviation and the new data are mean 0 and variance 1. This method has a problem related to the outliers and it has to be fixed by subtracting the median and dividing by the standard deviation between the interquantile range from 0.25 to 0.75.
 
 
 
