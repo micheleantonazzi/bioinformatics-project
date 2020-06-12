@@ -36,7 +36,13 @@ This control aim to verify if the rate between samples and features is high or n
 
 ### NaN values checking
 
-In biology experiments, there are some practical cases where some data could be NaN. This situation, especially when the NaN values are many, is dangerous for the learning model. If it happens, there are a lot of different techniques to fix it. If there NaN values are concentrated in a single sample or in a single feature it is convenient to remove it. Otherwise, if the NaN values are scattered in all datasets, they could be replaced by empirical values, like the mean or the median. In the dataset of this project, there are only one NaN value in the enhancers epigenomic data and no one for the promoters.
+In biology experiments, there are some practical cases where some data could be NaN. This situation, especially when the NaN values are many, is dangerous for the learning model. If it happens, there are a lot of different techniques to fix it. If there NaN values are concentrated in a single sample or in a single feature it is convenient to remove it. Otherwise, if the NaN values are scattered in all datasets, they could be replaced by empirical values, like the mean or the median. In the dataset of this project, there are only one NaN value (replaced with the mean) in the enhancers epigenomic data and no one for the promoters. 
+
+### Class imbalance
+
+In some real dataset, especially in biology, there could be a strong imbalance between classes. For example, if it is considered a rare disease, the positive samples are few than the negative one and the learning machine will tend to predict a wrong result, tending to the majority class. In these cases, it is necessary to adopt techniques to avoid this problem. The data considered in this project are imbalanced as shown by the figure.
+
+![](images/plot_class_imbalance.png)
 
 
 
