@@ -37,6 +37,6 @@ class DataChecking:
 
         for axis, (region, y) in zip(axes.ravel(), [('promoters', self._data.get_promoters_labels()),
                                                     ('enhancers', self._data.get_enhancers_labels())]):
-            y.hist(ax=axis, bins=3)
-            axis.set_title(f"Classes count in {region}")
+            y.hist(color='royalblue', ax=axis, bins=3)
+            axis.set_title(f'Number of samples for {region}')
         fig.show()
