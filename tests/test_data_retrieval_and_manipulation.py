@@ -52,3 +52,10 @@ def test_fill_nan():
     promoters_data = data_retrieval.get_promoters_epigenomic_data()
     assert promoters_data.isna().values.sum() == 1
     assert data_retrieval.fill_nan_promoters_epigenomic_data().isna().values.sum() == 0
+
+
+def test_check_class_imbalance():
+    try:
+        DataChecking(data_retrieval).check_class_imbalance()
+    except:
+        fail('Unexpected exception')
