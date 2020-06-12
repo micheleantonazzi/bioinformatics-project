@@ -60,3 +60,12 @@ def test_check_class_imbalance():
         DataChecking(data_retrieval).check_class_imbalance()
     except:
         fail('Unexpected exception')
+
+
+def test_constant_features():
+    try:
+        DataChecking(data_retrieval).check_constant_features()
+    except:
+        fail('Unexpected exception')
+
+

@@ -110,6 +110,9 @@ class DataRetrieval:
     def set_promoters_epigenomic_data(self, new_data: pandas.DataFrame):
         self._promoters_data[self.key_epigenomic] = new_data
 
+    def set_enhancers_epigenomic_data(self, new_data: pandas.DataFrame):
+        self._enhancers_data[self.key_epigenomic] = new_data
+
     def get_promoters_data(self) -> Dict[str, pandas.DataFrame]:
         return self._promoters_data
 

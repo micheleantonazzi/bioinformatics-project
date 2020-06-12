@@ -47,3 +47,21 @@ class DataChecking:
         promoters_epigenomic_data = promoters_epigenomic_data.fillna(promoters_epigenomic_data.mean())
         self._data.set_promoters_epigenomic_data(promoters_epigenomic_data)
         return promoters_epigenomic_data
+
+    def check_constant_features(self):
+        promoters_epigenomic_data = self._data.get_promoters_epigenomic_data()
+        enhancers_epigenomic_data = self._data.get_enhancers_epigenomic_data()
+
+        promoters_data_dropped = promoters_epigenomic_data.loc[:, (promoters_epigenomic_data != promoters_epigenomic_data.iloc[0]).any()]
+        if promoters_epigenomic_data.shape[1] != promoters_data_dropped.shape[1]:
+            self._data.set_promoters_epigenomic_data(promoters_data_dropped)
+            print(colored('Features in promoters data are constant and had to be dropped', 'yellow'))
+        else:
+            print(colored('In promoters data no constant features were found'))
+
+        enhancers_data_dropped = enhancers_epigenomic_data.loc[:, (enhancers_epigenomic_data != enhancers_epigenomic_data.iloc[0]).any()]
+        if enhancers_epigenomic_data.shape[1] != enhancers_data_dropped.shape[1]:
+            self._data.set_enhancers_epigenomic_data(enhancers_data_dropped)
+            print(colored('Features in enhancers data are constant and had to be dropped', 'yellow', 'green'))
+        else:
+            print(colored('In enhancers data no constant features were found', 'green'))
