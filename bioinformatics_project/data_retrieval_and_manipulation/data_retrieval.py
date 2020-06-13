@@ -9,10 +9,13 @@ from termcolor import colored
 
 
 class DataRetrieval:
+    KEY_EPIGENOMIC: str = 'epigenomic_data'
+    KEY_SEQUENCE: str = 'sequence_data'
+    KEY_PROMOTERS: str = 'promoters'
+    KEY_ENHANCERS: str = 'enhancers'
+    KEY_LABELS: str = 'labels'
+
     def __init__(self, cell_line: str = 'HEK293', window_size: int = 200):
-        self.key_epigenomic: str = 'epigenomic_data'
-        self.key_sequence: str = 'sequence_data'
-        self.key_labels = 'labels'
         self._cell_line: str = cell_line
         self._window_size: int = window_size
         self._promoters_data: Dict[str, pandas.DataFrame] = {self.key_epigenomic: None, self.key_sequence: None,
@@ -32,8 +35,8 @@ class DataRetrieval:
             regions="promoters",
             window_size=self._window_size
         )
-        self._promoters_data[self.key_epigenomic] = promoters_epigenomic_data
-        self._promoters_data[self.key_labels] = promoters_labels
+        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = promoters_epigenomic_data
+        self._promoters_data[DataRetrieval.KEY_LABELS] = promoters_labels
 
         print(colored('Data obtained: promoters epigenomic data and labels', 'green'))
 
@@ -50,8 +53,8 @@ class DataRetrieval:
             regions='enhancers',
             window_size=self._window_size
         )
-        self._enhancers_data[self.key_epigenomic] = promoters_enhancers_data
-        self._enhancers_data[self.key_labels] = enhancers_labels
+        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = promoters_enhancers_data
+        self._enhancers_data[DataRetrieval.KEY_LABELS] = enhancers_labels
 
         print(colored('Data obtained: enhancers epigenomic data and labels', 'green'))
 
@@ -66,78 +69,78 @@ class DataRetrieval:
     def extract_promoters_sequence_data(self, quantity: int = -1) -> pandas.DataFrame:
         print('Starting extracting promoters sequence data')
 
-        if self._promoters_data[self.key_epigenomic] is not None and quantity == -1:
-            quantity = len(self._promoters_data[self.key_epigenomic])
+        if self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] is not None and quantity == -1:
+            quantity = len(self._promoters_data[DataRetrieval.KEY_EPIGENOMIC])
 
         one_not_encode = numpy.array(BedSequence(
             self._genome,
-            bed=self._promoters_data[self.key_epigenomic].reset_index()[
-                    self._promoters_data[self.key_epigenomic].index.names][:quantity],
+            bed=self._promoters_data[DataRetrieval.KEY_EPIGENOMIC].reset_index()[
+                    self._promoters_data[DataRetrieval.KEY_EPIGENOMIC].index.names][:quantity],
             nucleotides='actg',
             batch_size=1
         ))
 
-        self._promoters_data[self.key_sequence] = pandas.DataFrame(
+        self._promoters_data[DataRetrieval.KEY_SEQUENCE] = pandas.DataFrame(
             one_not_encode.reshape(-1, self._window_size * 4).astype(int),
             columns=[f"{i}{nucleotide}" for i in range(self._window_size) for nucleotide in 'actg']
         )
 
         print(colored('\rData loading: promoters sequence data', 'green'))
-        return self._promoters_data[self.key_sequence]
+        return self._promoters_data[DataRetrieval.KEY_SEQUENCE]
 
     def extract_enhancers_sequence_data(self, quantity: int = -1) -> pandas.DataFrame:
         print('Starting extracting enhancers sequence data')
 
-        if self._enhancers_data[self.key_epigenomic] is not None and quantity == -1:
-            quantity = len(self._enhancers_data[self.key_epigenomic])
+        if self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] is not None and quantity == -1:
+            quantity = len(self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC])
 
         one_not_encode = numpy.array(BedSequence(
             self._genome,
-            bed=self._enhancers_data[self.key_epigenomic].reset_index()[
-                    self._enhancers_data[self.key_epigenomic].index.names][:quantity],
+            bed=self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC].reset_index()[
+                    self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC].index.names][:quantity],
             nucleotides='actg',
             batch_size=1
         ))
 
-        self._enhancers_data[self.key_sequence] = pandas.DataFrame(
+        self._enhancers_data[DataRetrieval.KEY_SEQUENCE] = pandas.DataFrame(
             one_not_encode.reshape(-1, self._window_size * 4).astype(int),
             columns=[f"{i}{nucleotide}" for i in range(self._window_size) for nucleotide in 'actg']
         )
 
         print(colored('\rData loading: enhancers sequence data', 'green'))
-        return self._enhancers_data[self.key_sequence]
+        return self._enhancers_data[DataRetrieval.KEY_SEQUENCE]
 
     def set_promoters_epigenomic_data(self, new_data: pandas.DataFrame):
-        self._promoters_data[self.key_epigenomic] = new_data
+        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = new_data
 
     def set_enhancers_epigenomic_data(self, new_data: pandas.DataFrame):
-        self._enhancers_data[self.key_epigenomic] = new_data
+        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = new_data
 
     def get_promoters_data(self) -> Dict[str, pandas.DataFrame]:
         return self._promoters_data
 
     def get_promoters_epigenomic_data(self) -> pandas.DataFrame:
-        return self._promoters_data[self.key_epigenomic]
+        return self._promoters_data[DataRetrieval.KEY_EPIGENOMIC]
 
     def get_promoters_labels(self) -> pandas.DataFrame:
-        return self._promoters_data[self.key_labels]
+        return self._promoters_data[DataRetrieval.KEY_LABELS]
 
     def get_enhancers_data(self) -> Dict[str, pandas.DataFrame]:
         return self._enhancers_data
 
     def get_enhancers_epigenomic_data(self) -> pandas.DataFrame:
-        return self._enhancers_data[self.key_epigenomic]
+        return self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC]
 
     def get_enhancers_labels(self) -> pandas.DataFrame:
-        return self._enhancers_data[self.key_labels]
+        return self._enhancers_data[DataRetrieval.KEY_LABELS]
 
     def get_genome_data(self) -> Genome:
         return self._genome
 
     def get_epigenomic_data(self) -> Dict[str, pandas.DataFrame]:
-        return {'promoters': self._promoters_data[self.key_epigenomic],
-                'enhancers': self._enhancers_data[self.key_epigenomic]}
+        return {DataRetrieval.KEY_PROMOTERS: self._promoters_data[DataRetrieval.KEY_EPIGENOMIC],
+                DataRetrieval.KEY_ENHANCERS: self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC]}
 
     def get_labels(self) -> Dict[str, pandas.DataFrame]:
-        return {'promoters': self._promoters_data[self.key_labels],
-                'enhancers': self._enhancers_data[self.key_labels]}
+        return {DataRetrieval.KEY_PROMOTERS: self._promoters_data[DataRetrieval.KEY_LABELS],
+                DataRetrieval.KEY_ENHANCERS: self._enhancers_data[DataRetrieval.KEY_LABELS]}
