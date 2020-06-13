@@ -76,3 +76,18 @@ def test_z_scoring():
         fail('Unexpected exception')
 
 
+def test_correlation():
+    try:
+        data_checking = DataChecking(data_retrieval)
+
+        pearson = data_checking.apply_pearson_correlation()
+        assert len(pearson[DataRetrieval.KEY_PROMOTERS]) + len(pearson[DataRetrieval.KEY_ENHANCERS]) == 37
+
+        spearman = data_checking.apply_spearman_correlation()
+        assert len(spearman[DataRetrieval.KEY_PROMOTERS]) + len(spearman[DataRetrieval.KEY_ENHANCERS]) == 33
+
+        mic = data_checking.apply_mic(data_checking.apply_pearson_spearman_correlation())
+        assert len(mic['promoters']) + len(mic['enhancers']) == 44
+
+    except:
+        fail('Unexpected exception')
