@@ -110,6 +110,21 @@ class DataRetrieval:
         print(colored('\rData loading: enhancers sequence data', 'green'))
         return self._enhancers_data[DataRetrieval.KEY_SEQUENCE]
 
+    def remove_uncorrelated_features(self, uncorrelated: Dict[str, set]):
+        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = self._promoters_data[DataRetrieval.KEY_EPIGENOMIC].drop(
+            columns=[col for col in
+                     uncorrelated[DataRetrieval.KEY_PROMOTERS]
+                     if col in self._promoters_data[DataRetrieval.KEY_EPIGENOMIC]]
+        )
+
+        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC].drop(
+            columns=[col for col in
+                     uncorrelated[DataRetrieval.KEY_ENHANCERS]
+                     if col in self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC]]
+        )
+
+        self
+
     def set_promoters_epigenomic_data(self, new_data: pandas.DataFrame):
         self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = new_data
 

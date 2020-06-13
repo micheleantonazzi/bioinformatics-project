@@ -89,5 +89,11 @@ def test_correlation():
         mic = data_checking.apply_mic(data_checking.apply_pearson_spearman_correlation())
         assert len(mic['promoters']) + len(mic['enhancers']) == 44
 
+        promoters_data_columns = len(data_retrieval.get_promoters_epigenomic_data().columns)
+        enhancers_data_columns = len(data_retrieval.get_enhancers_epigenomic_data().columns)
+
+        data_retrieval.remove_uncorrelated_features(mic)
+        assert promoters_data_columns == len(data_retrieval.get_promoters_epigenomic_data().columns) + len(mic['promoters'])
+        assert enhancers_data_columns == len(data_retrieval.get_enhancers_epigenomic_data().columns) + len(mic['enhancers'])
     except:
         fail('Unexpected exception')
