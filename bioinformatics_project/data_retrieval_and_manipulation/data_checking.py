@@ -1,7 +1,8 @@
+import numpy
 import pandas
 from typing import Dict
 from matplotlib.pyplot import subplots
-from scipy.stats import pearsonr, spearmanr
+from scipy.stats import pearsonr, spearmanr, entropy
 from sklearn.preprocessing import RobustScaler
 from termcolor import colored
 from tqdm import tqdm
@@ -76,12 +77,15 @@ class DataChecking:
         for region, data in self._data.get_epigenomic_data().items():
             uncorrelated[region] = set()
 
-            for column in tqdm(data.columns, desc=f'Running Pearson test for {region} data', dynamic_ncols=True, leave=False):
-                correlation, p_value = pearsonr(data[column].values.ravel(), self._data.get_labels()[region].values.ravel())
+            for column in tqdm(data.columns, desc=f'Running Pearson test for {region} data', dynamic_ncols=True,
+                               leave=False):
+                correlation, p_value = pearsonr(data[column].values.ravel(),
+                                                self._data.get_labels()[region].values.ravel())
                 if p_value > p_value_threshold:
                     uncorrelated[region].add(column)
 
-            print(colored(f'\rApplied Pearson test for {region}, {len(uncorrelated[region])} features are found', 'green'))
+            print(colored(f'\rApplied Pearson test for {region}, {len(uncorrelated[region])} features are found',
+                          'green'))
 
         return uncorrelated
 
@@ -90,36 +94,46 @@ class DataChecking:
         for region, data in self._data.get_epigenomic_data().items():
             uncorrelated[region] = set()
 
-            for column in tqdm(data.columns, desc=f'Running Spearman test for {region} data', dynamic_ncols=True, leave=False):
-                correlation, p_value = spearmanr(data[column].values.ravel(), self._data.get_labels()[region].values.ravel())
+            for column in tqdm(data.columns, desc=f'Running Spearman test for {region} data', dynamic_ncols=True,
+                               leave=False):
+                correlation, p_value = spearmanr(data[column].values.ravel(),
+                                                 self._data.get_labels()[region].values.ravel())
                 if p_value > p_value_threshold:
                     uncorrelated[region].add(column)
 
-            print(colored(f'\rApplied Spearman test for {region}, {len(uncorrelated[region])} features are found', 'green'))
+            print(colored(f'\rApplied Spearman test for {region}, {len(uncorrelated[region])} features are found',
+                          'green'))
 
         return uncorrelated
 
-    def apply_pearson_spearman_correlation(self, pearson_threshold: float = 0.01, spearman_threshold: float = 0.01):
+    def apply_pearson_spearman_correlation(self, pearson_threshold: float = 0.01,
+                                           spearman_threshold: float = 0.01) -> Dict[str, set]:
         uncorrelated = {}
         for region, data in self._data.get_epigenomic_data().items():
             uncorrelated[region] = set()
 
-            for column in tqdm(data.columns, desc=f'Running Spearman test for {region} data', dynamic_ncols=True, leave=False):
-                correlation, p_value = spearmanr(data[column].values.ravel(), self._data.get_labels()[region].values.ravel())
+            for column in tqdm(data.columns, desc=f'Running Spearman test for {region} data', dynamic_ncols=True,
+                               leave=False):
+                correlation, p_value = spearmanr(data[column].values.ravel(),
+                                                 self._data.get_labels()[region].values.ravel())
                 if p_value > spearman_threshold:
                     uncorrelated[region].add(column)
 
-                correlation, p_value = pearsonr(data[column].values.ravel(), self._data.get_labels()[region].values.ravel())
+                correlation, p_value = pearsonr(data[column].values.ravel(),
+                                                self._data.get_labels()[region].values.ravel())
                 if p_value > pearson_threshold:
                     uncorrelated[region].add(column)
 
-            print(colored(f'\rApplied Pearson and Spearman test for {region}, {len(uncorrelated[region])} features are found', 'green'))
+            print(colored(
+                f'\rApplied Pearson and Spearman test for {region}, {len(uncorrelated[region])} features are found',
+                'green'))
 
         return uncorrelated
 
-    def apply_mic(self, uncorrelated: Dict[str, set], correlation_threshold: float = 0.05):
+    def apply_mic(self, uncorrelated: Dict[str, set], correlation_threshold: float = 0.05) -> Dict[str, set]:
         for region, data in self._data.get_epigenomic_data().items():
-            for column in tqdm(uncorrelated[region], desc=f'Running MIC test for {region} data', dynamic_ncols=True, leave=False):
+            for column in tqdm(uncorrelated[region], desc=f'Running MIC test for {region} data', dynamic_ncols=True,
+                               leave=False):
                 mine = MINE()
                 mine.compute_score(data[column].values.ravel(), self._data.get_labels()[region].values.ravel())
                 score = mine.mic()
@@ -130,3 +144,38 @@ class DataChecking:
             print(colored(f'\rApplied MIC test for {region}, {len(uncorrelated[region])} features are found', 'green'))
 
         return uncorrelated
+
+    def apply_pearson_for_features_correlation(self, pearson_threshold: float = 0.01,
+                                               correlation_threshold: float = 0.95) -> (Dict[str, set],
+                                                                                        Dict[str, list]):
+        extremely_correlated = {
+            region: set()
+            for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]
+        }
+
+        scores = {
+            region: []
+            for region in self._data.get_epigenomic_data()
+        }
+
+        for region, data in self._data.get_epigenomic_data().items():
+            for i, column in tqdm(
+                    enumerate(data.columns),
+                    total=len(data.columns), desc=f"Running Pearson test for {region}", dynamic_ncols=True,
+                    leave=False):
+                for feature in data.columns[i + 1:]:
+                    correlation, p_value = pearsonr(data[column].values.ravel(), data[feature].values.ravel())
+                    correlation = numpy.abs(correlation)
+                    scores[region].append((correlation, column, feature))
+                    if p_value < pearson_threshold and correlation > correlation_threshold:
+                        print(region, column, feature, correlation)
+                        if entropy(data[column]) > entropy(data[feature]):
+                            extremely_correlated[region].add(feature)
+                        else:
+                            extremely_correlated[region].add(column)
+
+            print(
+                colored(f'\rApplied Pearson for features correlation for {region}, {len(extremely_correlated[region])}'
+                        f' useless features are found', 'green'))
+
+        return extremely_correlated, scores

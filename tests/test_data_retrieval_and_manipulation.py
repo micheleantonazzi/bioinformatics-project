@@ -76,7 +76,7 @@ def test_z_scoring():
         fail('Unexpected exception')
 
 
-def test_correlation():
+def test_pearson_spearman_correlation():
     try:
         data_checking = DataChecking(data_retrieval)
 
@@ -85,7 +85,13 @@ def test_correlation():
 
         spearman = data_checking.apply_spearman_correlation()
         assert len(spearman[DataRetrieval.KEY_PROMOTERS]) + len(spearman[DataRetrieval.KEY_ENHANCERS]) == 33
+    except:
+        fail('Unexpected exception')
 
+
+def test_mic():
+    try:
+        data_checking = DataChecking(data_retrieval)
         mic = data_checking.apply_mic(data_checking.apply_pearson_spearman_correlation())
         assert len(mic['promoters']) + len(mic['enhancers']) == 44
 
@@ -93,7 +99,18 @@ def test_correlation():
         enhancers_data_columns = len(data_retrieval.get_enhancers_epigenomic_data().columns)
 
         data_retrieval.remove_uncorrelated_features(mic)
-        assert promoters_data_columns == len(data_retrieval.get_promoters_epigenomic_data().columns) + len(mic['promoters'])
-        assert enhancers_data_columns == len(data_retrieval.get_enhancers_epigenomic_data().columns) + len(mic['enhancers'])
+        assert promoters_data_columns == len(data_retrieval.get_promoters_epigenomic_data().columns) + len(
+            mic['promoters'])
+        assert enhancers_data_columns == len(data_retrieval.get_enhancers_epigenomic_data().columns) + len(
+            mic['enhancers'])
+    except:
+        fail('Unexpected exception')
+
+
+def test_features_correlation():
+    try:
+        extremely_correlated, scores = DataChecking(data_retrieval).apply_pearson_for_features_correlation()
+        assert len(extremely_correlated[DataRetrieval.KEY_PROMOTERS]) == \
+               len(extremely_correlated[DataRetrieval.KEY_ENHANCERS]) == 0
     except:
         fail('Unexpected exception')
