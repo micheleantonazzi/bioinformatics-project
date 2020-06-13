@@ -78,6 +78,7 @@ setup(
                       "pybwtool",
                       "ray",
                       "termcolor",
-                      "minepy"],
+                      "minepy",
+                      "seaborn"],
     extras_require=extras,
 )
