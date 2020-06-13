@@ -1,7 +1,8 @@
 import numpy
 import pandas
+import seaborn
 from typing import Dict
-from matplotlib.pyplot import subplots
+from matplotlib.pyplot import subplots, show, subplots_adjust
 from scipy.stats import pearsonr, spearmanr, entropy
 from sklearn.preprocessing import RobustScaler
 from termcolor import colored
@@ -179,3 +180,28 @@ class DataChecking:
                         f' useless features are found', 'green'))
 
         return extremely_correlated, scores
+
+    def print_scatter_plot(self, features: Dict[str, list]):
+        features = {
+            region: sorted(score, key=lambda x: numpy.abs(x[0]), reverse=True)
+            for region, score in features.items()
+        }
+
+        for region, data in self._data.get_epigenomic_data().items():
+            _, firsts, seconds = list(zip(*features[region][:2]))
+            columns = list(set(firsts+seconds))
+            grid = seaborn.pairplot(pandas.concat([
+                data[columns],
+                self._data.get_labels()[region],
+            ], axis=1), hue=self._data.get_labels()[region].columns[0])
+            grid.fig.suptitle(f'Most correlated features for {region}')
+            show()
+
+            _, firsts, seconds = list(zip(*features[region][-2:]))
+            columns = list(set(firsts+seconds))
+            grid = seaborn.pairplot(pandas.concat([
+                data[columns],
+                self._data.get_labels()[region],
+            ], axis=1), hue=self._data.get_labels()[region].columns[0])
+            grid.fig.suptitle(f'Most uncorrelated features for {region}')
+            show()

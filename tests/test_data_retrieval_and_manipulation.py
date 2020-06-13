@@ -112,5 +112,7 @@ def test_features_correlation():
         extremely_correlated, scores = DataChecking(data_retrieval).apply_pearson_for_features_correlation()
         assert len(extremely_correlated[DataRetrieval.KEY_PROMOTERS]) == \
                len(extremely_correlated[DataRetrieval.KEY_ENHANCERS]) == 0
+
+        DataChecking(data_retrieval).print_scatter_plot(scores)
     except:
         fail('Unexpected exception')
