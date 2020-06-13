@@ -18,10 +18,10 @@ class DataRetrieval:
     def __init__(self, cell_line: str = 'HEK293', window_size: int = 200):
         self._cell_line: str = cell_line
         self._window_size: int = window_size
-        self._promoters_data: Dict[str, pandas.DataFrame] = {self.key_epigenomic: None, self.key_sequence: None,
-                                                             self.key_labels: None}
-        self._enhancers_data: Dict[str, pandas.DataFrame] = {self.key_epigenomic: None, self.key_sequence: None,
-                                                             self.key_labels: None}
+        self._promoters_data: Dict[str, pandas.DataFrame] = {DataRetrieval.KEY_EPIGENOMIC: None, DataRetrieval.KEY_SEQUENCE: None,
+                                                             DataRetrieval.KEY_LABELS: None}
+        self._enhancers_data: Dict[str, pandas.DataFrame] = {DataRetrieval.KEY_EPIGENOMIC: None, DataRetrieval.KEY_SEQUENCE: None,
+                                                             DataRetrieval.KEY_LABELS: None}
         self._genome: Genome = None
 
     def load_promoters_epigenomic_data(self) -> Dict[str, pandas.DataFrame]:
