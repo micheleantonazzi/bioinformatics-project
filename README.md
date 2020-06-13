@@ -54,19 +54,7 @@ Z-scoring is a way to standardizing the data. The Z-score is the number of stand
 
 ## Data correlation with output
 
-Another check which can be applied to the data is the correlation between features and output. If a feature isn't correlated with a specific output it is completely useless and it can be dropped. To do this, the Pearson and Spearman test are applied, which measure the monotonic and linear correlations respectively. After that, the candidate non-correlated features are tested with the MIC (Maximal information coefficient) that tests non-linear correlation between features and output. Only the features found with Pearson and Spearman methods are tested using MIC because it is computationally very complex.
-
-### The Pearson correlation coefficient
-
-The Pearson correlation method measures the linear correlation between two datasets. In particular, the Pearson coefficient has a value between -1 and +1, where -1 is total negative linear correlation, 0 implying no correlation and +1 is total positive linear correlation. It is important to specify that the Pearson result is significant if it is calculated over a large dataset, tipically with 1000 samples or more.
-
-
-
-
-
-
-
-
+Another check which can be applied to the data is the correlation between features and output. If a feature isn't correlated with a specific output it is completely useless and it can be dropped. To do this, the Pearson and Spearman tests are applied, which measure the monotonic and linear correlations respectively. After that, the candidate non-correlated features are tested with the MIC (Maximal information coefficient) that tests the non-linear correlation between features and output. Only the features found with Pearson and Spearman methods are tested using MIC because it is computationally very complex. More in detail, the Pearson correlation method measures the linear correlation between the two datasets. In particular, the Pearson coefficient has a value between -1 and +1, where -1 is a total negative linear correlation, 0 implying no correlation, and +1 is a total positive linear correlation. Instead, the Spearman correlation coefficient doesn't require that the two datasets are normalized and it measures the monotonicity relationship between them. The Spearman coefficient varies between -1 and +1, like Pearson's. Finally the the MIC is applied to the feature selected by Pearson and Spearman method to find non-linear correlations. It is important to specify that Pearson's, Spearman's and MIC's results are significant if they are is calculated over a large dataset, typically with 500 samples or more.
 
 # Bibliography 
 
