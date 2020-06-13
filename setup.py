@@ -77,6 +77,7 @@ setup(
                       "encodeproject",
                       "pybwtool",
                       "ray",
-                      "termcolor"],
+                      "termcolor",
+                      "minepy"],
     extras_require=extras,
 )
