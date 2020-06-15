@@ -207,7 +207,7 @@ class DataChecking:
             grid.fig.suptitle(f'Most uncorrelated features for {region}')
             show()
 
-    def print_feature_distributions(self, features_number: int = 5):
+    def print_features_different_active_inactive(self, features_number: int = 5):
         for region, data in self._data.get_epigenomic_data().items():
             distance = euclidean_distances(data.T)
             most_distance_columns_indices = numpy.argsort(-numpy.mean(distance, axis=1).flatten())[:features_number]
@@ -225,5 +225,22 @@ class DataChecking:
                 cleared_x[cleared_y==1].hist(ax=axis, bins=20)
 
                 axis.set_title(column)
+            show()
+
+    def print_pair_features_different(self, tuples_number: int = 5):
+        for region, data in self._data.get_epigenomic_data().items():
+            distance = euclidean_distances(data.T)
+            dist = numpy.triu(distance)
+            tuples = list(zip(*numpy.unravel_index(numpy.argsort(-dist.ravel()), dist.shape)))[:tuples_number]
+            fig, axes = subplots(nrows=1, ncols=5, figsize=(25, 5))
+            for (i, j), axis in zip(tuples, axes.flatten()):
+                column_i = data.columns[i]
+                column_j = data.columns[j]
+                for column in (column_i, column_j):
+                    head, tail = data[column].quantile([0.05, 0.95]).values.ravel()
+                    mask = ((data[column] < tail) & (data[column] > head)).values
+                    data[column][mask].hist(ax=axis, bins=20, alpha=0.5)
+                axis.set_title(f"{column_i} and {column_j}")
+            fig.tight_layout()
             show()
 

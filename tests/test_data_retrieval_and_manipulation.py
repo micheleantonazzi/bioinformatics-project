@@ -119,6 +119,7 @@ def test_features_correlation():
 
 def test_features_distribution():
     try:
-        DataChecking(data_retrieval).print_feature_distributions()
+        DataChecking(data_retrieval).print_features_different_active_inactive()
+        DataChecking(data_retrieval).print_pair_features_different()
     except:
         fail('Unexpected exception')
