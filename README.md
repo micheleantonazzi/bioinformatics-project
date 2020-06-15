@@ -56,9 +56,9 @@ Z-scoring is a way to standardizing the data. The Z-score is the number of stand
 
 Another check which can be applied to the data is the correlation between features and output. If a feature isn't correlated with a specific output it is completely useless and it can be dropped. To do this, the Pearson and Spearman tests are applied, which measure the monotonic and linear correlations respectively. After that, the candidate non-correlated features are tested with the MIC (Maximal information coefficient) that tests the non-linear correlation between features and output. Only the features found with Pearson and Spearman methods are tested using MIC because it is computationally very complex. More in detail, the Pearson correlation method measures the linear correlation between the two datasets. In particular, the Pearson coefficient has a value between -1 and +1, where -1 is a total negative linear correlation, 0 implying no correlation, and +1 is a total positive linear correlation. Instead, the Spearman correlation coefficient doesn't require that the two datasets are normalized and it measures the monotonicity relationship between them. The Spearman coefficient varies between -1 and +1, like Pearson's. Now is the moment to apply the MIC procedures to the feature selected by Pearson and Spearman method in order to find non-linear correlations. It is important to specify that Pearson's, Spearman's and MIC's results are significant if they are is calculated over a large dataset, typically with 500 samples or more. At the end the features uncorrelated with output can be removed.
 
-## Feature Correlation
+## Feature correlation
 
-To make the data less heavy, it is possible to find and remove tightly correlated features. The correlation can be measured using the Pearson or MIC method. In this project, the Pearson method is used to save time (MIC is computationally complex). When two features appear correlated, the one with the lower entropy is removed. The entropy can be interpreted as the average level of information or uncertainty given by a variable. In this project, there aren't features extremely correlated but it is interesting to examine the most correlated and least correlated features, as shown in the images below. The first pair of images show the two most correlated features in promoters and enhancers respectively, while the lastest pair show the two most uncorrelated features in the same regions.
+To make the data less heavy, it is possible to find and remove tightly correlated features. The correlation can be measured using the Pearson or MIC method. In this project, the Pearson method is used to save time (MIC is computationally complex). When two features appear correlated, the one with the lower entropy is removed. The entropy can be interpreted as the average level of information or uncertainty given by a variable. In this project, there aren't features extremely correlated but it is interesting to examine the most correlated and least correlated features, as shown in the images below. The first pair of images show the two most correlated features in promoters and enhancers respectively, while the last pair show the two most uncorrelated features in the same regions. The blue and orange colors refers to inactive and active region respectively.
 
 ![Most correlated features for promoters](images/plot_promoter_features_correlated.png)
 
@@ -67,6 +67,14 @@ To make the data less heavy, it is possible to find and remove tightly correlate
 ![Most correlated features for promoters](images/plot_promoters_uncorrelated_features.png)
 
 ![Most correlated features for promoters](images/plot_enhancers_uncorrelated_features.png)
+
+## Data distribution
+
+Visualizing the data distribution is helpful to better understand the dataset composition. Since the features are about 200, it is difficult and useless to represent all distributions, then the 10 most different features are selected. The histograms below represent the Euclidean distance between two features, whose values are filtered before 0.05 and after 0.95 percentile to reduce the impact of the outliers. The first image shows the feature distributions of promoters and the second image shows the enhancers features distributions. The inactive region's distributions are printed in blue while the active ones are orange.
+
+![Promoters feature distributions](images/plot_feature_distribution_promoters.png)
+
+![Promoters feature distributions](images/plot_feature_distribution_enhancers.png)
 
 # Bibliography 
 
