@@ -70,11 +70,17 @@ To make the data less heavy, it is possible to find and remove tightly correlate
 
 ## Data distribution
 
-Visualizing the data distribution is helpful to better understand the dataset composition. Since the features are about 200, it is difficult and useless to represent all distributions, then the 10 most different features are selected. The histograms below represent the Euclidean distance between two features, whose values are filtered before 0.05 and after 0.95 percentile to reduce the impact of the outliers. The first image shows the feature distributions of promoters and the second image shows the enhancers features distributions. The inactive region's distributions are printed in blue while the active ones are orange.
+Visualizing the data distribution is helpful to better understand the dataset composition. Since the features are about 200 and it is difficult and useless to represent all distributions, there were selected and represented the 5 most different features between active and inactive regions, both for promoters and enhancers. The histograms below represent the Euclidean distance between the feature values, which are filtered before 0.05 and after 0.95 percentile to reduce the impact of the outliers. In particular, the blue and orange colors refers to inactive and active region respectively. The first image shows the feature distributions of promoters and the second one shows the enhancers features distributions.
 
-![Promoters feature distributions](images/plot_feature_distribution_promoters.png)
+![Feature distributions for active and inactive promoters](images/plot_feature_distribution_promoters.png)
 
-![Promoters feature distributions](images/plot_feature_distribution_enhancers.png)
+![Feature distributions for active and inactive enhancers](images/plot_feature_distribution_enhancers.png)
+
+Another interesting point of view is given by the visualization of the differences between the distributions of the pairs of features. As done in the previous method, only the 5 most different pairs of features are considered and the considered values are between 0.05 and 0.95. This time the colors represent the two features and not the regions activation. 
+
+![Distributions of feature pairs for promoters](images/plot_pair_feature_promoters.png)
+
+![Distributions of feature pairs for enhancers](images/plot_pair_feature_enhancers.png)
 
 # Bibliography 
 
