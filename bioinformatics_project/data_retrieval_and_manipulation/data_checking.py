@@ -2,7 +2,7 @@ import numpy
 import pandas
 import seaborn
 from typing import Dict
-from matplotlib.pyplot import subplots, show, text
+from matplotlib.pyplot import subplots, show
 from scipy.stats import pearsonr, spearmanr, entropy
 from sklearn.metrics import euclidean_distances
 from sklearn.preprocessing import RobustScaler
@@ -212,7 +212,7 @@ class DataChecking:
             distance = euclidean_distances(data.T)
             most_distance_columns_indices = numpy.argsort(-numpy.mean(distance, axis=1).flatten())[:features_number]
             columns = data.columns[most_distance_columns_indices]
-            fig, axes = subplots(nrows=1, ncols=features_number, figsize=(25, 5))
+            fig, axes = subplots(nrows=1, ncols=features_number, figsize=(5 * features_number, 5))
             for column, axis in zip(columns, axes.flatten()):
                 head, tail = data[column].quantile([0.05, 0.95]).values.ravel()
 
@@ -232,7 +232,7 @@ class DataChecking:
             distance = euclidean_distances(data.T)
             dist = numpy.triu(distance)
             tuples = list(zip(*numpy.unravel_index(numpy.argsort(-dist.ravel()), dist.shape)))[:tuples_number]
-            fig, axes = subplots(nrows=1, ncols=5, figsize=(25, 5))
+            fig, axes = subplots(nrows=1, ncols=tuples_number, figsize=(5 * tuples_number, 5))
             for (i, j), axis in zip(tuples, axes.flatten()):
                 column_i = data.columns[i]
                 column_j = data.columns[j]
@@ -243,4 +243,7 @@ class DataChecking:
                 axis.set_title(f"{column_i} and {column_j}")
             fig.tight_layout()
             show()
+
+    def apply_boruta(self):
+        pass
 
