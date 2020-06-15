@@ -79,6 +79,7 @@ setup(
                       "ray",
                       "termcolor",
                       "minepy",
-                      "seaborn"],
+                      "seaborn",
+                      "Boruta"],
     extras_require=extras,
 )
