@@ -123,3 +123,10 @@ def test_features_distribution():
         DataChecking(data_retrieval).print_pair_features_different()
     except:
         fail('Unexpected exception')
+
+
+def test_boruta():
+    try:
+        DataChecking(data_retrieval).apply_boruta(5)
+    except:
+        fail('Unexpected exception')

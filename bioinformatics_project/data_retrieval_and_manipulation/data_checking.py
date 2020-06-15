@@ -1,9 +1,14 @@
+from multiprocessing import cpu_count
+
 import numpy
 import pandas
 import seaborn
 from typing import Dict
+
+from boruta import BorutaPy
 from matplotlib.pyplot import subplots, show
 from scipy.stats import pearsonr, spearmanr, entropy
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import euclidean_distances
 from sklearn.preprocessing import RobustScaler
 from termcolor import colored
@@ -244,6 +249,19 @@ class DataChecking:
             fig.tight_layout()
             show()
 
-    def apply_boruta(self):
-        pass
-
+    def apply_boruta(self, max_iter: int = 10, threshold: float = 0.05, max_depth: int = 5):
+        irrelevant_features = {}
+        for region, data in tqdm(
+                self._data.get_epigenomic_data().items(),
+                desc="Running Baruta Feature estimation"
+        ):
+            boruta_selector = BorutaPy(
+                RandomForestClassifier(n_jobs=cpu_count(), class_weight='balanced', max_depth=max_depth),
+                n_estimators='auto',
+                verbose=2,
+                alpha=threshold,
+                max_iter=max_iter,
+                random_state=42
+            )
+            irrelevant_features[region] = boruta_selector.fit(data.values, self._data.get_labels()[region].values.ravel()).transform(data.values)
+        return irrelevant_features
