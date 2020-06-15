@@ -116,3 +116,9 @@ def test_features_correlation():
         DataChecking(data_retrieval).print_scatter_plot(scores)
     except:
         fail('Unexpected exception')
+
+def test_features_distribution():
+    try:
+        DataChecking(data_retrieval).print_feature_distributions()
+    except:
+        fail('Unexpected exception')

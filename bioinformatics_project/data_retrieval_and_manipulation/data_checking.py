@@ -2,8 +2,9 @@ import numpy
 import pandas
 import seaborn
 from typing import Dict
-from matplotlib.pyplot import subplots, show, subplots_adjust
+from matplotlib.pyplot import subplots, show, text
 from scipy.stats import pearsonr, spearmanr, entropy
+from sklearn.metrics import euclidean_distances
 from sklearn.preprocessing import RobustScaler
 from termcolor import colored
 from tqdm import tqdm
@@ -205,3 +206,24 @@ class DataChecking:
             ], axis=1), hue=self._data.get_labels()[region].columns[0])
             grid.fig.suptitle(f'Most uncorrelated features for {region}')
             show()
+
+    def print_feature_distributions(self, features_number: int = 5):
+        for region, data in self._data.get_epigenomic_data().items():
+            distance = euclidean_distances(data.T)
+            most_distance_columns_indices = numpy.argsort(-numpy.mean(distance, axis=1).flatten())[:features_number]
+            columns = data.columns[most_distance_columns_indices]
+            fig, axes = subplots(nrows=1, ncols=features_number, figsize=(25, 5))
+            for column, axis in zip(columns, axes.flatten()):
+                head, tail = data[column].quantile([0.05, 0.95]).values.ravel()
+
+                mask = ((data[column] < tail) & (data[column] > head)).values
+
+                cleared_x = data[column][mask]
+                cleared_y = self._data.get_labels()[region].values.ravel()[mask]
+
+                cleared_x[cleared_y==0].hist(ax=axis, bins=20)
+                cleared_x[cleared_y==1].hist(ax=axis, bins=20)
+
+                axis.set_title(column)
+            show()
+
