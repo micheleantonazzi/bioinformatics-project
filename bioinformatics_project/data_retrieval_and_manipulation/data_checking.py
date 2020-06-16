@@ -294,13 +294,6 @@ class DataChecking:
                        ],
                        pandas.concat(self._data.get_sequence_data().values()).values,
                        pandas.concat(self._data.get_sequence_data().values()).values,
-                       *[
-                           numpy.hstack([
-                               self.pca(self._data.get_epigenomic_data()[region], n_components=25),
-                               self.mfa(self._data.get_sequence_data()[region], n_components=25)
-                           ])
-                           for region in self._data.get_epigenomic_data()
-                       ]
                    ],
             "y":[
                 *[
@@ -312,22 +305,16 @@ class DataChecking:
                     for val in self._data.get_labels().values()
                 ],
                 pandas.concat(self._data.get_labels().values()).values.ravel(),
-                pandas.vstack([numpy.ones_like(self._data.get_labels()[DataRetrieval.KEY_PROMOTERS]),
+                numpy.vstack([numpy.ones_like(self._data.get_labels()[DataRetrieval.KEY_PROMOTERS]),
                                numpy.zeros_like(self._data.get_labels()[DataRetrieval.KEY_ENHANCERS])]).ravel(),
-                *[
-                    val.values.ravel()
-                    for val in self._data.get_labels().values()
-                ],
             ],
             "titles":[
-                "Epigenomes promoters",
-                "Epigenomes enhancers",
-                "Sequences promoters",
-                "Sequences enhancers",
-                "Sequences active regions",
-                "Sequences regions types",
-                "Combined promoters data",
-                "Combined enhancers data"
+                'Epigenomes promoters',
+                'Epigenomes enhancers',
+                'Sequences promoters',
+                'Sequences enhancers',
+                'Sequences active regions',
+                'Sequences regions types',
             ]
         }
 
@@ -343,7 +330,7 @@ class DataChecking:
         fig, axes = subplots(nrows=2, ncols=4, figsize=(32, 16))
 
         for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing PCAs", total=len(xs)):
-            axis.scatter(*self._pca(x).T, s=1, color=colors[y])
+            axis.scatter(*self.pca(x).T, s=1, color=colors[y])
             axis.xaxis.set_visible(False)
             axis.yaxis.set_visible(False)
             axis.set_title(f"PCA decomposition - {title}")

@@ -6,6 +6,7 @@ data_ret.load_promoters_epigenomic_data()
 data_ret.load_enhancers_epigenomic_data()
 data_ret.load_genome_data()
 data_ret.extract_promoters_sequence_data()
+data_ret.extract_enhancers_sequence_data()
 
 data_checking = DataChecking(data_ret)
 data_checking.check_sample_features_imbalance()
