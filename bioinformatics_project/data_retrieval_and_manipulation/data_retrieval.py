@@ -159,3 +159,7 @@ class DataRetrieval:
     def get_labels(self) -> Dict[str, pandas.DataFrame]:
         return {DataRetrieval.KEY_PROMOTERS: self._promoters_data[DataRetrieval.KEY_LABELS],
                 DataRetrieval.KEY_ENHANCERS: self._enhancers_data[DataRetrieval.KEY_LABELS]}
+
+    def get_sequence_data(self) -> Dict[str, pandas.DataFrame]:
+        return {DataRetrieval.KEY_PROMOTERS: self._promoters_data[DataRetrieval.KEY_SEQUENCE],
+                DataRetrieval.KEY_ENHANCERS: self._enhancers_data[DataRetrieval.KEY_SEQUENCE]}

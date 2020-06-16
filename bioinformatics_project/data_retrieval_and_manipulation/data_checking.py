@@ -8,12 +8,14 @@ from typing import Dict
 from boruta import BorutaPy
 from matplotlib.pyplot import subplots, show
 from scipy.stats import pearsonr, spearmanr, entropy
+from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import euclidean_distances
 from sklearn.preprocessing import RobustScaler
 from termcolor import colored
 from tqdm import tqdm
 from minepy import MINE
+from prince import MFA
 
 from .data_retrieval import DataRetrieval
 
@@ -265,3 +267,63 @@ class DataChecking:
             )
             irrelevant_features[region] = boruta_selector.fit(data.values, self._data.get_labels()[region].values.ravel()).transform(data.values)
         return irrelevant_features
+
+    def _get_data_decomposition_task(self):
+        return {
+            "x":[
+                *[
+                    val.values
+                    for val in self._data.get_epigenomic_data().values()
+                ],
+                *[
+                    val.values
+                    for val in self._data.get_sequence_data().values()
+                ],
+                pandas.concat(self._data.get_sequence_data().values()).values,
+                pandas.concat(self._data.get_sequence_data().values()).values,
+                *[
+                    numpy.hstack([
+                        PCA(n_components=25, random_state=42).fit_transform(self._data.get_epigenomic_data()[region]),
+                        MFA(groups={
+                            nucleotide: [
+                                column
+                                for column in self._data.get_sequence_data()[region].columns
+                                if nucleotide in column
+                            ]
+                            for nucleotide in 'actg'
+                        }, n_components=25, random_state=42).fit_transform(self._data.get_sequence_data()[region])
+                    ])
+                    for region in self._data.get_epigenomic_data()
+                ]
+            ],
+            "y":[
+                *[
+                    val.values.ravel()
+                    for val in self._data.get_labels().values()
+                ],
+                *[
+                    val.values.ravel()
+                    for val in self._data.get_labels().values()
+                ],
+                pandas.concat(self._data.get_labels().values()).values.ravel(),
+                numpy.vstack([numpy.ones_like(self._data.get_labels()["promoters"]), np.zeros_like(self._data.get_labels()["enhancers"])]).ravel(),
+                *[
+                    val.values.ravel()
+                    for val in self._data.get_labels().values()
+                ],
+            ],
+            "titles":[
+                "Epigenomes promoters",
+                "Epigenomes enhancers",
+                "Sequences promoters",
+                "Sequences enhancers",
+                "Sequences active regions",
+                "Sequences regions types",
+                "Combined promoters data",
+                "Combined enhancers data"
+            ]
+        }
+
+    def apply_pca(self,  rosn_components: int = 2):
+        #pca = PCA(n_components=n_components, random_state=42).fit_transform(data)
+        print(self._data.get_epigenomic_data().values())
