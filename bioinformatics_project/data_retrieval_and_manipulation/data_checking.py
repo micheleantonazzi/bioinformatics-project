@@ -283,19 +283,19 @@ class DataChecking:
 
     def _get_data_decomposition_task(self):
         return {
-            "x":[
-                       *[
-                           val.values
-                           for val in self._data.get_epigenomic_data().values()
-                       ],
-                       *[
-                           val.values
-                           for val in self._data.get_sequence_data().values()
-                       ],
-                       pandas.concat(self._data.get_sequence_data().values()).values,
-                       pandas.concat(self._data.get_sequence_data().values()).values,
-                   ],
-            "y":[
+            "x": [
+                *[
+                    val
+                    for val in self._data.get_epigenomic_data().values()
+                ],
+                *[
+                    val
+                    for val in self._data.get_sequence_data().values()
+                ],
+                pandas.concat(self._data.get_sequence_data().values()),
+                pandas.concat(self._data.get_sequence_data().values()),
+            ],
+            "y": [
                 *[
                     val.values.ravel()
                     for val in self._data.get_labels().values()
@@ -327,11 +327,50 @@ class DataChecking:
             "tab:blue",
             "tab:orange",
         ])
-        fig, axes = subplots(nrows=2, ncols=4, figsize=(32, 16))
+        fig, axes = subplots(nrows=2, ncols=3, figsize=(32, 16))
 
         for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing PCAs", total=len(xs)):
             axis.scatter(*self.pca(x).T, s=1, color=colors[y])
             axis.xaxis.set_visible(False)
             axis.yaxis.set_visible(False)
-            axis.set_title(f"PCA decomposition - {title}")
+            axis.set_title(f"PCA decomposition - {title}",  fontdict={'fontsize': 25,
+                                                                      'fontweight' : 25,
+                                                                      'verticalalignment': 'baseline',
+                                                                      'horizontalalignment': 'center'})
+        show()
+
+    def apply_mfa(self):
+        tasks = {
+            "x":[
+                *[
+                    val
+                    for val in self._data.get_sequence_data().values()
+                ],
+
+            ],
+            "y":[
+                *[
+                    val.values.ravel()
+                    for val in self._data.get_labels().values()
+                ],
+            ],
+            "titles":[
+                'Sequences promoters',
+                'Sequences enhancers',
+            ]
+        }
+        xs = tasks["x"]
+        ys = tasks["y"]
+        titles = tasks["titles"]
+        colors = numpy.array([
+            "tab:blue",
+            "tab:orange",
+        ])
+        fig, axes = subplots(nrows=1, ncols=2, figsize=(32, 16))
+
+        for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing MFAs", total=len(xs)):
+            axis.scatter(*self.mfa(x).T, s=1, color=colors[y])
+            axis.xaxis.set_visible(False)
+            axis.yaxis.set_visible(False)
+            axis.set_title(f"MFA decomposition - {title}")
         show()
