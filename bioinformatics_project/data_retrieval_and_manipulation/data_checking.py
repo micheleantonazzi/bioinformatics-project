@@ -268,34 +268,40 @@ class DataChecking:
             irrelevant_features[region] = boruta_selector.fit(data.values, self._data.get_labels()[region].values.ravel()).transform(data.values)
         return irrelevant_features
 
+    def pca(self, data: pandas.DataFrame, components: int = 2) -> numpy.ndarray:
+        return PCA(n_components=components, random_state=42).fit_transform(data)
+
+    def mfa(self, data: pandas.DataFrame, components: int = 2, nucleotides: str = 'actg') -> numpy.ndarray:
+        return MFA(groups={
+            nucleotide: [
+                column
+                for column in data.columns
+                if nucleotide in column
+            ]
+            for nucleotide in nucleotides
+        }, n_components=components, random_state=42).fit_transform(data)
+
     def _get_data_decomposition_task(self):
         return {
             "x":[
-                *[
-                    val.values
-                    for val in self._data.get_epigenomic_data().values()
-                ],
-                *[
-                    val.values
-                    for val in self._data.get_sequence_data().values()
-                ],
-                pandas.concat(self._data.get_sequence_data().values()).values,
-                pandas.concat(self._data.get_sequence_data().values()).values,
-                *[
-                    numpy.hstack([
-                        PCA(n_components=25, random_state=42).fit_transform(self._data.get_epigenomic_data()[region]),
-                        MFA(groups={
-                            nucleotide: [
-                                column
-                                for column in self._data.get_sequence_data()[region].columns
-                                if nucleotide in column
-                            ]
-                            for nucleotide in 'actg'
-                        }, n_components=25, random_state=42).fit_transform(self._data.get_sequence_data()[region])
-                    ])
-                    for region in self._data.get_epigenomic_data()
-                ]
-            ],
+                       *[
+                           val.values
+                           for val in self._data.get_epigenomic_data().values()
+                       ],
+                       *[
+                           val.values
+                           for val in self._data.get_sequence_data().values()
+                       ],
+                       pandas.concat(self._data.get_sequence_data().values()).values,
+                       pandas.concat(self._data.get_sequence_data().values()).values,
+                       *[
+                           numpy.hstack([
+                               self.pca(self._data.get_epigenomic_data()[region], n_components=25),
+                               self.mfa(self._data.get_sequence_data()[region], n_components=25)
+                           ])
+                           for region in self._data.get_epigenomic_data()
+                       ]
+                   ],
             "y":[
                 *[
                     val.values.ravel()
@@ -306,7 +312,8 @@ class DataChecking:
                     for val in self._data.get_labels().values()
                 ],
                 pandas.concat(self._data.get_labels().values()).values.ravel(),
-                numpy.vstack([numpy.ones_like(self._data.get_labels()["promoters"]), np.zeros_like(self._data.get_labels()["enhancers"])]).ravel(),
+                pandas.vstack([numpy.ones_like(self._data.get_labels()[DataRetrieval.KEY_PROMOTERS]),
+                               numpy.zeros_like(self._data.get_labels()[DataRetrieval.KEY_ENHANCERS])]).ravel(),
                 *[
                     val.values.ravel()
                     for val in self._data.get_labels().values()
@@ -324,6 +331,20 @@ class DataChecking:
             ]
         }
 
-    def apply_pca(self,  rosn_components: int = 2):
-        #pca = PCA(n_components=n_components, random_state=42).fit_transform(data)
-        print(self._data.get_epigenomic_data().values())
+    def apply_pca(self,):
+        tasks = self._get_data_decomposition_task()
+        xs = tasks["x"]
+        ys = tasks["y"]
+        titles = tasks["titles"]
+        colors = numpy.array([
+            "tab:blue",
+            "tab:orange",
+        ])
+        fig, axes = subplots(nrows=2, ncols=4, figsize=(32, 16))
+
+        for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing PCAs", total=len(xs)):
+            axis.scatter(*self._pca(x).T, s=1, color=colors[y])
+            axis.xaxis.set_visible(False)
+            axis.yaxis.set_visible(False)
+            axis.set_title(f"PCA decomposition - {title}")
+        show()
