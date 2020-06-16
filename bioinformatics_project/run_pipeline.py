@@ -13,7 +13,8 @@ data_checking.check_sample_features_imbalance()
 data_checking.check_nan_values()
 data_checking.fill_nan_promoters_epigenomic_data()
 data_checking.check_constant_features()
-data_checking.apply_pca()
+data_checking.apply_tsne()
+
 data_checking.apply_z_scoring()
 
 

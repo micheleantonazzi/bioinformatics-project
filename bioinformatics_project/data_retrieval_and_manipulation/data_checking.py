@@ -16,6 +16,7 @@ from termcolor import colored
 from tqdm import tqdm
 from minepy import MINE
 from prince import MFA
+from tsnecuda import TSNE
 
 from .data_retrieval import DataRetrieval
 
@@ -333,7 +334,7 @@ class DataChecking:
             axis.scatter(*self.pca(x).T, s=1, color=colors[y])
             axis.xaxis.set_visible(False)
             axis.yaxis.set_visible(False)
-            axis.set_title(f"PCA decomposition - {title}",  fontdict={'fontsize': 25,
+            axis.set_title(f"PCA decomposition - {title}", fontdict={'fontsize': 25,
                                                                       'fontweight' : 25,
                                                                       'verticalalignment': 'baseline',
                                                                       'horizontalalignment': 'center'})
@@ -374,3 +375,30 @@ class DataChecking:
             axis.yaxis.set_visible(False)
             axis.set_title(f"MFA decomposition - {title}")
         show()
+
+    def cannylab_tsne(self, data: numpy.ndarray, perplexity: int, dimensionality_threshold: int = 50):
+        if data.shape[1] > dimensionality_threshold:
+            data = self.pca(data, components=dimensionality_threshold)
+        return TSNE(perplexity=perplexity, random_seed=42).fit_transform(data)
+
+    def apply_tsne(self):
+        tasks = self._get_data_decomposition_task()
+        xs = tasks["x"]
+        ys = tasks["y"]
+        titles = tasks["titles"]
+        colors = numpy.array([
+            "tab:blue",
+            "tab:orange",
+        ])
+        for perpexity in tqdm((30, 40, 50, 100, 500, 5000), desc="Running perplexities"):
+            fig, axes = subplots(nrows=2, ncols=3, figsize=(40, 20))
+            for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing TSNEs", total=len(xs)):
+                axis.scatter(*self.cannylab_tsne(x, perplexity=perpexity).T, s=1, color=colors[y])
+                axis.xaxis.set_visible(False)
+                axis.yaxis.set_visible(False)
+                axis.set_title(f"TSNE decomposition - {title}", fontdict={'fontsize': 25,
+                                                                          'fontweight' : 25,
+                                                                          'verticalalignment': 'baseline',
+                                                                          'horizontalalignment': 'center'})
+            fig.tight_layout()
+            show()
