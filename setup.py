@@ -80,6 +80,7 @@ setup(
                       "termcolor",
                       "minepy",
                       "seaborn",
-                      "Boruta"],
+                      "Boruta",
+                      "prince"],
     extras_require=extras,
 )
