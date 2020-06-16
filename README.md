@@ -90,7 +90,15 @@ The data decomposition is the process through which the data dimensionality is r
 
 ### PCA
 
-The principal component analysis (PCA) uses a simple idea: given a collection of points in multi dimensional space, a best fitting line is the one that minimizes the average square distance from the points to the line. The next best-fitting line is similar but chosen from the direction orthogonal to the first. Repeating this process produces an orthogonal basis in which different individual dimensions of the data are uncorrelated. These basis vectors are called principal components. This transformation is defines as follow: the first principal component has the largest possible variance and the succeeding components has the highest variance under the constraint that it is orthogonal to the previous component. It is important to specify that PCA is sensitive to the relative scaling of the original variables: this is why it has be run before applying the z-scoring.
+The principal component analysis (PCA) uses a simple idea: given a collection of points in multi dimensional space, a best fitting line is the one that minimizes the average square distance from the points to the line. The next best-fitting line is similar but chosen from the direction orthogonal to the first. Repeating this process produces an orthogonal basis in which different individual dimensions of the data are uncorrelated. These basis vectors are called principal components. This transformation is defines as follow: the first principal component has the largest possible variance and the succeeding components has the highest variance under the constraint that it is orthogonal to the previous component. It is important to specify that PCA is sensitive to the relative scaling of the original variables: this is why it has be run before applying the z-scoring. The figure below shows the PCA graphics obtained by the epigenomic data of promoters and  enhancers.
+
+![PCA visualizations](images/plot_pca.png)
+
+### MFA
+
+Multiple factor analysis (MFA) is used to view data organized into subgroups. This is the case with sequence data, which are one-not encoded sequences of nucleotides. MFA calculates the PCA for each subgroup and after operates another PCA on the previously calculated results.
+
+
 
 # Bibliography 
 
