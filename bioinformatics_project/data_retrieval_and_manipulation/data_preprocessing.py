@@ -186,6 +186,42 @@ class DataPreprocessing:
 
         return extremely_correlated, scores
 
+    def apply_spearman_for_features_correlation(self, spearman_threshold: float = 0.01,
+                                               correlation_threshold: float = 0.95) -> (Dict[str, set],
+                                                                                        Dict[str, list]):
+        extremely_correlated = {
+            region: set()
+            for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]
+        }
+
+        scores = {
+            region: []
+            for region in self._data.get_epigenomic_data()
+        }
+
+        for region, data in self._data.get_epigenomic_data().items():
+            for i, column in tqdm(
+                    enumerate(data.columns),
+                    total=len(data.columns), desc=f"Running Spearman test for {region} "
+                                                  f"to find feature-feature correlations", dynamic_ncols=True,
+                    leave=False):
+                for feature in data.columns[i + 1:]:
+                    correlation, p_value = spearmanr(data[column].values.ravel(), data[feature].values.ravel())
+                    correlation = numpy.abs(correlation)
+                    scores[region].append((correlation, column, feature))
+                    if p_value < spearman_threshold and correlation > correlation_threshold:
+                        print(region, column, feature, correlation)
+                        if entropy(data[column]) > entropy(data[feature]):
+                            extremely_correlated[region].add(feature)
+                        else:
+                            extremely_correlated[region].add(column)
+
+            print(
+                colored(f'\rApplied Spearman for feature-feature correlation for {region},'
+                        f' {len(extremely_correlated[region])} useless features are found', 'green'))
+
+        return extremely_correlated, scores
+
     def apply_boruta(self, max_iter: int = 10, threshold: float = 0.05, max_depth: int = 5) -> Dict[str, set]:
         features_to_drop = {
             region: set() for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]
