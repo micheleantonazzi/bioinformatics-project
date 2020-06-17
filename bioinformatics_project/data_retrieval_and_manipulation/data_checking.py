@@ -8,7 +8,7 @@ from sklearn.metrics import euclidean_distances
 from termcolor import colored
 from prince import MFA
 from tqdm import tqdm
-from tsnecuda import TSNE
+#from tsnecuda import TSNE
 from sklearn.decomposition import PCA
 
 
@@ -107,12 +107,12 @@ class DataChecking:
             ]
             for nucleotide in nucleotides
         }, n_components=components, random_state=42).fit_transform(data)
-
+    '''
     def cannylab_tsne(self, data: numpy.ndarray, perplexity: int, dimensionality_threshold: int = 50):
         if data.shape[1] > dimensionality_threshold:
             data = self.pca(data, components=dimensionality_threshold)
         return TSNE(perplexity=perplexity, random_seed=42).fit_transform(data)
-
+    '''
     def _get_data_decomposition_task(self):
         return {
             "x": [
@@ -170,7 +170,7 @@ class DataChecking:
                                                                      'verticalalignment': 'baseline',
                                                                      'horizontalalignment': 'center'})
         show()
-
+    '''
     def apply_mfa(self):
         tasks = {
             "x": [
@@ -228,4 +228,5 @@ class DataChecking:
                                                                           'horizontalalignment': 'center'})
             fig.tight_layout()
             show()
+    '''
 
