@@ -1,3 +1,4 @@
+import os
 from typing import Dict
 
 from epigenomic_dataset import load_epigenomes
@@ -167,3 +168,12 @@ class DataRetrieval:
     def get_sequence_data(self) -> Dict[str, pandas.DataFrame]:
         return {DataRetrieval.KEY_PROMOTERS: self._promoters_data[DataRetrieval.KEY_SEQUENCE],
                 DataRetrieval.KEY_ENHANCERS: self._enhancers_data[DataRetrieval.KEY_SEQUENCE]}
+
+    def save_epigenomic_data_to_csv(self):
+        os.mkdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data'))
+        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC].to_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data', 'promoters_epigenomic_data_processed.csv.gz'))
+        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC].to_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data', 'enhancers_epigenomic_data_processed.csv.gz'))
+
+    def load_epigenomic_data_from_csv(self):
+        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = pandas.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data', 'promoters_epigenomic_data_processed.csv.gz'), index_col=['chrom', 'chromStart', 'chromEnd', 'strand'])
+        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = pandas.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data', 'enhancers_epigenomic_data_processed.csv.gz'), index_col=['chrom', 'chromStart', 'chromEnd', 'strand'])
