@@ -123,13 +123,17 @@ class DataRetrieval:
                      if col in self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC]]
         )
 
-        self
-
     def set_promoters_epigenomic_data(self, new_data: pandas.DataFrame):
         self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = new_data
 
     def set_enhancers_epigenomic_data(self, new_data: pandas.DataFrame):
         self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = new_data
+
+    def set_epigenomic_data(self, region: str, data: pandas.DataFrame):
+        if region == DataRetrieval.KEY_PROMOTERS:
+            self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = data
+        elif region == DataRetrieval.KEY_ENHANCERS:
+            self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = data
 
     def get_promoters_data(self) -> Dict[str, pandas.DataFrame]:
         return self._promoters_data
