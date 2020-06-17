@@ -131,7 +131,7 @@ class DataPreprocessing:
 
         return uncorrelated
 
-    def apply_mic(self, correlation_threshold: float = 0.05) -> Dict[str, set]:
+    def apply_mic(self, correlation_threshold: float = 0.01) -> Dict[str, set]:
         uncorrelated = {
             region: set() for region in self._data.get_epigenomic_data().keys()
         }
@@ -142,6 +142,7 @@ class DataPreprocessing:
                 mine = MINE()
                 mine.compute_score(data[column].values.ravel(), self._data.get_labels()[region].values.ravel())
                 score = mine.mic()
+                print(score)
 
                 if score < correlation_threshold:
                     uncorrelated[region].add(column)
