@@ -19,9 +19,11 @@ class DataRetrieval:
     def __init__(self, cell_line: str = 'HEK293', window_size: int = 200):
         self._cell_line: str = cell_line
         self._window_size: int = window_size
-        self._promoters_data: Dict[str, pandas.DataFrame] = {DataRetrieval.KEY_EPIGENOMIC: None, DataRetrieval.KEY_SEQUENCE: None,
+        self._promoters_data: Dict[str, pandas.DataFrame] = {DataRetrieval.KEY_EPIGENOMIC: None,
+                                                             DataRetrieval.KEY_SEQUENCE: None,
                                                              DataRetrieval.KEY_LABELS: None}
-        self._enhancers_data: Dict[str, pandas.DataFrame] = {DataRetrieval.KEY_EPIGENOMIC: None, DataRetrieval.KEY_SEQUENCE: None,
+        self._enhancers_data: Dict[str, pandas.DataFrame] = {DataRetrieval.KEY_EPIGENOMIC: None,
+                                                             DataRetrieval.KEY_SEQUENCE: None,
                                                              DataRetrieval.KEY_LABELS: None}
         self._genome: Genome = None
 
@@ -169,11 +171,28 @@ class DataRetrieval:
         return {DataRetrieval.KEY_PROMOTERS: self._promoters_data[DataRetrieval.KEY_SEQUENCE],
                 DataRetrieval.KEY_ENHANCERS: self._enhancers_data[DataRetrieval.KEY_SEQUENCE]}
 
+    def check_exists_data_preprocessed(self) -> bool:
+        return os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data',
+                                           'promoters_epigenomic_data_processed.csv.gz')) and os.path.exists(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data',
+                         'enhancers_epigenomic_data_processed.csv.gz'))
+
     def save_epigenomic_data_to_csv(self):
         os.mkdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data'))
-        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC].to_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data', 'promoters_epigenomic_data_processed.csv.gz'))
-        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC].to_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data', 'enhancers_epigenomic_data_processed.csv.gz'))
+        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC].to_csv(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data',
+                         'promoters_epigenomic_data_processed.csv.gz'))
+        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC].to_csv(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data',
+                         'enhancers_epigenomic_data_processed.csv.gz'))
 
     def load_epigenomic_data_from_csv(self):
-        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = pandas.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data', 'promoters_epigenomic_data_processed.csv.gz'), index_col=['chrom', 'chromStart', 'chromEnd', 'strand'])
-        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = pandas.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data', 'enhancers_epigenomic_data_processed.csv.gz'), index_col=['chrom', 'chromStart', 'chromEnd', 'strand'])
+        self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = pandas.read_csv(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data',
+                         'promoters_epigenomic_data_processed.csv.gz'),
+            index_col=['chrom', 'chromStart', 'chromEnd', 'strand'])
+        self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = pandas.read_csv(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprocessed_data',
+                         'enhancers_epigenomic_data_processed.csv.gz'),
+            index_col=['chrom', 'chromStart', 'chromEnd', 'strand'])
+        print(colored('Epigenomic data saved to csv', 'green'))

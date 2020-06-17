@@ -186,7 +186,7 @@ class DataPreprocessing:
 
         return extremely_correlated, scores
 
-    def apply_boruta(self, max_iter: int = 10, threshold: float = 0.05, max_depth: int = 5):
+    def apply_boruta(self, max_iter: int = 10, threshold: float = 0.05, max_depth: int = 5) -> Dict[str, set]:
         features_to_drop = {
             region: set() for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]
         }
@@ -206,4 +206,4 @@ class DataPreprocessing:
             features_to_drop[region] = {data.columns[i] for i in range(len(boruta_selector.support_)) if
                                         boruta_selector.support_[i] == False}
 
-        self._data.remove_uncorrelated_features(features_to_drop)
+        return features_to_drop
