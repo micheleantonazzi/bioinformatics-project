@@ -1,5 +1,5 @@
 from pytest import fail
-from bioinformatics_project.data_retrieval_and_manipulation.data_checking import DataChecking
+from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing import DataPreprocessing
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 
 data_retrieval = DataRetrieval()
@@ -34,65 +34,45 @@ def test_extract_enhancers_sequence_data():
     assert len(enhancers_sequence_data) == 5
 
 
-def test_check_sample_features_imbalance():
+def test_constant_features():
     try:
-        DataChecking(data_retrieval).check_sample_features_imbalance()
-    except:
-        fail('Unexpected exception')
-
-
-def test_check_nan_values():
-    try:
-        DataChecking(data_retrieval).check_nan_values()
+        DataPreprocessing(data_retrieval).drop_constant_features()
     except:
         fail('Unexpected exception')
 
 
 def test_fill_nan():
     promoters_data = data_retrieval.get_promoters_epigenomic_data()
-    data_checking = DataChecking(data_retrieval)
+    data_pre = DataPreprocessing(data_retrieval)
     assert promoters_data.isna().values.sum() == 1
-    assert data_checking.fill_nan_promoters_epigenomic_data().isna().values.sum() == data_retrieval.get_promoters_epigenomic_data().isna().values.sum() == 0
-
-
-def test_check_class_imbalance():
-    try:
-        DataChecking(data_retrieval).check_class_imbalance()
-    except:
-        fail('Unexpected exception')
-
-
-def test_constant_features():
-    try:
-        DataChecking(data_retrieval).check_constant_features()
-    except:
-        fail('Unexpected exception')
+    data_pre.fill_nan_data()
+    assert data_retrieval.get_promoters_epigenomic_data().isna().values.sum() == 0
 
 
 def test_z_scoring():
     try:
-        DataChecking(data_retrieval).apply_z_scoring()
+        DataPreprocessing(data_retrieval).apply_z_scoring()
     except:
         fail('Unexpected exception')
 
 
 def test_pearson_spearman_correlation():
     try:
-        data_checking = DataChecking(data_retrieval)
+        data_pre = DataPreprocessing(data_retrieval)
 
-        pearson = data_checking.apply_pearson_correlation()
+        pearson = data_pre.apply_pearson_correlation()
         assert len(pearson[DataRetrieval.KEY_PROMOTERS]) + len(pearson[DataRetrieval.KEY_ENHANCERS]) == 37
 
-        spearman = data_checking.apply_spearman_correlation()
+        spearman = data_pre.apply_spearman_correlation()
         assert len(spearman[DataRetrieval.KEY_PROMOTERS]) + len(spearman[DataRetrieval.KEY_ENHANCERS]) == 33
     except:
         fail('Unexpected exception')
 
 
-def test_mic():
+def test_mic_and_remove_features():
     try:
-        data_checking = DataChecking(data_retrieval)
-        mic = data_checking.apply_mic(data_checking.apply_pearson_spearman_correlation())
+        data_pre = DataPreprocessing(data_retrieval)
+        mic = data_pre.apply_mic(data_pre.apply_pearson_spearman_correlation())
         assert len(mic['promoters']) + len(mic['enhancers']) == 44
 
         promoters_data_columns = len(data_retrieval.get_promoters_epigenomic_data().columns)
@@ -107,26 +87,17 @@ def test_mic():
         fail('Unexpected exception')
 
 
-def test_features_correlation():
+def test_feature_feature_correlation():
     try:
-        extremely_correlated, scores = DataChecking(data_retrieval).apply_pearson_for_features_correlation()
+        extremely_correlated, scores = DataPreprocessing(data_retrieval).apply_pearson_for_features_correlation()
         assert len(extremely_correlated[DataRetrieval.KEY_PROMOTERS]) == \
                len(extremely_correlated[DataRetrieval.KEY_ENHANCERS]) == 0
-
-        DataChecking(data_retrieval).print_scatter_plot(scores)
-    except:
-        fail('Unexpected exception')
-
-def test_features_distribution():
-    try:
-        DataChecking(data_retrieval).print_features_different_active_inactive()
-        DataChecking(data_retrieval).print_pair_features_different()
     except:
         fail('Unexpected exception')
 
 
 def test_boruta():
     try:
-        DataChecking(data_retrieval).apply_boruta(5)
+        DataPreprocessing(data_retrieval).apply_boruta(5)
     except:
         fail('Unexpected exception')
