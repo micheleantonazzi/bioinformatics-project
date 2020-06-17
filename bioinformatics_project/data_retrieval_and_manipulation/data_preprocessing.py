@@ -115,7 +115,8 @@ class DataPreprocessing:
 
         return uncorrelated
 
-    def apply_mic_on_selected_features(self, uncorrelated: Dict[str, set], correlation_threshold: float = 0.05) -> Dict[str, set]:
+    def apply_mic_on_selected_features(self, uncorrelated: Dict[str, set], correlation_threshold: float = 0.05) -> Dict[
+        str, set]:
         for region, data in self._data.get_epigenomic_data().items():
             for column in tqdm(uncorrelated[region], desc=f'Running MIC test for {region} data', dynamic_ncols=True,
                                leave=False):
@@ -186,7 +187,9 @@ class DataPreprocessing:
         return extremely_correlated, scores
 
     def apply_boruta(self, max_iter: int = 10, threshold: float = 0.05, max_depth: int = 5):
-        irrelevant_features = {}
+        features_to_drop = {
+            region: set() for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]
+        }
         for region, data in tqdm(
                 self._data.get_epigenomic_data().items(),
                 desc="Running Baruta Feature estimation"
@@ -194,12 +197,13 @@ class DataPreprocessing:
             boruta_selector = BorutaPy(
                 RandomForestClassifier(n_jobs=cpu_count(), class_weight='balanced', max_depth=max_depth),
                 n_estimators='auto',
-                verbose=2,
+                verbose=1,
                 alpha=threshold,
                 max_iter=max_iter,
                 random_state=42
             )
-            irrelevant_features[region] = boruta_selector.fit(data.values,
-                                                              self._data.get_labels()[region].values.ravel()).transform(
-                data.values)
-        return irrelevant_features
+            boruta_selector.fit(data.values, self._data.get_labels()[region].values.ravel())
+            features_to_drop[region] = {data.columns[i] for i in range(len(boruta_selector.support_)) if
+                                        boruta_selector.support_[i] == False}
+
+        self._data.remove_uncorrelated_features(features_to_drop)
