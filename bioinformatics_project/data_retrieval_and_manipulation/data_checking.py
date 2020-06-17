@@ -33,7 +33,7 @@ class DataChecking:
             axis.set_title(f'Number of samples for {region}')
         fig.show()
 
-    def print_correlated_feature(self, features: Dict[str, list]):
+    def print_correlated_feature(self, features: Dict[str, list], method: str):
         features = {
             region: sorted(score, key=lambda x: numpy.abs(x[0]), reverse=True)
             for region, score in features.items()
@@ -46,7 +46,7 @@ class DataChecking:
                 data[columns],
                 self._data.get_labels()[region],
             ], axis=1), hue=self._data.get_labels()[region].columns[0])
-            grid.fig.suptitle(f'Most correlated features for {region}')
+            grid.fig.suptitle(f'Most correlated features for {region} found with {method} method')
             show()
 
             _, firsts, seconds = list(zip(*features[region][-2:]))
@@ -55,7 +55,7 @@ class DataChecking:
                 data[columns],
                 self._data.get_labels()[region],
             ], axis=1), hue=self._data.get_labels()[region].columns[0])
-            grid.fig.suptitle(f'Most uncorrelated features for {region}')
+            grid.fig.suptitle(f'Most uncorrelated features for {region} found with {method} method')
             show()
 
     def print_features_different_active_inactive(self, features_number: int = 5):
