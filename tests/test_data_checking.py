@@ -15,8 +15,7 @@ data_preprocessing = DataPreprocessing(data_retrieval)
 data_preprocessing.drop_constant_features()
 data_preprocessing.fill_nan_data()
 data_preprocessing.apply_z_scoring()
-uncorrelated = data_preprocessing.apply_pearson_spearman_correlation()
-uncorrelated, scores = data_preprocessing.apply_mic(uncorrelated)
+correlated, scores = data_preprocessing.apply_pearson_for_features_correlation()
 
 
 def test_check_sample_features_imbalance():
@@ -46,28 +45,10 @@ def test_print_features_different_active_inactive():
     except:
         fail('Unexpected exception')
 
+
 def test_print_pair_features_different():
     try:
         DataChecking(data_retrieval).print_pair_features_different()
-    except:
-        fail('Unexpected exception')
-
-
-
-
-
-
-
-
-
-
-
-
-
-def test_features_distribution():
-    try:
-        DataPreprocessing(data_retrieval).print_features_different_active_inactive()
-        DataPreprocessing(data_retrieval).print_pair_features_different()
     except:
         fail('Unexpected exception')
 
