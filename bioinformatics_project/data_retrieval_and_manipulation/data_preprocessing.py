@@ -115,7 +115,7 @@ class DataPreprocessing:
 
         return uncorrelated
 
-    def apply_mic(self, uncorrelated: Dict[str, set], correlation_threshold: float = 0.05) -> Dict[str, set]:
+    def apply_mic_on_selected_features(self, uncorrelated: Dict[str, set], correlation_threshold: float = 0.05) -> Dict[str, set]:
         for region, data in self._data.get_epigenomic_data().items():
             for column in tqdm(uncorrelated[region], desc=f'Running MIC test for {region} data', dynamic_ncols=True,
                                leave=False):
@@ -125,6 +125,25 @@ class DataPreprocessing:
 
                 if score >= correlation_threshold:
                     uncorrelated[region].remove(column)
+
+            print(colored(f'\rApplied MIC test for {region}, {len(uncorrelated[region])} features are found', 'green'))
+
+        return uncorrelated
+
+    def apply_mic(self, correlation_threshold: float = 0.05) -> Dict[str, set]:
+        uncorrelated = {
+            region: set() for region in self._data.get_epigenomic_data().keys()
+        }
+
+        for region, data in self._data.get_epigenomic_data().items():
+            for column in tqdm(data.columns, desc=f'Running MIC test for {region} data', dynamic_ncols=True,
+                               leave=False):
+                mine = MINE()
+                mine.compute_score(data[column].values.ravel(), self._data.get_labels()[region].values.ravel())
+                score = mine.mic()
+
+                if score < correlation_threshold:
+                    uncorrelated[region].add(column)
 
             print(colored(f'\rApplied MIC test for {region}, {len(uncorrelated[region])} features are found', 'green'))
 
