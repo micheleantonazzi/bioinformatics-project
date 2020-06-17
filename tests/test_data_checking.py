@@ -51,11 +51,3 @@ def test_print_pair_features_different():
         DataChecking(data_retrieval).print_pair_features_different()
     except:
         fail('Unexpected exception')
-
-
-def test_pca():
-    try:
-        DataChecking(data_retrieval).apply_pca()
-    except:
-        fail('Unexpected exception')
-
