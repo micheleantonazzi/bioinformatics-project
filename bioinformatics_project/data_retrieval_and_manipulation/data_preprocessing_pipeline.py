@@ -30,7 +30,7 @@ class DataPreprocessingPipeline:
             data_retrieval.remove_uncorrelated_features(uncorrelated)
             uncorrelated = data_preprocessing.apply_mic()
             data_retrieval.remove_uncorrelated_features(uncorrelated)
-            uncorrelated = data_preprocessing.apply_pearson_for_features_correlation()
+            uncorrelated, _ = data_preprocessing.apply_pearson_for_features_correlation()
             data_retrieval.remove_uncorrelated_features(uncorrelated)
             uncorrelated = data_preprocessing.apply_boruta(200)
             data_retrieval.remove_uncorrelated_features(uncorrelated)
