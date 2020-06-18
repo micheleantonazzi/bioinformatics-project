@@ -3,7 +3,7 @@ from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing i
 from bioinformatics_project.data_retrieval_and_manipulation.data_checking import DataChecking
 from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing_pipeline import DataPreprocessingPipeline
 
-data = DataPreprocessingPipeline().execute_v1()
+data = DataPreprocessingPipeline().execute_v2()
 print(data.get_epigenomic_data())
 
 

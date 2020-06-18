@@ -10,3 +10,4 @@ __pycache__
 coverage.xml
 datasets/
 genomes/
+preprocessed_data_v*/
