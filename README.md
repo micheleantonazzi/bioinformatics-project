@@ -109,30 +109,3 @@ Multiple factor analysis (MFA) is used to view data organized into subgroups. Th
 [3] Kelley DR, Snoek J, Rinn JL. 2016. Basset: learning the regulatory code of the accessible genome with deep convolutional neural networks.
 
 [4] David R. Kelley, Yakir A. Reshef,2 Maxwell Bileschi, David Belanger, Cory Y. McLean, and Jasper Snoek. "Sequential regulatory activity prediction across chromosomes with convolutional neural networks"
-
-
-Starting loading promoters epigenomic data of HEK293 cell line with window size of 200
-Data obtained: promoters epigenomic data and labels
-Starting loading enhancers epigenomic data of HEK293 cell line with window size of 200
-Data obtained: enhancers epigenomic data and labels
-Starting loading genome sequence of hg19
-Data obtained: genome sequence of Human, Homo sapiens, hg19, 2009-02-17, 25 chromosomes
-Starting extracting promoters sequence data
-Data loading: promoters sequence data
-Starting extracting enhancers sequence data
-Data loading: enhancers sequence data
-Data have not been already preprocessed, starting preprocess procedure
-In promoters data are found 1 NaN values, they are substituted with the mean
-In enhancers data are found 0 NaN values
-In promoters data no constant features were found
-In enhancers data no constant features were found
-Applied Pearson and Spearman test for promoters, 12 features are found
-Applied Pearson and Spearman test for enhancers, 32 features are found
-Applied MIC test for promoters, 23 features are found
-Applied MIC test for enhancers, 26 features are found
-Applied Pearson for feature-feature correlation for promoters, 0 useless features are found
-Applied Pearson for feature-feature correlation for enhancers, 0 useless features are found
-Running Baruta Feature estimation: 100%|██████████| 2/2 [1:47:52<00:00, 3236.01s/it]
-The initial amount of features for promoters was 207, after preprocessing it is 171
-The initial amount of features for enhancers was 207, after preprocessing it is 115
-

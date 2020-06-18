@@ -127,7 +127,7 @@ class DataPreprocessing:
                 if score >= correlation_threshold:
                     uncorrelated[region].remove(column)
 
-            print(colored(f'\rApplied MIC test for {region}, {len(uncorrelated[region])} features are found', 'green'))
+            print(colored(f'\rApplied MIC test on selected features for {region}, {len(uncorrelated[region])} features are found', 'green'))
 
         return uncorrelated
 
@@ -235,7 +235,7 @@ class DataPreprocessing:
             boruta_selector = BorutaPy(
                 RandomForestClassifier(n_jobs=cpu_count(), class_weight='balanced', max_depth=max_depth),
                 n_estimators='auto',
-                verbose=0,
+                verbose=2,
                 alpha=threshold,
                 max_iter=max_iter,
                 random_state=42
