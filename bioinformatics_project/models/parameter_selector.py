@@ -29,7 +29,7 @@ class ParameterSelector:
         print(colored(f'Starting calculating best parameters for {model_type}', 'red'))
         if model_type == DECISION_TREE:
             parameters = dict(
-                max_depth=[2, 5, 10, 20, 30, 50, 100, 150, 200, 300, 400, None],
+                max_depth=[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 400, None],
                 class_weight=[None, "balanced"]
             )
             for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():

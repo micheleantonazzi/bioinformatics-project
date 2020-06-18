@@ -2,10 +2,13 @@ from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval impor
 from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing import DataPreprocessing
 from bioinformatics_project.data_retrieval_and_manipulation.data_checking import DataChecking
 from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing_pipeline import DataPreprocessingPipeline
+from bioinformatics_project.models.parameter_selector import ParameterSelector
+from bioinformatics_project.models.models_type import *
 
-data = DataPreprocessingPipeline().execute_v2()
-print(data.get_epigenomic_data())
+data_retrieval = DataRetrieval()
+DataPreprocessingPipeline(data_retrieval).execute_v1()
 
+ParameterSelector(data_retrieval).get_best_parameters(DECISION_TREE)
 
 
 
