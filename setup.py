@@ -81,6 +81,7 @@ setup(
                       "minepy",
                       "seaborn",
                       "Boruta",
-                      "prince"],
+                      "prince",
+                      "pickle-mixin"],
     extras_require=extras,
 )
