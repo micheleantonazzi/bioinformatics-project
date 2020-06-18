@@ -131,18 +131,19 @@ class DataPreprocessing:
 
         return uncorrelated
 
-    def apply_mic(self, correlation_threshold: float = 0.01) -> Dict[str, set]:
+    def apply_mic(self, correlation_threshold: float = 0.02) -> Dict[str, set]:
         uncorrelated = {
             region: set() for region in self._data.get_epigenomic_data().keys()
         }
 
         for region, data in self._data.get_epigenomic_data().items():
+            if region == DataRetrieval.KEY_ENHANCERS:
+                correlation_threshold = 0.01
             for column in tqdm(data.columns, desc=f'Running MIC test for {region} data', dynamic_ncols=True,
                                leave=False):
                 mine = MINE()
                 mine.compute_score(data[column].values.ravel(), self._data.get_labels()[region].values.ravel())
                 score = mine.mic()
-                print(score)
 
                 if score < correlation_threshold:
                     uncorrelated[region].add(column)
@@ -234,7 +235,7 @@ class DataPreprocessing:
             boruta_selector = BorutaPy(
                 RandomForestClassifier(n_jobs=cpu_count(), class_weight='balanced', max_depth=max_depth),
                 n_estimators='auto',
-                verbose=1,
+                verbose=0,
                 alpha=threshold,
                 max_iter=max_iter,
                 random_state=42
