@@ -18,7 +18,7 @@ class ParameterSelector:
         if not os.path.exists(path):
             os.mkdir(path)
 
-        path = os.path.join(path, DECISION_TREE + '.pkl')
+        path = os.path.join(path, model_type + '.pkl')
         if os.path.exists(path):
             print(colored(f'Loading best parameters for {model_type} from file', 'green'))
             with open(path, 'rb') as f:
