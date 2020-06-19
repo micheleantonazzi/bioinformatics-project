@@ -20,7 +20,8 @@ class ParameterSelector:
         return {
             DECISION_TREE: self.get_decision_tree_parameters,
             RANDOM_FOREST: self.get_random_forest_parameters,
-            PERCEPTRON: self.get_perceptron_parameters
+            PERCEPTRON: self.get_perceptron_parameters,
+            MLP: self.get_mlp_parameters
         }
 
     def load_parameters_from_disk(self, model_type: str):
@@ -103,4 +104,21 @@ class ParameterSelector:
             print(colored(f'Best {PERCEPTRON} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
+    def get_mlp_parameters(self):
+        parameters = dict(
+            epochs=1000,
+            batch_size=1024,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=False,
+            callbacks=[
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+                TQDMNotebookCallback(leave_outer=False)
+            ]
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {MLP} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
 
