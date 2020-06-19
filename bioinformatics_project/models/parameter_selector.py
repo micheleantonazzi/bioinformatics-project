@@ -29,8 +29,10 @@ class ParameterSelector:
         print(colored(f'Starting calculating best parameters for {model_type}', 'red'))
         if model_type == DECISION_TREE:
             parameters = dict(
-                max_depth=[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 400, None],
-                class_weight=[None, "balanced"]
+                max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, None],
+                class_weight=[None, 'balanced'],
+                random_state=[42],
+                criterion=['gini', 'entropy']
             )
             for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():
                 random_search = GridSearchCV(DecisionTreeClassifier(), parameters, scoring="balanced_accuracy", n_jobs=8)
