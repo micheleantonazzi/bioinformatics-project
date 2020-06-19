@@ -6,11 +6,9 @@ from bioinformatics_project.models.parameter_selector import ParameterSelector
 from bioinformatics_project.models.models_type import *
 
 data_retrieval = DataRetrieval()
-DataPreprocessingPipeline(data_retrieval).execute_v1()
+DataPreprocessingPipeline(data_retrieval).execute_v2()
 
-ParameterSelector(data_retrieval).get_best_parameters(DECISION_TREE)
-
-
-
-
+functions = ParameterSelector(data_retrieval).get_functions()
+for model, function in functions.items():
+    function()
 
