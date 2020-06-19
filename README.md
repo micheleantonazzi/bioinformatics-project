@@ -100,6 +100,15 @@ Multiple factor analysis (MFA) is used to view data organized into subgroups. Th
 
 
 
+## Metrics
+
+* accurancy: is the ration between the correct predictions and the total number samples.
+* balaned accurancy: this metric is particularly useful when the test set in unbalanced. In particular, it is calculated as the average of the correct prediction for each class.
+* auPRC: the area under precision recall curve is a useful measure of success of prediction when the classes are very imbalanced. The precision-recall curve shows the tradeoff between precision and recall for different threshold. A high area under the curve represents both high recall and high precision, where high precision relates to a low false positive rate, and high recall relates to a low false negative rate. The auPRC value is between 0 and 1 and an high value denotes a good predictor.
+* auROC: the area under receiver operating characteristic is a metric specific for binary classification tasks. It indicates the fraction between the true positive rate and the false positive rates. Differently form auPRC, its values is between 0.5 and 1.
+
+
+
 # Bibliography 
 
 [1] Yifeng Li, Wenqiang Shi, and Wyeth W. Wasserman. "Genome-wide prediction of cis-regulatory regions using supervised deep learning methods"

@@ -97,9 +97,7 @@ class ParameterSelector:
             shuffle=True,
             verbose=False,
             callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMProgressBar()
-            ]
+                EarlyStopping(monitor="val_loss", mode="min", patience=50)]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -115,9 +113,7 @@ class ParameterSelector:
             shuffle=True,
             verbose=False,
             callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMProgressBar()
-            ]
+                EarlyStopping(monitor="val_loss", mode="min", patience=50)]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
