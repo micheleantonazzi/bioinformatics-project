@@ -14,7 +14,9 @@ class ParameterSelector:
         self._data = data
 
     def get_best_parameters(self, model_type: str):
+        best_parameters = {}
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model_parameters')
+
         if not os.path.exists(path):
             os.mkdir(path)
 
@@ -22,24 +24,24 @@ class ParameterSelector:
         if os.path.exists(path):
             print(colored(f'Loading best parameters for {model_type} from file', 'green'))
             with open(path, 'rb') as f:
-                return pickle.load(f)
+                best_parameters = pickle.load(f)
+        else:
+            print(colored(f'Starting calculating best parameters for {model_type}', 'red'))
+            if model_type == DECISION_TREE:
+                parameters = dict(
+                    max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, None],
+                    class_weight=[None, 'balanced'],
+                    random_state=[42],
+                    criterion=['gini', 'entropy']
+                )
+                for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():
+                    random_search = GridSearchCV(DecisionTreeClassifier(), parameters, scoring="balanced_accuracy", n_jobs=8)
+                    random_search.fit(data, labels)
+                    best_parameters[region] = {name: value for name, value in random_search.best_params_.items()}
+                    best_parameters[region]['best_score'] = random_search.best_score_
 
-        best_parameters = {region: dict() for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]}
-
-        print(colored(f'Starting calculating best parameters for {model_type}', 'red'))
-        if model_type == DECISION_TREE:
-            parameters = dict(
-                max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, None],
-                class_weight=[None, 'balanced'],
-                random_state=[42],
-                criterion=['gini', 'entropy']
-            )
-            for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():
-                random_search = GridSearchCV(DecisionTreeClassifier(), parameters, scoring="balanced_accuracy", n_jobs=8)
-                random_search.fit(data, labels)
-                print(f'For {region} the best parameters for {model_type} are {random_search.best_params_} with accurancy of {random_search.best_score_}')
-                best_parameters[region] = {name: value for name, value in random_search.best_params_.items()}
-                best_parameters[region]['best_score'] = random_search.best_score_
-
-        with open(path, 'wb') as f:
-            pickle.dump(best_parameters, f, pickle.HIGHEST_PROTOCOL)
+            with open(path, 'wb') as f:
+                pickle.dump(best_parameters, f, pickle.HIGHEST_PROTOCOL)
+        for region, data in best_parameters.items():
+            print(colored(f'Best {model_type} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
