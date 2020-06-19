@@ -9,7 +9,6 @@ from sklearn.tree import DecisionTreeClassifier
 from termcolor import colored
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
-from bioinformatics_project.models.model_builder import ModelBuilder
 from bioinformatics_project.models.models_type import *
 
 
@@ -20,7 +19,8 @@ class ParameterSelector:
     def get_functions(self):
         return {
             DECISION_TREE: self.get_decision_tree_parameters,
-            RANDOM_FOREST: self.get_random_forest_parameters
+            RANDOM_FOREST: self.get_random_forest_parameters,
+            PERCEPTRON: self.get_perceptron_parameters
         }
 
     def load_parameters_from_disk(self, model_type: str):
@@ -83,6 +83,24 @@ class ParameterSelector:
 
         for region, data in best_parameters.items():
             print(colored(f'Best {RANDOM_FOREST} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
+    def get_perceptron_parameters(self):
+        parameters = dict(
+            epochs=1000,
+            batch_size=1024,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=False,
+            callbacks=[
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+                TQDMNotebookCallback(leave_outer=False)
+            ]
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {PERCEPTRON} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
 
