@@ -1,61 +1,57 @@
 from keras_tqdm import TQDMNotebookCallback
+from sklearn.ensemble import RandomForestClassifier
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Input
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.tree import DecisionTreeClassifier
 from tensorflow.python.keras.callbacks import EarlyStopping
 
+from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 from bioinformatics_project.models.models_type import *
 
 
 class ModelBuilder:
 
-    def __init__(self):
-        pass
+    def __init__(self, data: DataRetrieval):
+        self._data = data
 
-    def create_module(self, model_type: str):
-        if model_type == DECISION_TREE:
-            return DecisionTreeClassifier()
+    def get_functions(self):
+        return {
+            DECISION_TREE: self.create_decision_tree,
+            RANDOM_FOREST: self.create_random_forest,
+            PERCEPTRON: self.create_perceptron,
+            MLP: self.create_mlp
+        }
 
-        if model_type == PERCEPTRON:
-            perceptron = Sequential([
-                Input(shape=(191, )),
-                Dense(1, activation="sigmoid")
-            ], 'Perceptron')
+    def create_decision_tree(self, _, parameters):
+        return DecisionTreeClassifier(**parameters), {}
 
-            perceptron.compile(
-                optimizer='nadam',
-                loss='binary_crossentropy',
-                metrics=['accuracy']
-            )
-            parameters = dict(
-                epochs=1000,
-                batch_size=1024,
-                validation_split=0.1,
-                shuffle=True,
-                verbose=False,
-                callbacks=[
-                    EarlyStopping(monitor='val_loss', mode='min', patience=50),
-                    TQDMNotebookCallback(leave_outer=False)
-                ]
-            )
+    def create_random_forest(self, _, parameters):
+        return RandomForestClassifier(**parameters, n_jobs=-1), {}
 
-            return KerasClassifier(
-                build_fn=lambda: perceptron,
-                epochs=1000,
-                batch_size=1024,
-                validation_split=0.1,
-                shuffle=True,
-                verbose=False,
-                callbacks=[
-                    EarlyStopping(monitor='val_loss', mode='min', patience=50),
-                    TQDMNotebookCallback(leave_outer=False)
-                ]
-            )
+    def create_perceptron(self, region, parameters):
+        perceptron = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(1, activation="sigmoid")
+        ], "Perceptron")
 
+        perceptron.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy"
+        )
+        return perceptron, parameters
 
-    def create_model(self, type: str, parameters):
-        if type == DECISION_TREE:
-            return DecisionTreeClassifier(
-                **parameters
-            )
+    def create_mlp(self, region, parameters):
+        mlp = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(128, activation="relu"),
+            Dense(64, activation="relu"),
+            Dense(32, activation="relu"),
+            Dense(1, activation="sigmoid")
+        ], "MLP")
+
+        mlp.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy"
+        )
+        return mlp, parameters

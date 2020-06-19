@@ -6,6 +6,7 @@ from keras_tqdm import TQDMNotebookCallback
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
+from tensorflow_addons.callbacks import TQDMProgressBar
 from termcolor import colored
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
@@ -62,6 +63,7 @@ class ParameterSelector:
 
         for region, data in best_parameters.items():
             print(colored(f'Best {DECISION_TREE} parameters for {region}: ' + str(data), 'green'))
+            data.pop('best_score', None)
         return best_parameters
 
     def get_random_forest_parameters(self):
@@ -70,9 +72,9 @@ class ParameterSelector:
         if best_parameters is None:
             print(colored(f'Starting calculating best parameters for {RANDOM_FOREST}', 'red'))
             parameters = dict(
-                n_estimators=[10, 20, 50, 70, 100, 200],
-                max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, None],
-                class_weight=['balanced', None],
+                n_estimators=[60, 70, 80, 90, 100, 110, 120, 130, 140],
+                max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14],
+                class_weight=['balanced'],
             )
             for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():
                 grid_search = GridSearchCV(estimator=RandomForestClassifier(), param_grid=parameters, n_jobs=-1)
@@ -84,6 +86,7 @@ class ParameterSelector:
 
         for region, data in best_parameters.items():
             print(colored(f'Best {RANDOM_FOREST} parameters for {region}: ' + str(data), 'green'))
+            data.pop('best_score', None)
         return best_parameters
 
     def get_perceptron_parameters(self):
@@ -95,7 +98,7 @@ class ParameterSelector:
             verbose=False,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMNotebookCallback(leave_outer=False)
+                TQDMProgressBar()
             ]
         )
 
@@ -113,7 +116,7 @@ class ParameterSelector:
             verbose=False,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMNotebookCallback(leave_outer=False)
+                TQDMProgressBar()
             ]
         )
 
