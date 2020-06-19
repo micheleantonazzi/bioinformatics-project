@@ -82,6 +82,7 @@ setup(
                       "seaborn",
                       "Boruta",
                       "prince",
-                      "pickle-mixin"],
+                      "pickle-mixin",
+                      "tensorflow_addons"],
     extras_require=extras,
 )
