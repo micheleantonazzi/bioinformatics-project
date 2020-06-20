@@ -25,7 +25,7 @@ class ParameterSelector:
             MLP: self.get_mlp_parameters
         }
 
-    def load_parameters_from_disk(self, model_type: str):
+    def load_parameters_from_disk(self, model_type: str) -> dict:
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model_parameters')
 
         if not os.path.exists(path):
@@ -37,7 +37,7 @@ class ParameterSelector:
             with open(path, 'rb') as f:
                 return pickle.load(f)
         else:
-            return None
+            return {}
 
     def save_parameters_to_disk(self, model_type: str, best_parameters):
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model_parameters', model_type + '.pkl')
@@ -47,7 +47,7 @@ class ParameterSelector:
     def get_decision_tree_parameters(self):
         best_parameters = self.load_parameters_from_disk(DECISION_TREE)
 
-        if best_parameters is None:
+        if len(best_parameters.keys()) == 0:
             print(colored(f'Starting calculating best parameters for {DECISION_TREE}', 'red'))
             parameters = dict(
                 max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, None],
@@ -69,7 +69,7 @@ class ParameterSelector:
     def get_random_forest_parameters(self):
         best_parameters = self.load_parameters_from_disk(RANDOM_FOREST)
 
-        if best_parameters is None:
+        if len(best_parameters.keys()) == 0:
             print(colored(f'Starting calculating best parameters for {RANDOM_FOREST}', 'red'))
             parameters = dict(
                 n_estimators=[60, 70, 80, 90, 100, 110, 120, 130, 140],
