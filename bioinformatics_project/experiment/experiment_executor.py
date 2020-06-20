@@ -36,7 +36,7 @@ class ExperimentExecutor:
         }
 
     def save_results(self, region: str, model_name: str, results: list):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), region)
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results', region)
         if not os.path.exists(path):
             os.mkdir(path)
 
@@ -45,7 +45,7 @@ class ExperimentExecutor:
             pickle.dump(results, f, pickle.HIGHEST_PROTOCOL)
 
     def load_results(self, region: str, model_name: str):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), region, model_name + '.pkl')
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results', region, model_name + '.pkl')
         if os.path.exists(path):
             with open(path, 'rb') as f:
                 return pickle.load(f)
