@@ -52,14 +52,15 @@ class ExperimentExecutor:
 
         return []
 
-    def print_results(self, results: pandas.DataFrame):
+    def print_results(self, region: str, results: pandas.DataFrame):
         results.drop(columns=['holdout', 'region'])
         barplots(
             results,
             groupby=["model", "run_type"],
             show_legend=False,
             height=4,
-            orientation="horizontal"
+            orientation="horizontal",
+            path='experiment/plots/' + region + '/{feature}.png'
         )
 
     def execute_promoters_epigenomic_experiment(self, region: str, splits: int = 50):
