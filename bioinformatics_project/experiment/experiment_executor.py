@@ -36,7 +36,11 @@ class ExperimentExecutor:
         }
 
     def save_results(self, region: str, model_name: str, results: list):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results', region)
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        path = os.path.join(path, region)
         if not os.path.exists(path):
             os.mkdir(path)
 
@@ -53,7 +57,7 @@ class ExperimentExecutor:
         return []
 
     def print_results(self, region: str, results: pandas.DataFrame):
-        results.drop(columns=['holdout', 'region'])
+        results = results.drop(columns=['holdout', 'region'])
         barplots(
             results,
             groupby=["model", "run_type"],

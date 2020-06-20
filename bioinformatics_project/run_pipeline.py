@@ -6,9 +6,9 @@ import tensorflow
 
 
 executor = ExperimentExecutor()
-ret = executor.execute_promoters_epigenomic_experiment(DataRetrieval.KEY_PROMOTERS, 1)
+ret = executor.execute_promoters_epigenomic_experiment(DataRetrieval.KEY_PROMOTERS)
 executor.print_results(DataRetrieval.KEY_PROMOTERS, ret)
 
-ret = executor.execute_promoters_epigenomic_experiment(DataRetrieval.KEY_ENHANCERS, 1)
+ret = executor.execute_promoters_epigenomic_experiment(DataRetrieval.KEY_ENHANCERS)
 executor.print_results(DataRetrieval.KEY_ENHANCERS, ret)
 
