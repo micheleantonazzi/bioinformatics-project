@@ -89,21 +89,17 @@ class ExperimentExecutor:
                                                       parameters_function[model_name]()[region])
 
                     model.fit(data[train], labels[train], **train_parameters)
-                    model_ = (
-                        model.__class__.__name__
-                        if model.__class__.__name__ != "Sequential"
-                        else model.name
-                    )
+
                     model_results.append({
                         'region': region,
-                        'model': model_,
+                        'model': model_name,
                         'run_type': 'train',
                         'holdout': i,
                         **self.calculate_metrics(labels[train], model.predict(data[train]))
                     })
                     model_results.append({
                         'region': region,
-                        'model': model_,
+                        'model': model_name,
                         'run_type': 'test',
                         'holdout': i,
                         **self.calculate_metrics(labels[test], model.predict(data[test]))

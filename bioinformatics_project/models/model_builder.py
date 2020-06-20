@@ -17,8 +17,8 @@ class ModelBuilder:
 
     def get_functions(self):
         return {
-            DECISION_TREE: self.create_decision_tree,
-            RANDOM_FOREST: self.create_random_forest,
+            DECISION_TREE_GRID: self.create_decision_tree,
+            RANDOM_FOREST_GRID: self.create_random_forest,
             PERCEPTRON: self.create_perceptron,
             MLP: self.create_mlp
         }

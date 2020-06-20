@@ -19,8 +19,8 @@ class ParameterSelector:
 
     def get_functions(self):
         return {
-            DECISION_TREE: self.get_decision_tree_parameters,
-            RANDOM_FOREST: self.get_random_forest_parameters,
+            DECISION_TREE_GRID: self.get_decision_tree_parameters_grid,
+            RANDOM_FOREST_GRID: self.get_random_forest_parameters_grid,
             PERCEPTRON: self.get_perceptron_parameters,
             MLP: self.get_mlp_parameters
         }
@@ -44,11 +44,11 @@ class ParameterSelector:
         with open(path, 'wb') as f:
             pickle.dump(best_parameters, f, pickle.HIGHEST_PROTOCOL)
 
-    def get_decision_tree_parameters(self):
-        best_parameters = self.load_parameters_from_disk(DECISION_TREE)
+    def get_decision_tree_parameters_grid(self):
+        best_parameters = self.load_parameters_from_disk(DECISION_TREE_GRID)
 
         if len(best_parameters.keys()) == 0:
-            print(colored(f'Starting calculating best parameters for {DECISION_TREE}', 'red'))
+            print(colored(f'Starting calculating best parameters for {DECISION_TREE_GRID}', 'red'))
             parameters = dict(
                 max_depth=[5, 10, 20, 35, 50, 65, 80, 100, None],
                 class_weight=[None, 'balanced'],
@@ -60,18 +60,18 @@ class ParameterSelector:
                 best_parameters[region] = {name: value for name, value in grid_search.best_params_.items()}
                 best_parameters[region]['best_score'] = grid_search.best_score_
 
-            self.save_parameters_to_disk(DECISION_TREE, best_parameters)
+            self.save_parameters_to_disk(DECISION_TREE_GRID, best_parameters)
 
         for region, data in best_parameters.items():
-            print(colored(f'Best {DECISION_TREE} parameters for {region}: ' + str(data), 'green'))
+            print(colored(f'Best {DECISION_TREE_GRID} parameters for {region}: ' + str(data), 'green'))
             data.pop('best_score', None)
         return best_parameters
 
-    def get_random_forest_parameters(self):
-        best_parameters = self.load_parameters_from_disk(RANDOM_FOREST)
+    def get_random_forest_parameters_grid(self):
+        best_parameters = self.load_parameters_from_disk(RANDOM_FOREST_GRID)
 
         if len(best_parameters.keys()) == 0:
-            print(colored(f'Starting calculating best parameters for {RANDOM_FOREST}', 'red'))
+            print(colored(f'Starting calculating best parameters for {RANDOM_FOREST_GRID}', 'red'))
             parameters = dict(
                 n_estimators=[50, 100, 150, 200, 300, 400, 500],
                 max_depth=[5, 10, 20, 35, 50, 65, 80, 100, None],
@@ -84,10 +84,10 @@ class ParameterSelector:
                 best_parameters[region] = {name: value for name, value in grid_search.best_params_.items()}
                 best_parameters[region]['best_score'] = grid_search.best_score_
 
-            self.save_parameters_to_disk(RANDOM_FOREST, best_parameters)
+            self.save_parameters_to_disk(RANDOM_FOREST_GRID, best_parameters)
 
         for region, data in best_parameters.items():
-            print(colored(f'Best {RANDOM_FOREST} parameters for {region}: ' + str(data), 'green'))
+            print(colored(f'Best {RANDOM_FOREST_GRID} parameters for {region}: ' + str(data), 'green'))
             data.pop('best_score', None)
         return best_parameters
 

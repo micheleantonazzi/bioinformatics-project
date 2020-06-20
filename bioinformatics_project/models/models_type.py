@@ -1,4 +1,4 @@
-DECISION_TREE: str = 'decision_tree'
-RANDOM_FOREST: str = 'random_forest'
-PERCEPTRON: str = 'perceptron'
+DECISION_TREE_GRID: str = 'DecisionTreeWithGrid'
+RANDOM_FOREST_GRID: str = 'RandomForestWithGrid'
+PERCEPTRON: str = 'Perceptron'
 MLP: str = 'MLP'
