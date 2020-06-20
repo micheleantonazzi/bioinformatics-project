@@ -50,11 +50,12 @@ class ParameterSelector:
         if len(best_parameters.keys()) == 0:
             print(colored(f'Starting calculating best parameters for {DECISION_TREE}', 'red'))
             parameters = dict(
-                max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, None],
+                max_depth=[5, 10, 20, 35, 50, 65, 80, 100, None],
                 class_weight=[None, 'balanced'],
             )
             for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():
-                grid_search = GridSearchCV(estimator=DecisionTreeClassifier(), param_grid=parameters, n_jobs=-1)
+                grid_search = GridSearchCV(estimator=DecisionTreeClassifier(), param_grid=parameters,
+                                           n_jobs=-1, scoring='balanced_accuracy')
                 grid_search.fit(data, labels)
                 best_parameters[region] = {name: value for name, value in grid_search.best_params_.items()}
                 best_parameters[region]['best_score'] = grid_search.best_score_
@@ -72,12 +73,13 @@ class ParameterSelector:
         if len(best_parameters.keys()) == 0:
             print(colored(f'Starting calculating best parameters for {RANDOM_FOREST}', 'red'))
             parameters = dict(
-                n_estimators=[60, 70, 80, 90, 100, 110, 120, 130, 140],
-                max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14],
+                n_estimators=[50, 100, 150, 200, 300, 400, 500],
+                max_depth=[5, 10, 20, 35, 50, 65, 80, 100, None],
                 class_weight=['balanced'],
             )
             for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():
-                grid_search = GridSearchCV(estimator=RandomForestClassifier(), param_grid=parameters, n_jobs=-1)
+                grid_search = GridSearchCV(estimator=RandomForestClassifier(), param_grid=parameters,
+                                           n_jobs=-1, scoring='balanced_accuracy')
                 grid_search.fit(data, labels)
                 best_parameters[region] = {name: value for name, value in grid_search.best_params_.items()}
                 best_parameters[region]['best_score'] = grid_search.best_score_
