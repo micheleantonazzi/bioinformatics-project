@@ -51,13 +51,16 @@ class ExperimentExecutor:
 
         return []
 
-    def execute_promoters_epigenomic_experiment(self, splits: int = 50):
+    def print_results(self, results: pandas.DataFrame):
+        pass
+
+    def execute_promoters_epigenomic_experiment(self, region: str, splits: int = 50):
         data_retrieval = DataRetrieval()
         DataPreprocessingPipeline(data_retrieval).execute_v2()
 
         holdouts = self.get_holdouts(splits)
 
-        data, labels = data_retrieval.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS]
+        data, labels = data_retrieval.get_epigenomic_data_for_learning()[region]
         parameters_function = ParameterSelector(data_retrieval).get_functions()
         models = ModelBuilder(data_retrieval).get_functions()
 
@@ -65,32 +68,31 @@ class ExperimentExecutor:
         for model_name, builder in tqdm(models.items(),
                                         total=len(models), desc="Training models", leave=False, dynamic_ncols=True):
 
-            model_results = self.load_results(DataRetrieval.KEY_PROMOTERS, model_name)
+            model_results = self.load_results(region, model_name)
 
             if len(model_results) < splits * 2:
                 for i, (train, test) in tqdm(enumerate(holdouts.split(data, labels)), total=splits,
                                              desc="Computing holdouts", dynamic_ncols=True):
-                    print(f'For {DataRetrieval.KEY_PROMOTERS} train {model_name}')
-                    model, train_parameters = builder(DataRetrieval.KEY_PROMOTERS,
-                                                      parameters_function[model_name]()[DataRetrieval.KEY_PROMOTERS])
+                    print(f'For {region} train {model_name}')
+                    model, train_parameters = builder(region,
+                                                      parameters_function[model_name]()[region])
 
                     model.fit(data[train], labels[train], **train_parameters)
                     model_results.append({
-                        'region': DataRetrieval.KEY_PROMOTERS,
+                        'region': region,
                         'model': model_name,
                         'run_type': 'train',
                         'holdout': i,
                         **self.calculate_metrics(labels[train], model.predict(data[train]))
                     })
                     model_results.append({
-                        'region': DataRetrieval.KEY_PROMOTERS,
+                        'region': region,
                         'model': model_name,
                         'run_type': 'test',
                         'holdout': i,
                         **self.calculate_metrics(labels[test], model.predict(data[test]))
                     })
-                print(model_results)
-                self.save_results(DataRetrieval.KEY_PROMOTERS, model_name, model_results)
+                self.save_results(region, model_name, model_results)
 
             results.append(model_results)
 
