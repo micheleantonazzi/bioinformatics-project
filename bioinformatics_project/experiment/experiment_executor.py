@@ -58,11 +58,12 @@ class ExperimentExecutor:
 
     def print_results(self, data_version: str, region: str, results: pandas.DataFrame):
         results = results.drop(columns=['holdout', 'region'])
+        height = len(results['model'].unique())
         barplots(
             results,
             groupby=["model", "run_type"],
             show_legend=False,
-            height=4,
+            height=height,
             orientation="horizontal",
             path='experiment/plots_' + data_version + '/' + region + '/{feature}.png'
         )
