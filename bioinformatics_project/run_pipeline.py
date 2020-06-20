@@ -9,7 +9,7 @@ data_retrieval = DataRetrieval()
 DataPreprocessingPipeline(data_retrieval).execute_v2()
 
 executor = ExperimentExecutor()
-executor.execute_promoters_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_PROMOTERS)
+executor.execute_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_PROMOTERS, 2)
 
-executor.execute_promoters_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_ENHANCERS)
+executor.execute_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_ENHANCERS, 2)
 

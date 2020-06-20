@@ -17,16 +17,16 @@ class ModelBuilder:
 
     def get_functions(self):
         return {
-            DECISION_TREE_GRID: self.create_decision_tree,
-            RANDOM_FOREST_GRID: self.create_random_forest,
+            DECISION_TREE_GRID: self.create_decision_tree_grid,
+            RANDOM_FOREST_GRID: self.create_random_forest_grid,
             PERCEPTRON: self.create_perceptron,
             MLP: self.create_mlp
         }
 
-    def create_decision_tree(self, _, parameters):
+    def create_decision_tree_grid(self, _, parameters):
         return DecisionTreeClassifier(**parameters), {}
 
-    def create_random_forest(self, _, parameters):
+    def create_random_forest_grid(self, _, parameters):
         return RandomForestClassifier(**parameters, n_jobs=-1), {}
 
     def create_perceptron(self, region, parameters):
