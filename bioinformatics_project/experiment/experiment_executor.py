@@ -68,7 +68,7 @@ class ExperimentExecutor:
             path='experiment/plots_' + data_version + '/' + region + '/{feature}.png'
         )
 
-    def execute_promoters_epigenomic_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 50):
+    def execute_epigenomic_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 50):
 
         holdouts = self.get_holdouts(splits)
 
