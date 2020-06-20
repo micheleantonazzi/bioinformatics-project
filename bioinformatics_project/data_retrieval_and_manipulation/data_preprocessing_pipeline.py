@@ -43,6 +43,7 @@ class DataPreprocessingPipeline:
                           f'after preprocessing it is {len(self._data.get_enhancers_epigenomic_data().columns)}', 'green'))
 
         print(colored('Applied preprocessing version 1', 'red'))
+        self._data.set_data_version('v1')
         return self._data
 
     def execute_v2(self) -> DataRetrieval:
@@ -74,5 +75,6 @@ class DataPreprocessingPipeline:
                           f'after preprocessing it is {len(self._data.get_enhancers_epigenomic_data().columns)}', 'green'))
 
         print(colored('Applied preprocessing version 2', 'red'))
+        self._data.set_data_version('v2')
         return self._data
 

@@ -35,8 +35,8 @@ class ExperimentExecutor:
             **results2
         }
 
-    def save_results(self, region: str, model_name: str, results: list):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
+    def save_results(self, data_version: str, region: str, model_name: str, results: list):
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_' + data_version)
         if not os.path.exists(path):
             os.mkdir(path)
 
@@ -48,15 +48,15 @@ class ExperimentExecutor:
         with open(os.path.join(path), 'wb') as f:
             pickle.dump(results, f, pickle.HIGHEST_PROTOCOL)
 
-    def load_results(self, region: str, model_name: str):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results', region, model_name + '.pkl')
+    def load_results(self, data_version: str, region: str, model_name: str):
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_' + data_version, region, model_name + '.pkl')
         if os.path.exists(path):
             with open(path, 'rb') as f:
                 return pickle.load(f)
 
         return []
 
-    def print_results(self, region: str, results: pandas.DataFrame):
+    def print_results(self, data_version: str, region: str, results: pandas.DataFrame):
         results = results.drop(columns=['holdout', 'region'])
         barplots(
             results,
@@ -64,12 +64,10 @@ class ExperimentExecutor:
             show_legend=False,
             height=4,
             orientation="horizontal",
-            path='experiment/plots/' + region + '/{feature}.png'
+            path='experiment/plots_' + data_version + '/' + region + '/{feature}.png'
         )
 
-    def execute_promoters_epigenomic_experiment(self, region: str, splits: int = 50):
-        data_retrieval = DataRetrieval()
-        DataPreprocessingPipeline(data_retrieval).execute_v2()
+    def execute_promoters_epigenomic_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 50):
 
         holdouts = self.get_holdouts(splits)
 
@@ -81,7 +79,7 @@ class ExperimentExecutor:
         for model_name, builder in tqdm(models.items(),
                                         total=len(models), desc="Training models", leave=False, dynamic_ncols=True):
 
-            model_results = self.load_results(region, model_name)
+            model_results = self.load_results(data_retrieval.get_data_version(), region, model_name)
 
             if len(model_results) < splits * 2:
                 for i, (train, test) in tqdm(enumerate(holdouts.split(data, labels)), total=splits,
@@ -110,8 +108,10 @@ class ExperimentExecutor:
                         'holdout': i,
                         **self.calculate_metrics(labels[test], model.predict(data[test]))
                     })
-                self.save_results(region, model_name, model_results)
+                self.save_results(data_retrieval.get_data_version(), region, model_name, model_results)
 
             results = results + model_results
 
-        return pandas.DataFrame(results)
+        results = pandas.DataFrame(results)
+        self.print_results(data_retrieval.get_data_version(), region, results)
+        return results

@@ -1,14 +1,15 @@
 from bioinformatics_project.experiment.experiment_executor import ExperimentExecutor
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
+from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing_pipeline import DataPreprocessingPipeline
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow
 
+data_retrieval = DataRetrieval()
+DataPreprocessingPipeline(data_retrieval).execute_v2()
 
 executor = ExperimentExecutor()
-ret = executor.execute_promoters_epigenomic_experiment(DataRetrieval.KEY_PROMOTERS)
-executor.print_results(DataRetrieval.KEY_PROMOTERS, ret)
+executor.execute_promoters_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_PROMOTERS, 2)
 
-ret = executor.execute_promoters_epigenomic_experiment(DataRetrieval.KEY_ENHANCERS)
-executor.print_results(DataRetrieval.KEY_ENHANCERS, ret)
+executor.execute_promoters_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_ENHANCERS, 2)
 

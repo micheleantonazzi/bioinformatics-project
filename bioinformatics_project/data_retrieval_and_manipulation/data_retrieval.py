@@ -26,6 +26,7 @@ class DataRetrieval:
                                                              DataRetrieval.KEY_SEQUENCE: None,
                                                              DataRetrieval.KEY_LABELS: None}
         self._genome: Genome = None
+        self._data_version: str = 'None'
 
     def load_promoters_epigenomic_data(self) -> Dict[str, pandas.DataFrame]:
         print(
@@ -200,3 +201,9 @@ class DataRetrieval:
                          'enhancers_epigenomic_data_processed.csv.gz'),
             index_col=['chrom', 'chromStart', 'chromEnd', 'strand'])
         print(colored('Epigenomic data saved to csv', 'green'))
+
+    def set_data_version(self, version: str):
+        self._data_version = version
+
+    def get_data_version(self) -> str:
+        return self._data_version
