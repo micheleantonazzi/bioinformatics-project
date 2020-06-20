@@ -50,7 +50,7 @@ class ParameterSelector:
         if len(best_parameters.keys()) == 0:
             print(colored(f'Starting calculating best parameters for {DECISION_TREE_GRID}', 'red'))
             parameters = dict(
-                max_depth=[5, 10, 20, 35, 50, 65, 80, 100, None],
+                max_depth=[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, None],
                 class_weight=[None, 'balanced'],
             )
             for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():
@@ -73,8 +73,8 @@ class ParameterSelector:
         if len(best_parameters.keys()) == 0:
             print(colored(f'Starting calculating best parameters for {RANDOM_FOREST_GRID}', 'red'))
             parameters = dict(
-                n_estimators=[50, 100, 150, 200, 300, 400, 500],
-                max_depth=[5, 10, 20, 35, 50, 65, 80, 100, None],
+                n_estimators=[60, 70, 80, 90, 100, 120, 140, 160],
+                max_depth=[6, 8, 10, 12, 14, 16, 18, 20],
                 class_weight=['balanced'],
             )
             for region, (data, labels) in self._data.get_epigenomic_data_for_learning().items():
