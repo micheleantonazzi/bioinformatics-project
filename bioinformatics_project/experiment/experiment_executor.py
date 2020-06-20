@@ -1,3 +1,7 @@
+import os
+import pickle
+
+import pandas
 from tqdm import tqdm
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing_pipeline import DataPreprocessingPipeline
@@ -5,11 +9,47 @@ from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval impor
 from bioinformatics_project.models.model_builder import ModelBuilder
 from bioinformatics_project.models.parameter_selector import ParameterSelector
 from sklearn.model_selection import StratifiedShuffleSplit
+import numpy
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, average_precision_score
+from sanitize_ml_labels import sanitize_ml_labels
 
 
 class ExperimentExecutor:
     def get_holdouts(self, splits):
         return StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
+
+    def calculate_metrics(self, y_true: numpy.ndarray, y_pred: numpy.ndarray) -> numpy.ndarray:
+        integer_metrics = accuracy_score, balanced_accuracy_score
+        float_metrics = roc_auc_score, average_precision_score
+        results1 = {
+            sanitize_ml_labels(metric.__name__): metric(y_true, numpy.round(y_pred))
+            for metric in integer_metrics
+        }
+        results2 = {
+            sanitize_ml_labels(metric.__name__): metric(y_true, y_pred)
+            for metric in float_metrics
+        }
+        return {
+            **results1,
+            **results2
+        }
+
+    def save_results(self, region: str, model_name: str, results: list):
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), region)
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        path = os.path.join(path, model_name + '.pkl')
+        with open(os.path.join(path), 'wb') as f:
+            pickle.dump(results, f, pickle.HIGHEST_PROTOCOL)
+
+    def load_results(self, region: str, model_name: str):
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), region, model_name + '.pkl')
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
+                return pickle.load(f)
+
+        return []
 
     def execute_promoters_epigenomic_experiment(self, splits: int = 50):
         data_retrieval = DataRetrieval()
@@ -19,15 +59,39 @@ class ExperimentExecutor:
 
         data, labels = data_retrieval.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS]
         parameters_function = ParameterSelector(data_retrieval).get_functions()
+        models = ModelBuilder(data_retrieval).get_functions()
 
-        for i, (train, test) in tqdm(enumerate(holdouts.split(data, labels)), total=splits,
-                                     desc="Computing holdouts", dynamic_ncols=True):
+        results = []
+        for model_name, builder in tqdm(models.items(),
+                                        total=len(models), desc="Training models", leave=False, dynamic_ncols=True):
 
-            models = ModelBuilder(data_retrieval).get_functions()
-            for model_name, builder in tqdm(models.items(),
-                                                 total=len(models), desc="Training models", leave=False, dynamic_ncols=True):
+            model_results = self.load_results(DataRetrieval.KEY_PROMOTERS, model_name)
 
-                print(f'For {DataRetrieval.KEY_PROMOTERS} train {model_name}')
-                model, train_parameters = builder(DataRetrieval.KEY_PROMOTERS, parameters_function[model_name]()[DataRetrieval.KEY_PROMOTERS])
-                model.fit(data[train], labels[train], **train_parameters)
+            if len(model_results) < splits * 2:
+                for i, (train, test) in tqdm(enumerate(holdouts.split(data, labels)), total=splits,
+                                             desc="Computing holdouts", dynamic_ncols=True):
+                    print(f'For {DataRetrieval.KEY_PROMOTERS} train {model_name}')
+                    model, train_parameters = builder(DataRetrieval.KEY_PROMOTERS,
+                                                      parameters_function[model_name]()[DataRetrieval.KEY_PROMOTERS])
 
+                    model.fit(data[train], labels[train], **train_parameters)
+                    model_results.append({
+                        'region': DataRetrieval.KEY_PROMOTERS,
+                        'model': model_name,
+                        'run_type': 'train',
+                        'holdout': i,
+                        **self.calculate_metrics(labels[train], model.predict(data[train]))
+                    })
+                    model_results.append({
+                        'region': DataRetrieval.KEY_PROMOTERS,
+                        'model': model_name,
+                        'run_type': 'test',
+                        'holdout': i,
+                        **self.calculate_metrics(labels[test], model.predict(data[test]))
+                    })
+                print(model_results)
+                self.save_results(DataRetrieval.KEY_PROMOTERS, model_name, model_results)
+
+            results.append(model_results)
+
+        return pandas.DataFrame(results)
