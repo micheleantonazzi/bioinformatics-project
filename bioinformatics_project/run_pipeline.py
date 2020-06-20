@@ -4,5 +4,5 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow
 
 
-ExperimentExecutor().execute_promoters_epigenomic_experiment()
+ret = ExperimentExecutor().execute_promoters_epigenomic_experiment()
 
