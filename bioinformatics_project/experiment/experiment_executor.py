@@ -12,6 +12,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 import numpy
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, average_precision_score
 from sanitize_ml_labels import sanitize_ml_labels
+from barplots import barplots
 
 
 class ExperimentExecutor:
@@ -52,7 +53,14 @@ class ExperimentExecutor:
         return []
 
     def print_results(self, results: pandas.DataFrame):
-        pass
+        results.drop(columns=['holdout', 'region'])
+        barplots(
+            results,
+            groupby=["model", "run_type"],
+            show_legend=False,
+            height=4,
+            orientation="horizontal"
+        )
 
     def execute_promoters_epigenomic_experiment(self, region: str, splits: int = 50):
         data_retrieval = DataRetrieval()
@@ -78,22 +86,27 @@ class ExperimentExecutor:
                                                       parameters_function[model_name]()[region])
 
                     model.fit(data[train], labels[train], **train_parameters)
+                    model_ = (
+                        model.__class__.__name__
+                        if model.__class__.__name__ != "Sequential"
+                        else model.name
+                    )
                     model_results.append({
                         'region': region,
-                        'model': model_name,
+                        'model': model_,
                         'run_type': 'train',
                         'holdout': i,
                         **self.calculate_metrics(labels[train], model.predict(data[train]))
                     })
                     model_results.append({
                         'region': region,
-                        'model': model_name,
+                        'model': model_,
                         'run_type': 'test',
                         'holdout': i,
                         **self.calculate_metrics(labels[test], model.predict(data[test]))
                     })
                 self.save_results(region, model_name, model_results)
 
-            results.append(model_results)
+            results = results + model_results
 
         return pandas.DataFrame(results)
