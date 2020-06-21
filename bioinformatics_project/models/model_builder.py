@@ -15,7 +15,7 @@ class ModelBuilder:
     def __init__(self, data: DataRetrieval):
         self._data = data
 
-    def get_functions(self):
+    def get_epigenomic_functions(self):
         return {
             DECISION_TREE_GRID: self.create_decision_tree_grid,
             RANDOM_FOREST_GRID: self.create_random_forest_grid,

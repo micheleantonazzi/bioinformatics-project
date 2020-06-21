@@ -18,7 +18,7 @@ class ParameterSelector:
     def __init__(self, data: DataRetrieval):
         self._data = data
 
-    def get_functions(self):
+    def get_epigenomic_functions(self):
         return {
             DECISION_TREE_GRID: self.get_decision_tree_parameters_grid,
             RANDOM_FOREST_GRID: self.get_random_forest_parameters_grid,

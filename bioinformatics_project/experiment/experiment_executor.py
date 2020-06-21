@@ -68,8 +68,8 @@ class ExperimentExecutor:
         holdouts = self.get_holdouts(splits)
 
         data, labels = data_retrieval.get_epigenomic_data_for_learning()[region]
-        parameters_function = ParameterSelector(data_retrieval).get_functions()
-        models = ModelBuilder(data_retrieval).get_functions()
+        parameters_function = ParameterSelector(data_retrieval).get_epigenomic_functions()
+        models = ModelBuilder(data_retrieval).get_epigenomic_functions()
 
         results = []
         for model_name, builder in tqdm(models.items(),
