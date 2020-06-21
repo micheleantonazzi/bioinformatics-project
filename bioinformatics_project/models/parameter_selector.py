@@ -2,12 +2,13 @@ import os
 import pickle
 
 from tensorflow.keras.callbacks import EarlyStopping
-from keras_tqdm import TQDMNotebookCallback
+from keras_tqdm import TQDMNotebookCallback, TQDMCallback
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from tensorflow_addons.callbacks import TQDMProgressBar
 from termcolor import colored
+from tqdm.keras import TqdmCallback
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 from bioinformatics_project.models.models_type import *
@@ -121,8 +122,7 @@ class ParameterSelector:
              verbose=False,
              callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMProgressBar()
-             ]
+            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -139,7 +139,6 @@ class ParameterSelector:
             verbose=False,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMProgressBar()
             ]
         )
 
@@ -157,7 +156,6 @@ class ParameterSelector:
             verbose=False,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMProgressBar()
             ]
         )
 
@@ -175,7 +173,6 @@ class ParameterSelector:
             verbose=False,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMProgressBar()
             ]
         )
 
