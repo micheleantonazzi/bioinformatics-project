@@ -20,7 +20,9 @@ class ModelBuilder:
             DECISION_TREE_GRID: self.create_decision_tree_grid,
             RANDOM_FOREST_GRID: self.create_random_forest_grid,
             PERCEPTRON: self.create_perceptron,
-            MLP: self.create_mlp
+            PERCEPTRON_2: self.create_perceptron,
+            MLP: self.create_mlp,
+            MLP_2: self.create_mlp_2
         }
 
     def create_decision_tree_grid(self, _, parameters):
@@ -49,6 +51,22 @@ class ModelBuilder:
             Dense(64, activation="relu"),
             Dense(32, activation="relu"),
             Dense(1, activation="sigmoid")
+        ], "MLP")
+
+        mlp.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy"
+        )
+        return mlp, parameters
+
+    def create_mlp_2(self, region, parameters):
+        mlp = Sequential([
+             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+             Dense(256, activation="relu"),
+             Dense(128, activation="relu"),
+             Dense(64, activation="relu"),
+             Dense(32, activation="relu"),
+             Dense(1, activation="sigmoid")
         ], "MLP")
 
         mlp.compile(

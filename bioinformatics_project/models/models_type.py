@@ -1,4 +1,6 @@
 DECISION_TREE_GRID: str = 'DecisionTreeWithGrid'
 RANDOM_FOREST_GRID: str = 'RandomForestWithGrid'
 PERCEPTRON: str = 'Perceptron'
+PERCEPTRON_2: str = 'Perceptron_2'
 MLP: str = 'MLP'
+MLP_2: str = 'MLP_2'

@@ -22,7 +22,9 @@ class ParameterSelector:
             DECISION_TREE_GRID: self.get_decision_tree_parameters_grid,
             RANDOM_FOREST_GRID: self.get_random_forest_parameters_grid,
             PERCEPTRON: self.get_perceptron_parameters,
-            MLP: self.get_mlp_parameters
+            PERCEPTRON_2: self.get_perceptron_2_parameters,
+            MLP: self.get_mlp_parameters,
+            MLP_2: self.get_mlp_2_parameters
         }
 
     def load_parameters_from_disk(self, model_type: str) -> dict:
@@ -107,6 +109,22 @@ class ParameterSelector:
             print(colored(f'Best {PERCEPTRON} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
+    def get_perceptron_2_parameters(self):
+        parameters = dict(
+             epochs=1000,
+             batch_size=64,
+             validation_split=0.1,
+             shuffle=True,
+             verbose=False,
+             callbacks=[
+                 EarlyStopping(monitor="val_loss", mode="min", patience=50)]
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {PERCEPTRON} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
     def get_mlp_parameters(self):
         parameters = dict(
             epochs=1000,
@@ -121,5 +139,21 @@ class ParameterSelector:
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
             print(colored(f'Best {MLP} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
+    def get_mlp_2_parameters(self):
+        parameters = dict(
+            epochs=1000,
+            batch_size=64,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=False,
+            callbacks=[
+                EarlyStopping(monitor="val_loss", mode="min", patience=50)]
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {MLP_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
