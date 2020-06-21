@@ -22,7 +22,8 @@ class ModelBuilder:
             PERCEPTRON: self.create_perceptron,
             PERCEPTRON_2: self.create_perceptron,
             MLP: self.create_mlp,
-            MLP_2: self.create_mlp_2
+            MLP_2: self.create_mlp_2,
+            FFNN: self.create_ffnn
         }
 
     def create_decision_tree_grid(self, _, parameters):
