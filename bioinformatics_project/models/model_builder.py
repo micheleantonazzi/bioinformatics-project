@@ -62,7 +62,6 @@ class ModelBuilder:
     def create_mlp_2(self, region, parameters):
         mlp = Sequential([
              Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-             Dense(256, activation="relu"),
              Dense(128, activation="relu"),
              Dense(64, activation="relu"),
              Dense(32, activation="relu"),
