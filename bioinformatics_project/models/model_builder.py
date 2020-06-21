@@ -1,13 +1,13 @@
-from keras_tqdm import TQDMNotebookCallback
+from keras.layers import BatchNormalization
 from sklearn.ensemble import RandomForestClassifier
-from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Input
-from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.tree import DecisionTreeClassifier
 from tensorflow.python.keras.callbacks import EarlyStopping
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 from bioinformatics_project.models.models_type import *
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, BatchNormalization, Activation, Dropout
 
 
 class ModelBuilder:
@@ -74,3 +74,24 @@ class ModelBuilder:
             loss="binary_crossentropy"
         )
         return mlp, parameters
+
+    def create_ffnn(self, region, parameters):
+        ffnn = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(256, activation="relu"),
+            Dense(128),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(64, activation="relu"),
+            Dropout(0.3),
+            Dense(32, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(1, activation="sigmoid")
+        ], "FFNN")
+
+        ffnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy"
+        )
+
+        return ffnn, parameters

@@ -24,7 +24,8 @@ class ParameterSelector:
             PERCEPTRON: self.get_perceptron_parameters,
             PERCEPTRON_2: self.get_perceptron_2_parameters,
             MLP: self.get_mlp_parameters,
-            MLP_2: self.get_mlp_2_parameters
+            MLP_2: self.get_mlp_2_parameters,
+            FFNN: self.get_ffnn_parameters
         }
 
     def load_parameters_from_disk(self, model_type: str) -> dict:
@@ -101,7 +102,9 @@ class ParameterSelector:
             shuffle=True,
             verbose=False,
             callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50)]
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+                TQDMProgressBar()
+            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -117,12 +120,14 @@ class ParameterSelector:
              shuffle=True,
              verbose=False,
              callbacks=[
-                 EarlyStopping(monitor="val_loss", mode="min", patience=50)]
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+                TQDMProgressBar()
+             ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
-            print(colored(f'Best {PERCEPTRON} parameters for {region}: ' + str(data), 'green'))
+            print(colored(f'Best {PERCEPTRON_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
     def get_mlp_parameters(self):
@@ -133,7 +138,9 @@ class ParameterSelector:
             shuffle=True,
             verbose=False,
             callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50)]
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+                TQDMProgressBar()
+            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -149,11 +156,31 @@ class ParameterSelector:
             shuffle=True,
             verbose=False,
             callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50)]
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+                TQDMProgressBar()
+            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
             print(colored(f'Best {MLP_2} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
+    def get_ffnn_parameters(self):
+        parameters = dict(
+            epochs=1000,
+            batch_size=1024,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=False,
+            callbacks=[
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+                TQDMProgressBar()
+            ]
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {FFNN} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
