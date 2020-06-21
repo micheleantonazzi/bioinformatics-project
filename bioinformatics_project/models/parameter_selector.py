@@ -104,7 +104,6 @@ class ParameterSelector:
             verbose=False,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                TQDMProgressBar()
             ]
         )
 

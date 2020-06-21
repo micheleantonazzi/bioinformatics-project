@@ -4,7 +4,6 @@ import pickle
 import pandas
 from tqdm import tqdm
 
-from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing_pipeline import DataPreprocessingPipeline
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 from bioinformatics_project.models.model_builder import ModelBuilder
 from bioinformatics_project.models.parameter_selector import ParameterSelector
@@ -36,27 +35,23 @@ class ExperimentExecutor:
         }
 
     def save_results(self, data_version: str, region: str, model_name: str, results: list):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_' + data_version)
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'epigenomic', 'results_' + data_version, region)
         if not os.path.exists(path):
-            os.mkdir(path)
-
-        path = os.path.join(path, region)
-        if not os.path.exists(path):
-            os.mkdir(path)
+            os.makedirs(path)
 
         path = os.path.join(path, model_name + '.pkl')
         with open(os.path.join(path), 'wb') as f:
             pickle.dump(results, f, pickle.HIGHEST_PROTOCOL)
 
     def load_results(self, data_version: str, region: str, model_name: str):
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_' + data_version, region, model_name + '.pkl')
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'epigenomic', 'results_' + data_version, region, model_name + '.pkl')
         if os.path.exists(path):
             with open(path, 'rb') as f:
                 return pickle.load(f)
 
         return []
 
-    def print_results(self, data_version: str, region: str, results: pandas.DataFrame):
+    def print_results(self, experiment_type: str, data_version: str, region: str, results: pandas.DataFrame):
         results = results.drop(columns=['holdout', 'region'])
         height = len(results['model'].unique())
         barplots(
@@ -65,7 +60,7 @@ class ExperimentExecutor:
             show_legend=False,
             height=height,
             orientation="horizontal",
-            path='experiment/plots_' + data_version + '/' + region + '/{feature}.png'
+            path=experiment_type + '/experiment/plots_' + data_version + '/' + region + '/{feature}.png'
         )
 
     def execute_epigenomic_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 50):
@@ -110,5 +105,5 @@ class ExperimentExecutor:
             results = results + model_results
 
         results = pandas.DataFrame(results)
-        self.print_results(data_retrieval.get_data_version(), region, results)
+        self.print_results('epigenomic', data_retrieval.get_data_version(), region, results)
         return results
