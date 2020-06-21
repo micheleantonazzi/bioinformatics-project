@@ -23,7 +23,10 @@ class ModelBuilder:
             PERCEPTRON_2: self.create_perceptron,
             MLP: self.create_mlp,
             MLP_2: self.create_mlp_2,
-            FFNN: self.create_ffnn
+            FFNN: self.create_ffnn,
+            FFNN_2: self.create_ffnn_2,
+            FFNN_3: self.create_ffnn_3,
+            FFNN_4: self.create_ffnn_4
         }
 
     def create_decision_tree_grid(self, _, parameters):
@@ -88,6 +91,90 @@ class ModelBuilder:
             Dense(16, activation="relu"),
             Dense(1, activation="sigmoid")
         ], "FFNN")
+
+        ffnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy"
+        )
+
+        return ffnn, parameters
+
+    def create_ffnn_2(self, region, parameters):
+        ffnn = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(256, activation='relu'),
+            Dense(256, activation='relu'),
+            Dense(256, activation='relu'),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(128, activation='relu'),
+            Dense(128, activation='relu'),
+            Dense(128, activation='relu'),
+            Dense(64, activation="relu"),
+            Dense(64, activation="relu"),
+            Dense(64, activation="relu"),
+            Dropout(0.3),
+            Dense(32, activation="relu"),
+            Dense(32, activation="relu"),
+            Dense(32, activation="relu"),
+            Dropout(0.3),
+            Dense(16, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(1, activation="sigmoid")
+        ], FFNN_2)
+
+        ffnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy"
+        )
+
+        return ffnn, parameters
+
+    def create_ffnn_3(self, region, parameters):
+        ffnn = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(1024, activation='relu'),
+            Dense(1024, activation='relu'),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(512, activation='relu'),
+            Dense(512, activation='relu'),
+            Dense(256, activation='relu'),
+            Dense(256, activation='relu'),
+            Dense(128, activation='relu'),
+            Dense(64, activation="relu"),
+            Dropout(0.3),
+            Dense(32, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(1, activation="sigmoid")
+        ], FFNN_3)
+
+        ffnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy"
+        )
+
+        return ffnn, parameters
+
+    def create_ffnn_4(self, region, parameters):
+        ffnn = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(1024, activation='relu'),
+            Dense(1024, activation='relu'),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(512, activation='relu'),
+            Dense(512, activation='relu'),
+            Dense(256, activation='relu'),
+            Dense(256, activation='relu'),
+            Dense(128, activation='relu'),
+            Dense(128, activation='relu'),
+            Dense(64, activation="relu"),
+            Dense(32, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(1, activation="sigmoid")
+        ], FFNN_4)
 
         ffnn.compile(
             optimizer="nadam",
