@@ -60,7 +60,7 @@ class ExperimentExecutor:
             show_legend=False,
             height=height,
             orientation="horizontal",
-            path=experiment_type + '/experiment/plots_' + data_version + '/' + region + '/{feature}.png'
+            path='experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/{feature}.png'
         )
 
     def execute_epigenomic_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 50):
