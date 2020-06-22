@@ -11,4 +11,4 @@ coverage.xml
 datasets/
 genomes/
 preprocessed_data_v*/
-plot_v*/
+plots_v*/
