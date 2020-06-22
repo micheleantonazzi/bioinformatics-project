@@ -103,24 +103,17 @@ class ModelBuilder:
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu'),
-            Dense(256, activation='relu'),
-            Dense(256, activation='relu'),
+            Dropout(0.3),
             BatchNormalization(),
             Activation("relu"),
             Dense(128, activation='relu'),
-            Dense(128, activation='relu'),
-            Dense(128, activation='relu'),
-            Dense(64, activation="relu"),
-            Dense(64, activation="relu"),
+            Dropout(0.3),
             Dense(64, activation="relu"),
             Dropout(0.3),
             Dense(32, activation="relu"),
-            Dense(32, activation="relu"),
-            Dense(32, activation="relu"),
             Dropout(0.3),
             Dense(16, activation="relu"),
-            Dense(16, activation="relu"),
-            Dense(16, activation="relu"),
+            Dropout(0.3),
             Dense(1, activation="sigmoid")
         ], FFNN_2)
 
@@ -134,21 +127,20 @@ class ModelBuilder:
     def create_ffnn_3(self, region, parameters):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(1024, activation='relu'),
-            Dense(1024, activation='relu'),
+            Dense(256, activation='relu'),
+            Dropout(0.5),
             BatchNormalization(),
             Activation("relu"),
-            Dense(512, activation='relu'),
-            Dense(512, activation='relu'),
-            Dense(256, activation='relu'),
-            Dense(256, activation='relu'),
             Dense(128, activation='relu'),
+            Dropout(0.5),
             Dense(64, activation="relu"),
-            Dropout(0.3),
+            Dropout(0.5),
             Dense(32, activation="relu"),
+            Dropout(0.5),
             Dense(16, activation="relu"),
+            Dropout(0.5),
             Dense(1, activation="sigmoid")
-        ], FFNN_3)
+        ], FFNN_2)
 
         ffnn.compile(
             optimizer="nadam",
@@ -160,21 +152,18 @@ class ModelBuilder:
     def create_ffnn_4(self, region, parameters):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(1024, activation='relu'),
-            Dense(1024, activation='relu'),
+            Dense(64, activation='relu'),
+            Dropout(0.3),
             BatchNormalization(),
             Activation("relu"),
-            Dense(512, activation='relu'),
-            Dense(512, activation='relu'),
-            Dense(256, activation='relu'),
-            Dense(256, activation='relu'),
-            Dense(128, activation='relu'),
-            Dense(128, activation='relu'),
-            Dense(64, activation="relu"),
-            Dense(32, activation="relu"),
+            Dense(32, activation='relu'),
+            Dropout(0.3),
             Dense(16, activation="relu"),
+            Dropout(0.3),
+            Dense(8, activation="relu"),
+            Dropout(0.3),
             Dense(1, activation="sigmoid")
-        ], FFNN_4)
+        ], FFNN_2)
 
         ffnn.compile(
             optimizer="nadam",
