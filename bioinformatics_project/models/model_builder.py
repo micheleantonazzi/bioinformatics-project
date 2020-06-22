@@ -140,7 +140,7 @@ class ModelBuilder:
             Dense(16, activation="relu"),
             Dropout(0.5),
             Dense(1, activation="sigmoid")
-        ], FFNN_2)
+        ], FFNN_3)
 
         ffnn.compile(
             optimizer="nadam",
@@ -163,7 +163,7 @@ class ModelBuilder:
             Dense(8, activation="relu"),
             Dropout(0.3),
             Dense(1, activation="sigmoid")
-        ], FFNN_2)
+        ], FFNN_4)
 
         ffnn.compile(
             optimizer="nadam",
