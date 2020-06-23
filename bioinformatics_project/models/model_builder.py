@@ -221,9 +221,9 @@ class ModelBuilder:
             Dense(64, activation="relu"),
             Dropout(0.5),
             Dense(32, activation="relu"),
-            Dropout(0.6),
+            Dropout(0.5),
             Dense(16, activation="relu"),
-            Dropout(0.6),
+            Dropout(0.5),
             Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
         ], FFNN_6)
 
