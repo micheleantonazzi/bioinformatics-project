@@ -243,7 +243,7 @@ class ParameterSelector:
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_promoters = dict(
-            epochs=200,
+            epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
@@ -259,7 +259,7 @@ class ParameterSelector:
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_enhancers = dict(
-            epochs=200,
+            epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
@@ -281,7 +281,7 @@ class ParameterSelector:
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_promoters = dict(
-            epochs=200,
+            epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
@@ -297,7 +297,7 @@ class ParameterSelector:
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_enhancers = dict(
-            epochs=200,
+            epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
@@ -319,7 +319,7 @@ class ParameterSelector:
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_promoters = dict(
-            epochs=200,
+            epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
@@ -335,7 +335,7 @@ class ParameterSelector:
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_enhancers = dict(
-            epochs=200,
+            epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
