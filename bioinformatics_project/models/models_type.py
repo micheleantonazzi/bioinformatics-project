@@ -11,4 +11,6 @@ FFNN_4: str = 'FFNN_4'
 FFNN_5: str = 'FFNN_5'
 FFNN_6: str = 'FFNN_6'
 FFNN_7: str = 'FFNN_7'
+FFNN_8: str = 'FFNN_8'
+
 CNN: str = 'CNN'

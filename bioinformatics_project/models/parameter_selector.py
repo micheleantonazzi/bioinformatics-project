@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from termcolor import colored
-from tqdm.keras import TqdmCallback
+from tensorflow.keras.callbacks import LearningRateScheduler
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 from bioinformatics_project.models.models_type import *
@@ -32,7 +32,8 @@ class ParameterSelector:
             FFNN_4: self.get_ffnn_4_parameters,
             FFNN_5: self.get_ffnn_5_parameters,
             FFNN_6: self.get_ffnn_6_parameters,
-            FFNN_7: self.get_ffnn_7_parameters
+            FFNN_7: self.get_ffnn_7_parameters,
+            FFNN_8: self.get_ffnn_8_parameters
         }
 
     def load_parameters_from_disk(self, model_type: str) -> dict:
@@ -349,5 +350,23 @@ class ParameterSelector:
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters_promoters, DataRetrieval.KEY_ENHANCERS: parameters_enhancers}
         for region, data in best_parameters.items():
             print(colored(f'Best {FFNN_7} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
+    def get_ffnn_8_parameters(self):
+        parameters = dict(
+            epochs=50,
+            batch_size=512,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+                LearningRateScheduler(lambda epoch: 0.001 * epoch)
+            ]
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {FFNN_8} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
