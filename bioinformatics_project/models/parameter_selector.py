@@ -248,7 +248,7 @@ class ParameterSelector:
             batch_size=2048,
             validation_split=0.1,
             shuffle=True,
-            verbose=True,
+            verbose=False,
             callbacks=[
                 EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
             ],
