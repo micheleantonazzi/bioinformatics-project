@@ -244,7 +244,7 @@ class ParameterSelector:
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_promoters = dict(
             epochs=200,
-            batch_size=2048,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
             verbose=False,
@@ -260,7 +260,7 @@ class ParameterSelector:
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_enhancers = dict(
             epochs=200,
-            batch_size=2048,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
             verbose=False,
@@ -282,7 +282,7 @@ class ParameterSelector:
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_promoters = dict(
             epochs=200,
-            batch_size=2048,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
             verbose=False,
@@ -298,7 +298,7 @@ class ParameterSelector:
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_enhancers = dict(
             epochs=200,
-            batch_size=2048,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
             verbose=False,
@@ -320,7 +320,7 @@ class ParameterSelector:
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_promoters = dict(
             epochs=200,
-            batch_size=2048,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
             verbose=False,
@@ -336,7 +336,7 @@ class ParameterSelector:
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
         parameters_enhancers = dict(
             epochs=200,
-            batch_size=2048,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
             verbose=False,
