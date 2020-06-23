@@ -32,8 +32,7 @@ class ParameterSelector:
             FFNN_4: self.get_ffnn_4_parameters,
             FFNN_5: self.get_ffnn_5_parameters,
             FFNN_6: self.get_ffnn_6_parameters,
-            FFNN_7: self.get_ffnn_7_parameters,
-            FFNN_8: self.get_ffnn_8_parameters
+            FFNN_7: self.get_ffnn_7_parameters
         }
 
     def load_parameters_from_disk(self, model_type: str) -> dict:
@@ -350,22 +349,5 @@ class ParameterSelector:
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters_promoters, DataRetrieval.KEY_ENHANCERS: parameters_enhancers}
         for region, data in best_parameters.items():
             print(colored(f'Best {FFNN_7} parameters for {region}: ' + str(data), 'green'))
-        return best_parameters
-
-    def get_ffnn_8_parameters(self):
-        parameters = dict(
-            epochs=500,
-            batch_size=1024,
-            validation_split=0.1,
-            shuffle=True,
-            verbose=True,
-            callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50),
-            ]
-        )
-
-        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
-        for region, data in best_parameters.items():
-            print(colored(f'Best {FFNN_8} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 

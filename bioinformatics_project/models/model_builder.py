@@ -28,8 +28,7 @@ class ModelBuilder:
             FFNN_4: self.create_ffnn_4,
             FFNN_5: self.create_ffnn_5,
             FFNN_6: self.create_ffnn_6,
-            FFNN_7: self.create_ffnn_7,
-            FFNN_8: self.create_ffnn_8
+            FFNN_7: self.create_ffnn_7
         }
 
     def create_decision_tree_grid(self, _, parameters):
@@ -255,26 +254,6 @@ class ModelBuilder:
 
         ffnn.compile(
             optimizer="nadam",
-            loss="binary_crossentropy",
-        )
-
-        return ffnn, parameters
-
-    def create_ffnn_8(self, region, parameters):
-        ffnn = Sequential([
-            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(256, activation='relu'),
-            BatchNormalization(),
-            Activation("relu"),
-            Dense(128, activation='relu'),
-            Dense(64, activation="relu"),
-            Dense(32, activation="relu"),
-            Dense(16, activation="relu"),
-            Dense(1, activation="sigmoid")
-        ], FFNN_8)
-
-        ffnn.compile(
-            optimizer=Adadelta(),
             loss="binary_crossentropy",
         )
 
