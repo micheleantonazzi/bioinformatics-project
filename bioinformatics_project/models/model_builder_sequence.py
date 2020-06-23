@@ -16,7 +16,7 @@ class ModelBuilderSequence:
 
     def create_perceptron(self, region, parameters):
         perceptron = Sequential([
-            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Input(shape=(200, 4)),
             Dense(1, activation="sigmoid")
         ], "Perceptron")
 
