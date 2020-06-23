@@ -1,14 +1,12 @@
 import numpy
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
-from tensorflow.keras import Model
-
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 from bioinformatics_project.models.models_type import *
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, BatchNormalization, Activation, Dropout, Input, Flatten
-from tensorflow.keras.initializers import Constant, GlorotNormal
-from tensorflow.keras.regularizers import l1_l2
+from tensorflow.keras.layers import Dense, BatchNormalization, Activation, Dropout, Input
+from tensorflow.keras.initializers import Constant
+from tensorflow.keras.optimizers import Adadelta
 
 
 class ModelBuilder:
@@ -263,22 +261,21 @@ class ModelBuilder:
         return ffnn, parameters
 
     def create_ffnn_8(self, region, parameters):
-        Input_layer = Input(shape=(len(self._data.get_epigenomic_data()[region].columns), 1))
-        initializer = GlorotNormal()
-        x = Dense(units=50, activation='relu', kernel_initializer=initializer)(Input_layer)
-        x = Dense(units=200, activation='relu', kernel_initializer=initializer)(x)
-        x = Dense(units=50, activation='relu', kernel_initializer=initializer)(x)
-        x = Dense(units=200, activation='relu', kernel_initializer=initializer)(x)
-        encoded = Dense(units=64, activation='relu', kernel_initializer=initializer)(x)
+        ffnn = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(256, activation='relu'),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(128, activation='relu'),
+            Dense(64, activation="relu"),
+            Dense(32, activation="relu"),
+            Dense(16, activation="relu"),
+            Dense(1, activation="sigmoid")
+        ], FFNN_8)
 
-        autoencoder = Model(Input_layer, encoded)
-        autoencoder = Sequential(autoencoder)
-        autoencoder.add(Flatten())
-        autoencoder.add(Dense(128, activation="relu", kernel_initializer=initializer, activity_regularizer=l1_l2(l1=1e-5, l2=1e-4)))
-        autoencoder.add(Dense(64, activation="relu", kernel_initializer=initializer, activity_regularizer=l1_l2(l1=1e-5, l2=1e-4)))
-        autoencoder.add(Dense(32, activation="relu", kernel_initializer=initializer, activity_regularizer=l1_l2(l1=1e-5, l2=1e-4)))
-        autoencoder.add(Dense(16, activation="relu", kernel_initializer=initializer, activity_regularizer=l1_l2(l1=1e-5, l2=1e-4)))
-        autoencoder.add(Dense(1, activation="sigmoid"))
-        autoencoder.compile(optimizer='Adadelta', loss='binary_crossentropy')
+        ffnn.compile(
+            optimizer=Adadelta(),
+            loss="binary_crossentropy",
+        )
 
-        return autoencoder, parameters
+        return ffnn, parameters

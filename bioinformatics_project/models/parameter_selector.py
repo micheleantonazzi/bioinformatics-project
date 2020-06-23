@@ -354,14 +354,13 @@ class ParameterSelector:
 
     def get_ffnn_8_parameters(self):
         parameters = dict(
-            epochs=50,
-            batch_size=512,
+            epochs=500,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
             verbose=True,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
-                LearningRateScheduler(lambda epoch: 0.001 * epoch)
             ]
         )
 
