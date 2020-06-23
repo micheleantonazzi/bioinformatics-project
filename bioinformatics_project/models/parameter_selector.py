@@ -250,7 +250,7 @@ class ParameterSelector:
             shuffle=True,
             verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
             ],
             class_weight=class_weight
         )
@@ -266,7 +266,7 @@ class ParameterSelector:
             shuffle=True,
             verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
             ],
             class_weight=class_weight
         )
@@ -289,7 +289,7 @@ class ParameterSelector:
             shuffle=True,
             verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
             ],
             class_weight=class_weight
         )
@@ -305,7 +305,7 @@ class ParameterSelector:
             shuffle=True,
             verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
             ],
             class_weight=class_weight
         )
@@ -328,7 +328,7 @@ class ParameterSelector:
             shuffle=True,
             verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
             ],
             class_weight=class_weight
         )
@@ -344,7 +344,7 @@ class ParameterSelector:
             shuffle=True,
             verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
             ],
             class_weight=class_weight
         )
