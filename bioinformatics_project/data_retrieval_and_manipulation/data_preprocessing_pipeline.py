@@ -126,7 +126,7 @@ class DataPreprocessingPipeline:
             self._data.remove_uncorrelated_features(uncorrelated)
             uncorrelated, _ = data_preprocessing.apply_pearson_for_features_correlation()
             self._data.remove_uncorrelated_features(uncorrelated)
-            uncorrelated = data_preprocessing.apply_boruta_without_drop_tentative(300)
+            uncorrelated = data_preprocessing.apply_boruta_without_drop_tentative(200)
             self._data.remove_uncorrelated_features(uncorrelated)
             self._data.save_epigenomic_data_to_csv(DataPreprocessingPipeline.FOLDER_V3)
             print(colored(f'The initial amount of features for promoters was {promoters_features_number}, '
