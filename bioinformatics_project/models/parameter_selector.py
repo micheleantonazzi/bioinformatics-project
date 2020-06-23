@@ -1,12 +1,12 @@
 import os
 import pickle
 
+import numpy
 from tensorflow.keras.callbacks import EarlyStopping
 from keras_tqdm import TQDMNotebookCallback, TQDMCallback
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
-from tensorflow_addons.callbacks import TQDMProgressBar
 from termcolor import colored
 from tqdm.keras import TqdmCallback
 
@@ -29,7 +29,10 @@ class ParameterSelector:
             FFNN: self.get_ffnn_parameters,
             FFNN_2: self.get_ffnn_2_parameters,
             FFNN_3: self.get_ffnn_3_parameters,
-            FFNN_4: self.get_ffnn_4_parameters
+            FFNN_4: self.get_ffnn_4_parameters,
+            FFNN_5: self.get_ffnn_5_parameters,
+            FFNN_6: self.get_ffnn_6_parameters,
+            FFNN_7: self.get_ffnn_7_parameters
         }
 
     def load_parameters_from_disk(self, model_type: str) -> dict:
@@ -232,5 +235,122 @@ class ParameterSelector:
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
             print(colored(f'Best {FFNN_4} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
+    def get_ffnn_5_parameters(self):
+        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)
+        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True)
+        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
+        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        print(class_weight)
+        parameters_promoters = dict(
+            epochs=200,
+            batch_size=2048,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+            ],
+            class_weight=class_weight
+        )
+
+        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == False)
+        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == True)
+        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1])
+        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        parameters_enhancers = dict(
+            epochs=200,
+            batch_size=2048,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+            ],
+            class_weight=class_weight
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters_promoters, DataRetrieval.KEY_ENHANCERS: parameters_enhancers}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {FFNN_5} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
+    def get_ffnn_6_parameters(self):
+        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)
+        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True)
+        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
+        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        print(class_weight)
+        parameters_promoters = dict(
+            epochs=200,
+            batch_size=2048,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+            ],
+            class_weight=class_weight
+        )
+
+        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == False)
+        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == True)
+        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1])
+        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        parameters_enhancers = dict(
+            epochs=200,
+            batch_size=2048,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+            ],
+            class_weight=class_weight
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters_promoters, DataRetrieval.KEY_ENHANCERS: parameters_enhancers}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {FFNN_6} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
+    def get_ffnn_7_parameters(self):
+        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)
+        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True)
+        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
+        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        print(class_weight)
+        parameters_promoters = dict(
+            epochs=200,
+            batch_size=2048,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+            ],
+            class_weight=class_weight
+        )
+
+        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == False)
+        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == True)
+        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1])
+        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        parameters_enhancers = dict(
+            epochs=200,
+            batch_size=2048,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor='val_roc', mode="max", patience=10, restore_best_weights=True),
+            ],
+            class_weight=class_weight
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters_promoters, DataRetrieval.KEY_ENHANCERS: parameters_enhancers}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {FFNN_7} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 

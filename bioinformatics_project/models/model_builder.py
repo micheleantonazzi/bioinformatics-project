@@ -1,13 +1,13 @@
-from keras.layers import BatchNormalization
+import numpy
 from sklearn.ensemble import RandomForestClassifier
-from tensorflow.keras.layers import Dense, Input
 from sklearn.tree import DecisionTreeClassifier
-from tensorflow.python.keras.callbacks import EarlyStopping
+from keras.metrics import AUC
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 from bioinformatics_project.models.models_type import *
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, BatchNormalization, Activation, Dropout
+from tensorflow.keras.layers import Dense, BatchNormalization, Activation, Dropout, Input
+from tensorflow.keras.initializers import Constant
 
 
 class ModelBuilder:
@@ -26,7 +26,10 @@ class ModelBuilder:
             FFNN: self.create_ffnn,
             FFNN_2: self.create_ffnn_2,
             FFNN_3: self.create_ffnn_3,
-            FFNN_4: self.create_ffnn_4
+            FFNN_4: self.create_ffnn_4,
+            FFNN_5: self.create_ffnn_5,
+            FFNN_6: self.create_ffnn_6,
+            FFNN_7: self.create_ffnn_7
         }
 
     def create_decision_tree_grid(self, _, parameters):
@@ -168,6 +171,94 @@ class ModelBuilder:
         ffnn.compile(
             optimizer="nadam",
             loss="binary_crossentropy"
+        )
+
+        return ffnn, parameters
+
+    def create_ffnn_5(self, region, parameters):
+        bias = numpy.log([numpy.count_nonzero(
+            self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True) /
+                         numpy.count_nonzero(
+                             self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)])
+        ffnn = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(256, activation='relu'),
+            Dropout(0.3),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(128, activation='relu'),
+            Dropout(0.3),
+            Dense(64, activation="relu"),
+            Dropout(0.3),
+            Dense(32, activation="relu"),
+            Dropout(0.3),
+            Dense(16, activation="relu"),
+            Dropout(0.3),
+            Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
+        ], FFNN_5)
+
+        ffnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy",
+            metrics=[AUC(curve='ROC', name='roc')]
+        )
+
+        return ffnn, parameters
+
+    def create_ffnn_6(self, region, parameters):
+        bias = numpy.log([numpy.count_nonzero(
+            self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True) /
+                          numpy.count_nonzero(
+                              self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)])
+        ffnn = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(256, activation='relu'),
+            Dropout(0.5),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(128, activation='relu'),
+            Dropout(0.5),
+            Dense(64, activation="relu"),
+            Dropout(0.5),
+            Dense(32, activation="relu"),
+            Dropout(0.6),
+            Dense(16, activation="relu"),
+            Dropout(0.6),
+            Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
+        ], FFNN_6)
+
+        ffnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy",
+            metrics=[AUC(curve='ROC', name='roc')]
+        )
+
+        return ffnn, parameters
+
+    def create_ffnn_7(self, region, parameters):
+        bias = numpy.log([numpy.count_nonzero(
+            self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True) /
+                          numpy.count_nonzero(
+                              self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)])
+        ffnn = Sequential([
+            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
+            Dense(64, activation='relu'),
+            Dropout(0.5),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(32, activation='relu'),
+            Dropout(0.5),
+            Dense(16, activation="relu"),
+            Dropout(0.5),
+            Dense(8, activation="relu"),
+            Dropout(0.5),
+            Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
+        ], FFNN_7)
+
+        ffnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy",
+            metrics=[AUC(curve='ROC', name='roc')]
         )
 
         return ffnn, parameters
