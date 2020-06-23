@@ -14,7 +14,7 @@ from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval impor
 from bioinformatics_project.models.models_type import *
 
 
-class ParameterSelector:
+class ParameterSelectorEpigenomic:
     def __init__(self, data: DataRetrieval):
         self._data = data
 

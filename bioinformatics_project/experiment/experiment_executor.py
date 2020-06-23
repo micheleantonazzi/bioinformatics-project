@@ -5,8 +5,8 @@ import pandas
 from tqdm import tqdm
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
-from bioinformatics_project.models.model_builder import ModelBuilder
-from bioinformatics_project.models.parameter_selector import ParameterSelector
+from bioinformatics_project.models.model_builder_epigenomic import ModelBuilderEpigenomic
+from bioinformatics_project.models.parameter_selector_epigenomic import ParameterSelectorEpigenomic
 from sklearn.model_selection import StratifiedShuffleSplit
 import numpy
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, average_precision_score
@@ -68,8 +68,8 @@ class ExperimentExecutor:
         holdouts = self.get_holdouts(splits)
 
         data, labels = data_retrieval.get_epigenomic_data_for_learning()[region]
-        parameters_function = ParameterSelector(data_retrieval).get_epigenomic_functions()
-        models = ModelBuilder(data_retrieval).get_epigenomic_functions()
+        parameters_function = ParameterSelectorEpigenomic(data_retrieval).get_epigenomic_functions()
+        models = ModelBuilderEpigenomic(data_retrieval).get_epigenomic_functions()
 
         results = []
         for model_name, builder in tqdm(models.items(),
