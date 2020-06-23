@@ -263,7 +263,8 @@ class DataPreprocessing:
                 random_state=42
             )
             boruta_selector.fit(data.values, self._data.get_labels()[region].values.ravel())
-            features_to_drop[region] = {data.columns[i] for i in range(len(boruta_selector.ranking_)) if
-                                        boruta_selector.ranking_[i] == 0}
+            support = [a or b for a, b in zip(boruta_selector.support_, boruta_selector.support_weak_)]
+            features_to_drop[region] = {data.columns[i] for i in range(len(support)) if
+                                        support[i] == False}
 
         return features_to_drop
