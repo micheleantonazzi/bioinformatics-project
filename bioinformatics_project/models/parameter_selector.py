@@ -242,7 +242,6 @@ class ParameterSelector:
         pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True)
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        print(class_weight)
         parameters_promoters = dict(
             epochs=200,
             batch_size=2048,
@@ -281,7 +280,6 @@ class ParameterSelector:
         pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True)
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        print(class_weight)
         parameters_promoters = dict(
             epochs=200,
             batch_size=2048,
@@ -320,7 +318,6 @@ class ParameterSelector:
         pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True)
         total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        print(class_weight)
         parameters_promoters = dict(
             epochs=200,
             batch_size=2048,
