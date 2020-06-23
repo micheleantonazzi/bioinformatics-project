@@ -245,3 +245,25 @@ class DataPreprocessing:
                                         boruta_selector.support_[i] == False}
 
         return features_to_drop
+
+    def apply_boruta_without_drop_tentative(self, max_iter: int = 10, threshold: float = 0.05, max_depth: int = 5) -> Dict[str, set]:
+        features_to_drop = {
+            region: set() for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]
+        }
+        for region, data in tqdm(
+                self._data.get_epigenomic_data().items(),
+                desc="Running Baruta Feature estimation"
+        ):
+            boruta_selector = BorutaPy(
+                RandomForestClassifier(n_jobs=cpu_count(), class_weight='balanced', max_depth=max_depth),
+                n_estimators='auto',
+                verbose=2,
+                alpha=threshold,
+                max_iter=max_iter,
+                random_state=42
+            )
+            boruta_selector.fit(data.values, self._data.get_labels()[region].values.ravel())
+            features_to_drop[region] = {data.columns[i] for i in range(len(boruta_selector.ranking_)) if
+                                        boruta_selector.ranking_[i] == 0}
+
+        return features_to_drop
