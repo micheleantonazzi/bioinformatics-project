@@ -200,7 +200,6 @@ class ModelBuilder:
         ffnn.compile(
             optimizer="nadam",
             loss="binary_crossentropy",
-            metrics=[AUC(curve='ROC', name='roc')]
         )
 
         return ffnn, parameters
@@ -230,7 +229,6 @@ class ModelBuilder:
         ffnn.compile(
             optimizer="nadam",
             loss="binary_crossentropy",
-            metrics=[AUC(curve='ROC', name='roc')]
         )
 
         return ffnn, parameters
@@ -258,7 +256,6 @@ class ModelBuilder:
         ffnn.compile(
             optimizer="nadam",
             loss="binary_crossentropy",
-            metrics=[AUC(curve='ROC', name='roc')]
         )
 
         return ffnn, parameters
