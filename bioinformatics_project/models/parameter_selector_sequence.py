@@ -11,16 +11,32 @@ class ParameterSelectorSequence:
 
     def get_sequence_functions(self):
         return {
-            PERCEPTRON_SEQUENCE: self.get_perceptron_parameters
+            PERCEPTRON_SEQUENCE: self.get_perceptron_parameters,
+            MLP_SEQUENCE: self.get_mlp_parameters
         }
 
     def get_perceptron_parameters(self):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
-            validation_split=0.1,
             shuffle=True,
-            verbose=False,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+            ]
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
+        for region, data in best_parameters.items():
+            print(colored(f'Best {PERCEPTRON_SEQUENCE} parameters for {region}: ' + str(data), 'green'))
+        return best_parameters
+
+    def get_mlp_parameters(self):
+        parameters = dict(
+            epochs=1000,
+            batch_size=1024,
+            shuffle=True,
+            verbose=True,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
             ]
