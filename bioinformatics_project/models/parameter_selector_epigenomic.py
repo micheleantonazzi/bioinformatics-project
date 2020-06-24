@@ -155,7 +155,7 @@ class ParameterSelectorEpigenomic:
     def get_mlp_2_parameters(self):
         parameters = dict(
             epochs=1000,
-            batch_size=64,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
             verbose=False,
