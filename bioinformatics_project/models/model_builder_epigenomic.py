@@ -180,7 +180,6 @@ class ModelBuilderEpigenomic:
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu', kernel_regularizer=l2(l=0.01)),
-            Dropout(0.4),
             BatchNormalization(),
             Activation("relu"),
             Dense(128, activation='relu', kernel_regularizer=l2(l=0.01)),

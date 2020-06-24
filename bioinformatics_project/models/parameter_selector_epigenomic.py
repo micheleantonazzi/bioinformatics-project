@@ -239,7 +239,7 @@ class ParameterSelectorEpigenomic:
 
     def get_ffnn_5_parameters(self):
         parameters = dict(
-            epochs=1000,
+            epochs=400,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
