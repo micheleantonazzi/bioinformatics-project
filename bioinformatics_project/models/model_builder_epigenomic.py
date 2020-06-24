@@ -177,24 +177,26 @@ class ModelBuilderEpigenomic:
         return ffnn, parameters
 
     def create_ffnn_5(self, region, parameters):
-        bias = numpy.log([numpy.count_nonzero(
-            self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True) /
-                         numpy.count_nonzero(
-                             self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)])
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
-            Dropout(0.5),
-            Dense(128, activation='relu', kernel_regularizer=l2(0.01)),
-            Dense(64, activation="relu", kernel_regularizer=l2(0.01)),
-            Dropout(0.5),
-            Dense(1, activation="sigmoid"),
-            Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
+            Dense(256, activation='relu', kernel_regularizer=l2(l=0.01)),
+            Dropout(0.4),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(128, activation='relu', kernel_regularizer=l2(l=0.01)),
+            Dropout(0.4),
+            Dense(64, activation="relu", kernel_regularizer=l2(l=0.01)),
+            Dropout(0.4),
+            Dense(32, activation="relu", kernel_regularizer=l2(l=0.01)),
+            Dropout(0.4),
+            Dense(16, activation="relu", kernel_regularizer=l2(l=0.01)),
+            Dropout(0.4),
+            Dense(1, activation="sigmoid")
         ], FFNN_5)
 
         ffnn.compile(
             optimizer="nadam",
-            loss="binary_crossentropy",
+            loss="binary_crossentropy"
         )
 
         return ffnn, parameters
@@ -203,15 +205,13 @@ class ModelBuilderEpigenomic:
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
-            Dropout(0.5),
             Dense(128, activation='relu', kernel_regularizer=l2(0.01)),
             Dense(64, activation="relu", kernel_regularizer=l2(0.01)),
-            Dropout(0.5),
             Dense(1, activation="sigmoid")
         ], FFNN_6)
 
         ffnn.compile(
-            optimizer=SGD(learning_rate=0.1),
+            optimizer=SGD(learning_rate=0.1, momentum=0.1),
             loss="binary_crossentropy"
         )
 

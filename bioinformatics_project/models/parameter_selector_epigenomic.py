@@ -238,39 +238,18 @@ class ParameterSelectorEpigenomic:
         return best_parameters
 
     def get_ffnn_5_parameters(self):
-        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)
-        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True)
-        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
-        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        parameters_promoters = dict(
+        parameters = dict(
             epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
-            verbose=False,
+            verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
-            ],
-            class_weight=class_weight
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
+            ]
         )
 
-        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == False)
-        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == True)
-        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1])
-        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        parameters_enhancers = dict(
-            epochs=1000,
-            batch_size=1024,
-            validation_split=0.1,
-            shuffle=True,
-            verbose=False,
-            callbacks=[
-                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
-            ],
-            class_weight=class_weight
-        )
-
-        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters_promoters, DataRetrieval.KEY_ENHANCERS: parameters_enhancers}
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
             print(colored(f'Best {FFNN_5} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
