@@ -6,7 +6,9 @@ from bioinformatics_project.models.models_type import *
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, BatchNormalization, Activation, Dropout, Input
 from tensorflow.keras.initializers import Constant
-from tensorflow.keras.optimizers import Adadelta
+from tensorflow.keras.metrics import AUC
+from tensorflow.keras.regularizers import l2
+from tensorflow.keras.optimizers import SGD
 
 
 class ModelBuilderEpigenomic:
@@ -19,16 +21,13 @@ class ModelBuilderEpigenomic:
             DECISION_TREE_GRID: self.create_decision_tree_grid,
             RANDOM_FOREST_GRID: self.create_random_forest_grid,
             PERCEPTRON: self.create_perceptron,
-            PERCEPTRON_2: self.create_perceptron,
             MLP: self.create_mlp,
-            MLP_2: self.create_mlp_2,
             FFNN: self.create_ffnn,
             FFNN_2: self.create_ffnn_2,
             FFNN_3: self.create_ffnn_3,
             FFNN_4: self.create_ffnn_4,
             FFNN_5: self.create_ffnn_5,
             FFNN_6: self.create_ffnn_6,
-            FFNN_7: self.create_ffnn_7
         }
 
     def create_decision_tree_grid(self, _, parameters):
@@ -154,22 +153,25 @@ class ModelBuilderEpigenomic:
     def create_ffnn_4(self, region, parameters):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(64, activation='relu'),
+            Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
             Dropout(0.3),
             BatchNormalization(),
             Activation("relu"),
-            Dense(32, activation='relu'),
+            Dense(128, activation='relu', kernel_regularizer=l2(0.01)),
             Dropout(0.3),
-            Dense(16, activation="relu"),
+            Dense(64, activation="relu", kernel_regularizer=l2(0.01)),
             Dropout(0.3),
-            Dense(8, activation="relu"),
+            Dense(32, activation="relu", kernel_regularizer=l2(0.01)),
+            Dropout(0.3),
+            Dense(16, activation="relu", kernel_regularizer=l2(0.01)),
             Dropout(0.3),
             Dense(1, activation="sigmoid")
         ], FFNN_4)
 
         ffnn.compile(
             optimizer="nadam",
-            loss="binary_crossentropy"
+            loss="binary_crossentropy",
+            metrics=[AUC(curve='PR', name='auprc')]
         )
 
         return ffnn, parameters
@@ -181,18 +183,12 @@ class ModelBuilderEpigenomic:
                              self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)])
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(256, activation='relu'),
-            Dropout(0.3),
-            BatchNormalization(),
-            Activation("relu"),
-            Dense(128, activation='relu'),
-            Dropout(0.3),
-            Dense(64, activation="relu"),
-            Dropout(0.3),
-            Dense(32, activation="relu"),
-            Dropout(0.3),
-            Dense(16, activation="relu"),
-            Dropout(0.3),
+            Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
+            Dropout(0.5),
+            Dense(128, activation='relu', kernel_regularizer=l2(0.01)),
+            Dense(64, activation="relu", kernel_regularizer=l2(0.01)),
+            Dropout(0.5),
+            Dense(1, activation="sigmoid"),
             Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
         ], FFNN_5)
 
@@ -204,30 +200,19 @@ class ModelBuilderEpigenomic:
         return ffnn, parameters
 
     def create_ffnn_6(self, region, parameters):
-        bias = numpy.log([numpy.count_nonzero(
-            self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True) /
-                          numpy.count_nonzero(
-                              self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)])
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(256, activation='relu'),
+            Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
             Dropout(0.5),
-            BatchNormalization(),
-            Activation("relu"),
-            Dense(128, activation='relu'),
+            Dense(128, activation='relu', kernel_regularizer=l2(0.01)),
+            Dense(64, activation="relu", kernel_regularizer=l2(0.01)),
             Dropout(0.5),
-            Dense(64, activation="relu"),
-            Dropout(0.5),
-            Dense(32, activation="relu"),
-            Dropout(0.5),
-            Dense(16, activation="relu"),
-            Dropout(0.5),
-            Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
+            Dense(1, activation="sigmoid")
         ], FFNN_6)
 
         ffnn.compile(
-            optimizer="nadam",
-            loss="binary_crossentropy",
+            optimizer=SGD(learning_rate=0.1),
+            loss="binary_crossentropy"
         )
 
         return ffnn, parameters
