@@ -14,4 +14,5 @@ FFNN_7: str = 'FFNN_7'
 
 PERCEPTRON_SEQUENCE: str = 'Perceptron'
 MLP_SEQUENCE: str = 'MLP'
+FFNN_SEQUENCE: str = 'FFNN'
 CNN: str = 'CNN'
