@@ -9,7 +9,7 @@ from tensorflow.keras.initializers import Constant
 from tensorflow.keras.optimizers import Adadelta
 
 
-class ModelBuilder:
+class ModelBuilderEpigenomic:
 
     def __init__(self, data: DataRetrieval):
         self._data = data

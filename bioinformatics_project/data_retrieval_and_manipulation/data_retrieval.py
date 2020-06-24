@@ -176,6 +176,13 @@ class DataRetrieval:
         return {region: (self.get_epigenomic_data()[region].values, self.get_labels()[region].values.ravel())
                 for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]}
 
+    def get_sequence_data_for_learning(self):
+        return {region: (
+                self.get_epigenomic_data()[region].reset_index()[self.get_epigenomic_data()[region].index.names],
+                self.get_labels()[region].values.ravel()
+            )
+            for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]}
+
     def check_exists_data_preprocessed(self, folder) -> bool:
         return os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), folder,
                                            'promoters_epigenomic_data_processed.csv.gz')) and os.path.exists(
