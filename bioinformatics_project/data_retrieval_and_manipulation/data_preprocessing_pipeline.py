@@ -23,6 +23,8 @@ class DataPreprocessingPipeline:
         if self._data.check_exists_data_preprocessed(DataPreprocessingPipeline.FOLDER_V0):
             print(colored('Data have been already preprocessed', 'green'))
             self._data.load_epigenomic_data_from_csv(DataPreprocessingPipeline.FOLDER_V0)
+            print(colored(f'The amount of features for promoters is {len(self._data.get_promoters_epigenomic_data().columns)}', 'green'))
+            print(colored(f'The amount of features for enhancers is {len(self._data.get_enhancers_epigenomic_data().columns)}', 'green'))
         else:
             print(colored('Data have not been already preprocessed, starting preprocess procedure', 'red'))
             promoters_features_number = len(self._data.get_promoters_epigenomic_data().columns)
@@ -48,6 +50,8 @@ class DataPreprocessingPipeline:
         if self._data.check_exists_data_preprocessed(DataPreprocessingPipeline.FOLDER_V1):
             print(colored('Data have been already preprocessed', 'green'))
             self._data.load_epigenomic_data_from_csv(DataPreprocessingPipeline.FOLDER_V1)
+            print(colored(f'The amount of features for promoters is {len(self._data.get_promoters_epigenomic_data().columns)}', 'green'))
+            print(colored(f'The amount of features for enhancers is {len(self._data.get_enhancers_epigenomic_data().columns)}', 'green'))
         else:
             print(colored('Data have not been already preprocessed, starting preprocess procedure', 'red'))
             promoters_features_number = len(self._data.get_promoters_epigenomic_data().columns)
@@ -81,6 +85,8 @@ class DataPreprocessingPipeline:
         if self._data.check_exists_data_preprocessed(DataPreprocessingPipeline.FOLDER_V2):
             print(colored('Data have been already preprocessed', 'green'))
             self._data.load_epigenomic_data_from_csv(DataPreprocessingPipeline.FOLDER_V2)
+            print(colored(f'The amount of features for promoters is {len(self._data.get_promoters_epigenomic_data().columns)}', 'green'))
+            print(colored(f'The amount of features for enhancers is {len(self._data.get_enhancers_epigenomic_data().columns)}', 'green'))
         else:
             print(colored('Data have not been already preprocessed, starting preprocess procedure', 'red'))
             promoters_features_number = len(self._data.get_promoters_epigenomic_data().columns)
@@ -113,6 +119,8 @@ class DataPreprocessingPipeline:
         if self._data.check_exists_data_preprocessed(DataPreprocessingPipeline.FOLDER_V3):
             print(colored('Data have been already preprocessed', 'green'))
             self._data.load_epigenomic_data_from_csv(DataPreprocessingPipeline.FOLDER_V3)
+            print(colored(f'The amount of features for promoters is {len(self._data.get_promoters_epigenomic_data().columns)}', 'green'))
+            print(colored(f'The amount of features for enhancers is {len(self._data.get_enhancers_epigenomic_data().columns)}', 'green'))
         else:
             print(colored('Data have not been already preprocessed, starting preprocess procedure', 'red'))
             promoters_features_number = len(self._data.get_promoters_epigenomic_data().columns)
