@@ -1,4 +1,3 @@
-from tensorflow.keras.callbacks import EarlyStopping
 from termcolor import colored
 
 from bioinformatics_project.models.models_type import *
@@ -21,13 +20,10 @@ class ParameterSelectorSequence:
 
     def get_perceptron_parameters(self):
         parameters = dict(
-            epochs=1000,
+            epochs=100,
             batch_size=1024,
             shuffle=True,
             verbose=True,
-            callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50),
-            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -37,13 +33,10 @@ class ParameterSelectorSequence:
 
     def get_mlp_parameters(self):
         parameters = dict(
-            epochs=1000,
+            epochs=100,
             batch_size=1024,
             shuffle=True,
             verbose=True,
-            callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50),
-            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -53,13 +46,10 @@ class ParameterSelectorSequence:
 
     def get_ffnn_parameters(self):
         parameters = dict(
-            epochs=1000,
+            epochs=100,
             batch_size=1024,
             shuffle=True,
             verbose=True,
-            callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50),
-            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -73,9 +63,6 @@ class ParameterSelectorSequence:
             batch_size=1024,
             shuffle=True,
             verbose=True,
-            callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=10),
-            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -89,9 +76,6 @@ class ParameterSelectorSequence:
             batch_size=1024,
             shuffle=True,
             verbose=True,
-            callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=10),
-            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
@@ -105,9 +89,6 @@ class ParameterSelectorSequence:
             batch_size=1024,
             shuffle=True,
             verbose=True,
-            callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=10),
-            ]
         )
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
