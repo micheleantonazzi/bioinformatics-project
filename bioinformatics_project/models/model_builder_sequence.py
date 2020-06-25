@@ -1,7 +1,7 @@
 from tensorflow.keras.metrics import AUC
 from tensorflow.keras import Sequential, Input
 from tensorflow.keras.layers import Dense, Flatten, Dropout, Reshape, Conv2D, MaxPool2D, BatchNormalization, Activation
-
+from tensorflow.keras.optimizers import Nadam
 from bioinformatics_project.models.models_type import *
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 
@@ -134,7 +134,7 @@ class ModelBuilderSequence:
         ], CNN_2)
 
         cnn.compile(
-            optimizer="nadam",
+            optimizer=Nadam(learning_rate=0.002),
             loss="binary_crossentropy",
             metrics=[
                 "accuracy",
