@@ -1,6 +1,6 @@
 from tensorflow.keras.metrics import AUC
 from tensorflow.keras import Sequential, Input
-from tensorflow.keras.layers import Dense, Flatten, Dropout, Reshape, Conv2D, MaxPool2D, BatchNormalization, Activation
+from tensorflow.keras.layers import Dense, Flatten, Dropout, Reshape, Conv2D, MaxPool1D, MaxPool2D, BatchNormalization, Activation, Conv1D
 from tensorflow.keras.optimizers import Nadam
 from bioinformatics_project.models.models_type import *
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
@@ -116,15 +116,21 @@ class ModelBuilderSequence:
     def create_cnn_2(self):
         cnn = Sequential([
             Input(shape=(200, 4)),
-            Reshape((200, 4, 1)),
-            Conv2D(64, kernel_size=(5, 2), activation="relu"),
+            Reshape((800, 1)),
+            Conv1D(64, kernel_size=5, activation="relu"),
             BatchNormalization(),
             Activation('relu'),
-            MaxPool2D(pool_size=(2, 2), strides=(2, 1)),
-            Conv2D(64, kernel_size=(7, 2), activation="relu"),
+            Conv1D(64, kernel_size=5, activation="relu"),
             BatchNormalization(),
             Activation('relu'),
-            MaxPool2D(pool_size=(2, 1), strides=(2, 1)),
+            Conv1D(64, kernel_size=5, activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool1D(pool_size=2),
+            Conv1D(64, kernel_size=10, activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool1D(pool_size=2),
             Flatten(),
             Dense(64, activation="relu"),
             Dropout(0.1),
