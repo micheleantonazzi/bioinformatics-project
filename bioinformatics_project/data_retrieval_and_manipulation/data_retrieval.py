@@ -8,7 +8,9 @@ import numpy
 from keras_bed_sequence import BedSequence
 from termcolor import colored
 
-
+"""
+DataRetrieval contains all methods to retrieve the data to analyze, both epigenomic and sequence
+"""
 class DataRetrieval:
     KEY_EPIGENOMIC: str = 'epigenomic_data'
     KEY_SEQUENCE: str = 'sequence_data'
@@ -64,12 +66,20 @@ class DataRetrieval:
 
         return self._enhancers_data
 
+    """
+        Load the genome data of the assembly passed as parameter
+    """
     def load_genome_data(self, assembly: str = 'hg19') -> Genome:
         print('Starting loading genome sequence of ' + assembly)
         self._genome = Genome(assembly)
         print(colored('\rData obtained: genome sequence of ' + str(self._genome), 'green'))
         return self._genome
 
+    """
+        Extract the promoters sequence data.
+        Parameters:
+            quantity: number of sequences to extract. -1 means all sequences 
+    """
     def extract_promoters_sequence_data(self, quantity: int = -1) -> pandas.DataFrame:
         print('Starting extracting promoters sequence data')
 
@@ -92,6 +102,11 @@ class DataRetrieval:
         print(colored('\rData loading: promoters sequence data', 'green'))
         return self._promoters_data[DataRetrieval.KEY_SEQUENCE]
 
+    """
+        Extract the enhacers sequence data.
+        Parameters:
+            quantity: number of sequences to extract. -1 means all sequences 
+    """
     def extract_enhancers_sequence_data(self, quantity: int = -1) -> pandas.DataFrame:
         print('Starting extracting enhancers sequence data')
 
@@ -114,6 +129,9 @@ class DataRetrieval:
         print(colored('\rData loading: enhancers sequence data', 'green'))
         return self._enhancers_data[DataRetrieval.KEY_SEQUENCE]
 
+    """
+        Remove the feature feature passed as parameter. These feature are found using methods contained in DataChecking object
+    """
     def remove_uncorrelated_features(self, uncorrelated: Dict[str, set]):
         self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = self._promoters_data[DataRetrieval.KEY_EPIGENOMIC].drop(
             columns=[col for col in
@@ -172,10 +190,18 @@ class DataRetrieval:
         return {DataRetrieval.KEY_PROMOTERS: self._promoters_data[DataRetrieval.KEY_SEQUENCE],
                 DataRetrieval.KEY_ENHANCERS: self._enhancers_data[DataRetrieval.KEY_SEQUENCE]}
 
+    """
+        Returns a dictionary where, for each type region (promoters and enhancers),
+        there is a tuple which contains the features and the relative labels
+    """
     def get_epigenomic_data_for_learning(self):
         return {region: (self.get_epigenomic_data()[region].values, self.get_labels()[region].values.ravel())
                 for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]}
 
+    """
+        Returns a dictionary where, for each type region (promoters and enhancers),
+        there is a tuple which contains the sequence data and the relative labels
+    """
     def get_sequence_data_for_learning(self):
         return {region: (
                 self.get_epigenomic_data()[region].reset_index()[self.get_epigenomic_data()[region].index.names],
@@ -183,13 +209,19 @@ class DataRetrieval:
             )
             for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]}
 
+    """
+        Check if data are already preprocessed checking inside the given folder 
+    """
     def check_exists_data_preprocessed(self, folder) -> bool:
         return os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), folder,
                                            'promoters_epigenomic_data_processed.csv.gz')) and os.path.exists(
             os.path.join(os.path.dirname(os.path.abspath(__file__)), folder,
                          'enhancers_epigenomic_data_processed.csv.gz'))
 
-    def save_epigenomic_data_to_csv(self, folder):
+    """
+        After data preprocessing, this method save data to disk in order to load it in future 
+    """
+    def save_epigenomic_data_to_csv(self, folder: str):
         os.mkdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), folder))
         self._promoters_data[DataRetrieval.KEY_EPIGENOMIC].to_csv(
             os.path.join(os.path.dirname(os.path.abspath(__file__)), folder,
@@ -197,7 +229,9 @@ class DataRetrieval:
         self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC].to_csv(
             os.path.join(os.path.dirname(os.path.abspath(__file__)), folder,
                          'enhancers_epigenomic_data_processed.csv.gz'))
-
+    """
+        Load the preprocessed data in the given folder to not re-run the entire pipeline
+    """
     def load_epigenomic_data_from_csv(self, folder: str):
         self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = pandas.read_csv(
             os.path.join(os.path.dirname(os.path.abspath(__file__)), folder,
@@ -209,6 +243,9 @@ class DataRetrieval:
             index_col=['chrom', 'chromStart', 'chromEnd', 'strand'])
         print(colored('Epigenomic data saved to csv', 'green'))
 
+    """
+        Set the version of the preprocessing pipeline
+    """
     def set_data_version(self, version: str):
         self._data_version = version
 

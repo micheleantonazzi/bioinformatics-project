@@ -14,17 +14,25 @@ from sklearn.decomposition import PCA
 
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 
-
+"""
+    This class contains methods useful to analyze the data and visualize them in graphs
+"""
 class DataChecking:
     def __init__(self, data: DataRetrieval):
         self._data = data
 
+    """
+        Check the feature-sample imbalance and plot it
+    """
     def check_sample_features_imbalance(self):
         for region, data in self._data.get_epigenomic_data().items():
             rate = data.shape[0] / data.shape[1]
             print(colored(f'The rate between sample and features for {region} is: {rate}',
                           'green' if rate > 10 else 'red'))
 
+    """
+        Check imbalance between positive and negative samples and plot it
+    """
     def check_class_imbalance(self):
         fig, axes = subplots(ncols=2, figsize=(10, 5))
 
@@ -33,6 +41,9 @@ class DataChecking:
             axis.set_title(f'Number of samples for {region}')
         fig.show()
 
+    """
+        Plot the most correlated and uncorrelated features found using a specific method passed as parameter
+    """
     def print_correlated_feature(self, features: Dict[str, list], method: str):
         features = {
             region: sorted(score, key=lambda x: numpy.abs(x[0]), reverse=True)
@@ -58,6 +69,9 @@ class DataChecking:
             grid.fig.suptitle(f'Most uncorrelated features for {region} found with {method} method')
             show()
 
+    """
+        Calculate the features distribution about active and inactive regions and plot the most diverse
+    """
     def print_features_different_active_inactive(self, features_number: int = 5):
         for region, data in self._data.get_epigenomic_data().items():
             distance = euclidean_distances(data.T)
@@ -78,6 +92,9 @@ class DataChecking:
                 axis.set_title(column)
             show()
 
+    """
+        Plot the distribution of the most diverse pair of feature
+    """
     def print_pair_features_different(self, tuples_number: int = 5):
         for region, data in self._data.get_epigenomic_data().items():
             distance = euclidean_distances(data.T)
@@ -98,21 +115,16 @@ class DataChecking:
     def pca(self, data: pandas.DataFrame, components: int = 2) -> numpy.ndarray:
         return PCA(n_components=components, random_state=42).fit_transform(data)
 
-    def mfa(self, data: pandas.DataFrame, components: int = 2, nucleotides: str = 'actg') -> numpy.ndarray:
-        return MFA(groups={
-            nucleotide: [
-                column
-                for column in data.columns
-                if nucleotide in column
-            ]
-            for nucleotide in nucleotides
-        }, n_components=components, random_state=42).fit_transform(data)
     '''
     def cannylab_tsne(self, data: numpy.ndarray, perplexity: int, dimensionality_threshold: int = 50):
         if data.shape[1] > dimensionality_threshold:
             data = self.pca(data, components=dimensionality_threshold)
         return TSNE(perplexity=perplexity, random_seed=42).fit_transform(data)
     '''
+
+    """
+        Returns tasks and relative labels to study the data decomposition
+    """
     def _get_data_decomposition_task(self):
         return {
             "x": [
@@ -150,6 +162,9 @@ class DataChecking:
             ]
         }
 
+    """
+        Apply PCA method to study the data decomposition and plot the results 
+    """
     def apply_pca(self, ):
         tasks = self._get_data_decomposition_task()
         xs = tasks["x"]
@@ -170,43 +185,11 @@ class DataChecking:
                                                                      'verticalalignment': 'baseline',
                                                                      'horizontalalignment': 'center'})
         show()
-    '''
-    def apply_mfa(self):
-        tasks = {
-            "x": [
-                *[
-                    val
-                    for val in self._data.get_sequence_data().values()
-                ],
 
-            ],
-            "y": [
-                *[
-                    val.values.ravel()
-                    for val in self._data.get_labels().values()
-                ],
-            ],
-            "titles": [
-                'Sequences promoters',
-                'Sequences enhancers',
-            ]
-        }
-        xs = tasks["x"]
-        ys = tasks["y"]
-        titles = tasks["titles"]
-        colors = numpy.array([
-            "tab:blue",
-            "tab:orange",
-        ])
-        fig, axes = subplots(nrows=1, ncols=2, figsize=(32, 16))
-
-        for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing MFAs", total=len(xs)):
-            axis.scatter(*self.mfa(x).T, s=1, color=colors[y])
-            axis.xaxis.set_visible(False)
-            axis.yaxis.set_visible(False)
-            axis.set_title(f"MFA decomposition - {title}")
-        show()
-
+    """
+        Apply PCA to reduce the feature space and then TSNE (canny lab version) method to study the data decomposition and plot the results 
+    """
+    """
     def apply_cannylab_tsne(self):
         tasks = self._get_data_decomposition_task()
         xs = tasks["x"]
@@ -228,5 +211,5 @@ class DataChecking:
                                                                           'horizontalalignment': 'center'})
             fig.tight_layout()
             show()
-    '''
+    """
 
