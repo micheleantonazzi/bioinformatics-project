@@ -112,5 +112,5 @@ class ParameterSelectorSequence:
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
-            print(colored(f'Best {CNN_2} parameters for {region}: ' + str(data), 'green'))
+            print(colored(f'Best {CNN_3} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
