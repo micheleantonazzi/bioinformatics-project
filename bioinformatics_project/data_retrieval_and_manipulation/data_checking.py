@@ -8,7 +8,7 @@ from sklearn.metrics import euclidean_distances
 from termcolor import colored
 from prince import MFA
 from tqdm import tqdm
-#from tsnecuda import TSNE
+from tsnecuda import TSNE
 from sklearn.decomposition import PCA
 
 
@@ -115,12 +115,10 @@ class DataChecking:
     def pca(self, data: pandas.DataFrame, components: int = 2) -> numpy.ndarray:
         return PCA(n_components=components, random_state=42).fit_transform(data)
 
-    '''
     def cannylab_tsne(self, data: numpy.ndarray, perplexity: int, dimensionality_threshold: int = 50):
         if data.shape[1] > dimensionality_threshold:
             data = self.pca(data, components=dimensionality_threshold)
         return TSNE(perplexity=perplexity, random_seed=42).fit_transform(data)
-    '''
 
     """
         Returns tasks and relative labels to study the data decomposition
@@ -189,7 +187,6 @@ class DataChecking:
     """
         Apply PCA to reduce the feature space and then TSNE (canny lab version) method to study the data decomposition and plot the results 
     """
-    """
     def apply_cannylab_tsne(self):
         tasks = self._get_data_decomposition_task()
         xs = tasks["x"]
@@ -211,5 +208,4 @@ class DataChecking:
                                                                           'horizontalalignment': 'center'})
             fig.tight_layout()
             show()
-    """
 
