@@ -72,8 +72,11 @@ def test_pearson_spearman_correlation():
 def test_mic_and_remove_features():
     try:
         data_pre = DataPreprocessing(data_retrieval)
-        mic = data_pre.apply_mic_on_selected_features(data_pre.apply_pearson_spearman_correlation())
-        assert len(mic['promoters']) + len(mic['enhancers']) == 44
+        uncorrelated = data_pre.apply_pearson_spearman_correlation()
+        assert len(uncorrelated['promoters']) + len(uncorrelated['enhancers']) == 44
+        uncorrelated = {region: list(data)[:1] for region, data in uncorrelated.items()}
+        mic = data_pre.apply_mic_on_selected_features(uncorrelated)
+        assert len(mic['promoters']) + len(mic['enhancers']) == 2
 
         promoters_data_columns = len(data_retrieval.get_promoters_epigenomic_data().columns)
         enhancers_data_columns = len(data_retrieval.get_enhancers_epigenomic_data().columns)
@@ -83,8 +86,8 @@ def test_mic_and_remove_features():
             mic['promoters'])
         assert enhancers_data_columns == len(data_retrieval.get_enhancers_epigenomic_data().columns) + len(
             mic['enhancers'])
-    except:
-        fail('Unexpected exception')
+    except Exception as e:
+        fail('Unexpected exception', e)
 
 
 def test_feature_feature_correlation():

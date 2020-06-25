@@ -34,7 +34,7 @@ def test_check_class_imbalance():
 
 def test_print_correlated_feature():
     try:
-        DataChecking(data_retrieval).print_correlated_feature(scores)
+        DataChecking(data_retrieval).print_correlated_feature(scores, 'Person')
     except:
         fail('Unexpected exception')
 
