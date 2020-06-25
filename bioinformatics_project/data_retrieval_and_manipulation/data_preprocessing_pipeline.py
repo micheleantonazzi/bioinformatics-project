@@ -5,7 +5,9 @@ from termcolor import colored
 from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing import DataPreprocessing
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 
-
+"""
+    This class contains methods to automatically execute the pipelines to preprocess data
+"""
 class DataPreprocessingPipeline:
     FOLDER_V0: str = 'preprocessed_data_v0'
     FOLDER_V1: str = 'preprocessed_data_v1'

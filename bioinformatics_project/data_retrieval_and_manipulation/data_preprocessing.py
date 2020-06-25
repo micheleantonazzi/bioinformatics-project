@@ -14,6 +14,9 @@ from minepy import MINE
 from .data_retrieval import DataRetrieval
 
 
+"""
+    This class is responsible to preprocess the data
+"""
 class DataPreprocessing:
     def __init__(self, data: DataRetrieval):
         self._data = data
