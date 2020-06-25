@@ -1,6 +1,6 @@
 from tensorflow.keras.metrics import AUC
 from tensorflow.keras import Sequential, Input
-from tensorflow.keras.layers import Dense, Flatten, Dropout, Reshape, Conv2D
+from tensorflow.keras.layers import Dense, Flatten, Dropout, Reshape, Conv2D, MaxPool2D, BatchNormalization, Activation
 
 from bioinformatics_project.models.models_type import *
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
@@ -15,7 +15,9 @@ class ModelBuilderSequence:
             PERCEPTRON_SEQUENCE: self.create_perceptron,
             MLP_SEQUENCE: self.create_mlp,
             FFNN_SEQUENCE: self.create_ffnn,
-            CNN: self.create_cnn
+            CNN: self.create_cnn,
+            CNN_2: self.create_cnn_2,
+            CNN_3: self.create_cnn_3
         }
 
     def create_perceptron(self):
@@ -98,6 +100,74 @@ class ModelBuilderSequence:
             Dense(16, activation="relu"),
             Dense(1, activation="sigmoid")
         ], CNN)
+
+        cnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy",
+            metrics=[
+                "accuracy",
+                AUC(curve="ROC", name="auroc"),
+                AUC(curve="PR", name="auprc")
+            ]
+        )
+
+        return cnn
+
+    def create_cnn_2(self):
+        cnn = Sequential([
+            Input(shape=(200, 4)),
+            Reshape((200, 4, 1)),
+            Conv2D(64, kernel_size=(5, 2), activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool2D(pool_size=(2, 2), strides=(2, 1)),
+            Conv2D(64, kernel_size=(7, 2), activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool2D(pool_size=(2, 1), strides=(2, 1)),
+            Flatten(),
+            Dense(64, activation="relu"),
+            Dropout(0.1),
+            Dense(64, activation="relu"),
+            Dropout(0.1),
+            Dense(1, activation="sigmoid")
+        ], CNN_2)
+
+        cnn.compile(
+            optimizer="nadam",
+            loss="binary_crossentropy",
+            metrics=[
+                "accuracy",
+                AUC(curve="ROC", name="auroc"),
+                AUC(curve="PR", name="auprc")
+            ]
+        )
+
+        return cnn
+
+    def create_cnn_3(self):
+        cnn = Sequential([
+            Input(shape=(200, 4)),
+            Reshape((200, 4, 1)),
+            Conv2D(64, kernel_size=(5, 4), activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool2D(pool_size=(2, 1), strides=(2, 1)),
+            Conv2D(64, kernel_size=(5, 1), activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool2D(pool_size=(2, 1), strides=(2, 1)),
+            Conv2D(32, kernel_size=(5, 1), activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool2D(pool_size=(2, 1), strides=(2, 1)),
+            Flatten(),
+            Dense(64, activation="relu"),
+            Dropout(0.3),
+            Dense(32, activation="relu"),
+            Dropout(0.3),
+            Dense(1, activation="sigmoid")
+        ], CNN_3)
 
         cnn.compile(
             optimizer="nadam",

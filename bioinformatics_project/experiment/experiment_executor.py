@@ -131,7 +131,7 @@ class ExperimentExecutor:
         self.print_results('epigenomic', data_retrieval.get_data_version(), region, results)
         return results
 
-    def execute_sequence_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 50):
+    def execute_sequence_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 10):
         data_retrieval.load_genome_data()
         holdouts = self.get_holdouts(splits)
 
