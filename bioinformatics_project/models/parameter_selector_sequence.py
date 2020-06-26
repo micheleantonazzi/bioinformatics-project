@@ -3,7 +3,12 @@ from termcolor import colored
 from bioinformatics_project.models.models_type import *
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 
-
+"""
+    This class store the parameters for each model in the ModelBuilderSequence object.
+    In particular, the Decision Tree and Random Forest parameters have been chosen using the Grid Search technique and,
+    given its complexity, the selected parameters are saved to disk
+    
+"""
 class ParameterSelectorSequence:
     def __init__(self, data: DataRetrieval):
         self._data = data

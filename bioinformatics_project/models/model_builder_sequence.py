@@ -5,7 +5,9 @@ from tensorflow.keras.optimizers import Nadam
 from bioinformatics_project.models.models_type import *
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 
-
+"""
+    This class builds the model for the experiments that use sequence data
+"""
 class ModelBuilderSequence:
     def __init__(self, data: DataRetrieval):
         self._data = data

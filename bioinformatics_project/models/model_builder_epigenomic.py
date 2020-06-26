@@ -10,7 +10,9 @@ from tensorflow.keras.metrics import AUC
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.optimizers import SGD
 
-
+"""
+    This class is responsible to build the model for the epigenomic experiments
+"""
 class ModelBuilderEpigenomic:
 
     def __init__(self, data: DataRetrieval):
