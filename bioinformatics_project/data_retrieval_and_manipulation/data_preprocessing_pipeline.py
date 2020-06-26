@@ -6,7 +6,8 @@ from bioinformatics_project.data_retrieval_and_manipulation.data_preprocessing i
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 
 """
-    This class contains methods to automatically execute the pipelines to preprocess data
+    This class contains methods to automatically execute the pipelines to preprocess data.
+    Once a pipeline is run, the dataset is saved to disk in order to load it in future.  
 """
 class DataPreprocessingPipeline:
     FOLDER_V0: str = 'preprocessed_data_v0'
@@ -18,6 +19,13 @@ class DataPreprocessingPipeline:
     def __init__(self, data: DataRetrieval):
         self._data = data
 
+    """
+        Execute the easier preprocessing pipeline, without feature selection. This pipeline is to fast to execute and
+        it isn't saved on disk. 
+            - fill nan values 
+            - drop constant feature (there are not constant feature)
+            - apply z-score
+    """
     def execute_v0(self) -> DataRetrieval:
         self._data.load_promoters_epigenomic_data()
         self._data.load_enhancers_epigenomic_data()
@@ -45,6 +53,23 @@ class DataPreprocessingPipeline:
         self._data.set_data_version('v0')
         return self._data
 
+    """
+        The first version of pipeline with feature selection.
+        This pipeline is wrong because the uncorrelated feature found using Pearson and Spearman are directly removed,
+        without check if they have non-linear correlation using MIC test.
+            - fill nan values 
+            - drop constant feature (there are not constant feature)
+            - apply z-score
+            - execute Pearson and Spearman tests
+            - remove feature found with the previous step
+            - apply MIC on all dataset
+            - remove feature found with the previous step
+            - apply Pearson test to feature-feature correlation
+            - remove feature with less entropy
+            - run Boruta
+            - remove feature found with the previous step
+
+    """
     def execute_v1(self) -> DataRetrieval:
         self._data.load_promoters_epigenomic_data()
         self._data.load_enhancers_epigenomic_data()
@@ -80,6 +105,21 @@ class DataPreprocessingPipeline:
         self._data.set_data_version('v1')
         return self._data
 
+    """
+        PIPELINE USED IN THE EXPERIMENTS
+        
+        The fixed version of pipeline with feature selection.
+            - fill nan values 
+            - drop constant feature (there are not constant feature)
+            - apply z-score
+            - execute Pearson and Spearman tests
+            - apply MIC on feature found in the previous step to find non-linear correlation
+            - remove feature left over from the previous step
+            - apply Pearson test to feature-feature correlation
+            - remove feature with less entropy
+            - run Boruta
+            - remove feature found with the previous step
+    """
     def execute_v2(self) -> DataRetrieval:
         self._data.load_promoters_epigenomic_data()
         self._data.load_enhancers_epigenomic_data()
@@ -114,6 +154,20 @@ class DataPreprocessingPipeline:
         self._data.set_data_version('v2')
         return self._data
 
+    """        
+        This pipeline is similar to the v2, the only difference is that with are remove only the feature rejected from Boruta
+        and those tentative are confirmed
+            - fill nan values 
+            - drop constant feature (there are not constant feature)
+            - apply z-score
+            - execute Pearson and Spearman tests
+            - apply MIC on feature found in the previous step to find non-linear correlation
+            - remove feature left over from the previous step
+            - apply Pearson test to feature-feature correlation
+            - remove feature with less entropy
+            - run Boruta without remove tentative features
+            - remove feature found with the previous step
+    """
     def execute_v3(self) -> DataRetrieval:
         self._data.load_promoters_epigenomic_data()
         self._data.load_enhancers_epigenomic_data()
