@@ -13,7 +13,12 @@ from tensorflow.keras.callbacks import LearningRateScheduler
 from bioinformatics_project.data_retrieval_and_manipulation.data_retrieval import DataRetrieval
 from bioinformatics_project.models.models_type import *
 
-
+"""
+    This class store the parameters for each model in the ModelBuilderEpigenomic object.
+    In particular, the Decision Tree and Random Forest parameters have been chosen using the Grid Search technique and,
+    given its complexity, the selected parameters are saved to disk
+    
+"""
 class ParameterSelectorEpigenomic:
     def __init__(self, data: DataRetrieval):
         self._data = data
@@ -35,6 +40,9 @@ class ParameterSelectorEpigenomic:
             FFNN_7: self.get_ffnn_7_parameters
         }
 
+    """
+        This method load the model parameters from disk
+    """
     def load_parameters_from_disk(self, model_type: str) -> dict:
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model_parameters')
 
@@ -49,11 +57,18 @@ class ParameterSelectorEpigenomic:
         else:
             return {}
 
+    """
+        This method save the model parameters to disk
+    """
     def save_parameters_to_disk(self, model_type: str, best_parameters):
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model_parameters', model_type + '.pkl')
         with open(path, 'wb') as f:
             pickle.dump(best_parameters, f, pickle.HIGHEST_PROTOCOL)
 
+    """
+        Return Decision Tree best parameters found using the Grid Search technique.
+        It the parameters have been already calculated, they are loaded from disk
+    """
     def get_decision_tree_parameters_grid(self):
         best_parameters = self.load_parameters_from_disk(DECISION_TREE_GRID)
 
@@ -77,6 +92,10 @@ class ParameterSelectorEpigenomic:
             data.pop('best_score', None)
         return best_parameters
 
+    """
+        Return the Random Forest best parameters found using the Grid Search technique.
+        It the parameters have been already calculated, they are loaded from disk
+    """
     def get_random_forest_parameters_grid(self):
         best_parameters = self.load_parameters_from_disk(RANDOM_FOREST_GRID)
 

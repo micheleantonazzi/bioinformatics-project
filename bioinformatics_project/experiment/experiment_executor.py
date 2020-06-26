@@ -3,7 +3,6 @@ import pickle
 from typing import Tuple
 
 import pandas
-from tensorflow.keras.callbacks import EarlyStopping
 from keras_bed_sequence import BedSequence
 from keras_mixed_sequence import MixedSequence
 from tqdm import tqdm
@@ -23,10 +22,18 @@ from tensorflow.keras.utils import Sequence
 from bioinformatics_project.models.parameter_selector_sequence import ParameterSelectorSequence
 
 
+"""
+    This class contains the procedures to execute both epigenomic and sequence experiments.
+    After the procedures is done, the results are saved to disk and the graphs are plotted.
+"""
 class ExperimentExecutor:
     def get_holdouts(self, splits):
         return StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
 
+    """
+        Return the sequence holdout specified by parameters.
+        In particular, it is returned a tuple containing two MixedSequence that load seqauence data for both training and test sets
+    """
     def get_sequence_holdout(self, train: numpy.ndarray, test: numpy.ndarray, bed: pandas.DataFrame, labels: numpy.ndarray, genome: Genome, batch_size: int = 1024) -> Tuple[Sequence, Sequence]:
         return (
             MixedSequence(
@@ -41,6 +48,9 @@ class ExperimentExecutor:
             )
         )
 
+    """
+        Calculate metrics relative to an experiments. The input parameters are the correct labels and the results  given by a model
+    """
     def calculate_metrics(self, y_true: numpy.ndarray, y_pred: numpy.ndarray) -> numpy.ndarray:
         integer_metrics = accuracy_score, balanced_accuracy_score
         float_metrics = roc_auc_score, average_precision_score
@@ -57,6 +67,12 @@ class ExperimentExecutor:
             **results2
         }
 
+    """
+        Save results to disk in order to not recalculate it in future.
+        Results are saved in a path based on the type of experiment (which uses epigenomic or sequence data),
+        the version of the preprocessing pipeline, the region (promoters or enhancers) and the file name corresponds
+        to the model name
+    """
     def save_results(self, experiment_type: str, data_version: str, region: str, model_name: str, results: list):
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), experiment_type, 'results_' + data_version, region)
         if not os.path.exists(path):
@@ -66,6 +82,10 @@ class ExperimentExecutor:
         with open(os.path.join(path), 'wb') as f:
             pickle.dump(results, f, pickle.HIGHEST_PROTOCOL)
 
+    """
+        Return the results specific for experiment type, version of data, region and model.
+        They are loaded from disk if the have been already calculated, otherwise an empty list is returned
+    """
     def load_results(self, experiment_type: str, data_version: str, region: str, model_name: str):
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), experiment_type, 'results_' + data_version, region, model_name + '.pkl')
         if os.path.exists(path):
@@ -74,6 +94,9 @@ class ExperimentExecutor:
 
         return []
 
+    """
+        Plot the results in a specific folder based on experiment type, data version, region and model name
+    """
     def print_results(self, experiment_type: str, data_version: str, region: str, results: pandas.DataFrame):
         results = results.drop(columns=['holdout', 'region'])
         height = len(results['model'].unique())
@@ -86,6 +109,12 @@ class ExperimentExecutor:
             path='experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/{feature}.png'
         )
 
+    """
+        Execute the experiments using epigenomic data.
+        All models are runned for each holdout, the result are saved to disk.
+        If the results for a specific model have been already calculated, they are loaded directly from disk.
+        Finally the metrics are calculated and the relative graphs are plotted
+    """
     def execute_epigenomic_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 50):
 
         holdouts = self.get_holdouts(splits)
@@ -131,6 +160,12 @@ class ExperimentExecutor:
         self.print_results('epigenomic', data_retrieval.get_data_version(), region, results)
         return results
 
+    """
+        Execute the experiments using sequence data.
+        All models are runned for each holdout, the result are saved to disk.
+        If the results for a specific model have been already calculated, they are loaded directly from disk.
+        Finally the metrics are calculated and the relative graphs are plotted
+    """
     def execute_sequence_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 10):
         data_retrieval.load_genome_data()
         holdouts = self.get_holdouts(splits)

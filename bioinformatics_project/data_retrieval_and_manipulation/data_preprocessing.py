@@ -60,6 +60,9 @@ class DataPreprocessing:
             )
         )
 
+    """
+        Return the features which haven't Person correlation with output
+    """
     def apply_pearson_correlation(self, p_value_threshold: float = 0.01) -> Dict[str, set]:
         uncorrelated = {}
         for region, data in self._data.get_epigenomic_data().items():
@@ -77,6 +80,9 @@ class DataPreprocessing:
 
         return uncorrelated
 
+    """
+        Return the features which haven't Spearman correlation with output
+    """
     def apply_spearman_correlation(self, p_value_threshold: float = 0.01) -> Dict[str, set]:
         uncorrelated = {}
         for region, data in self._data.get_epigenomic_data().items():
@@ -94,6 +100,9 @@ class DataPreprocessing:
 
         return uncorrelated
 
+    """
+        Return the features which haven't both Pearson and Spearman correlation with output
+    """
     def apply_pearson_spearman_correlation(self, pearson_threshold: float = 0.01,
                                            spearman_threshold: float = 0.01) -> Dict[str, set]:
         uncorrelated = {}
@@ -118,6 +127,9 @@ class DataPreprocessing:
 
         return uncorrelated
 
+    """
+        Run MIC test on features passed as parameter to find a non linear correlation with output
+    """
     def apply_mic_on_selected_features(self, uncorrelated: Dict[str, set], correlation_threshold: float = 0.05) -> Dict[
         str, set]:
         for region, data in self._data.get_epigenomic_data().items():
@@ -133,7 +145,9 @@ class DataPreprocessing:
             print(colored(f'\rApplied MIC test on selected features for {region}, {len(uncorrelated[region])} features are found', 'green'))
 
         return uncorrelated
-
+    """
+        Run MIC test on all features
+    """
     def apply_mic(self, correlation_threshold: float = 0.02) -> Dict[str, set]:
         uncorrelated = {
             region: set() for region in self._data.get_epigenomic_data().keys()
@@ -155,6 +169,9 @@ class DataPreprocessing:
 
         return uncorrelated
 
+    """
+       Run Pearson test to find feature-feature correlation and return those with less entropy  
+    """
     def apply_pearson_for_features_correlation(self, pearson_threshold: float = 0.01,
                                                correlation_threshold: float = 0.95) -> (Dict[str, set],
                                                                                         Dict[str, list]):
@@ -191,6 +208,9 @@ class DataPreprocessing:
 
         return extremely_correlated, scores
 
+    """
+        Run Pearson test to find feature-feature correlation and return those with less entropy
+    """
     def apply_spearman_for_features_correlation(self, spearman_threshold: float = 0.01,
                                                correlation_threshold: float = 0.95) -> (Dict[str, set],
                                                                                         Dict[str, list]):
@@ -227,6 +247,10 @@ class DataPreprocessing:
 
         return extremely_correlated, scores
 
+    """
+        Apply Boruta test using a Random Forest to make an automatic feature selection.
+        The Tentative feature and Rejected are dropped 
+    """
     def apply_boruta(self, max_iter: int = 10, threshold: float = 0.05, max_depth: int = 5) -> Dict[str, set]:
         features_to_drop = {
             region: set() for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]
@@ -249,6 +273,10 @@ class DataPreprocessing:
 
         return features_to_drop
 
+    """
+        Apply Boruta test using a Random Forest to make an automatic feature selection.
+        Only the Rejected are dropped
+    """
     def apply_boruta_without_drop_tentative(self, max_iter: int = 10, threshold: float = 0.05, max_depth: int = 5) -> Dict[str, set]:
         features_to_drop = {
             region: set() for region in [DataRetrieval.KEY_PROMOTERS, DataRetrieval.KEY_ENHANCERS]
