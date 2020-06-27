@@ -33,10 +33,10 @@ class ModelBuilderEpigenomic:
             FFNN_7: self.create_ffnn_7
         }
 
-    def create_decision_tree_grid(self, _, parameters):
+    def create_decision_tree_grid(self, _, parameters, __):
         return DecisionTreeClassifier(**parameters), {}
 
-    def create_random_forest_grid(self, _, parameters):
+    def create_random_forest_grid(self, _, parameters, __):
         return RandomForestClassifier(**parameters, n_jobs=-1), {}
 
     def create_perceptron(self, region, parameters):
@@ -51,7 +51,7 @@ class ModelBuilderEpigenomic:
         )
         return perceptron, parameters
 
-    def create_mlp(self, region, parameters):
+    def create_mlp(self, region, parameters, _):
         mlp = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation="relu"),
@@ -67,7 +67,7 @@ class ModelBuilderEpigenomic:
         )
         return mlp, parameters
 
-    def create_mlp_2(self, region, parameters):
+    def create_mlp_2(self, region, parameters, _):
         mlp = Sequential([
              Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
              Dense(128, activation="relu"),
@@ -82,7 +82,7 @@ class ModelBuilderEpigenomic:
         )
         return mlp, parameters
 
-    def create_ffnn(self, region, parameters):
+    def create_ffnn(self, region, parameters, _):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation="relu"),
@@ -103,7 +103,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_2(self, region, parameters):
+    def create_ffnn_2(self, region, parameters, _):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu'),
@@ -128,7 +128,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_3(self, region, parameters):
+    def create_ffnn_3(self, region, parameters, _):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu'),
@@ -153,7 +153,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_4(self, region, parameters):
+    def create_ffnn_4(self, region, parameters, _):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
@@ -179,7 +179,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_5(self, region, parameters):
+    def create_ffnn_5(self, region, parameters, _):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu', kernel_regularizer=l2(l=0.01)),
@@ -203,7 +203,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_6(self, region, parameters):
+    def create_ffnn_6(self, region, parameters, _):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu', kernel_regularizer=l2(0.001)),
@@ -219,28 +219,31 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_7(self, region, parameters):
+    def create_ffnn_7(self, region, parameters, learning_labels):
         bias = numpy.log([numpy.count_nonzero(
-            self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True) /
+            learning_labels == 1) /
                           numpy.count_nonzero(
-                              self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)])
+                              learning_labels == 0)])
+        print(bias)
 
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(256, activation="relu"),
-            Dense(128),
+            Dense(256, activation='relu'),
             BatchNormalization(),
             Activation("relu"),
+            Dense(128, activation='relu'),
             Dense(64, activation="relu"),
-            Dropout(0.3),
             Dense(32, activation="relu"),
+            Dropout(0.5),
             Dense(16, activation="relu"),
+            Dropout(0.5),
             Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
         ], "FFNN_7")
 
         ffnn.compile(
             optimizer="nadam",
-            loss="binary_crossentropy"
+            loss="binary_crossentropy",
+            metrics=[AUC(curve='PR', name='pr')]
         )
 
         return ffnn, parameters
