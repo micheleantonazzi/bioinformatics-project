@@ -134,7 +134,7 @@ class ExperimentExecutor:
                                              desc="Computing holdouts", dynamic_ncols=True):
                     print(f'For {region} train {model_name}')
                     model, train_parameters = builder(region,
-                                                      parameters_function[model_name]()[region])
+                                                      parameters_function[model_name](labels[train])[region], labels[train])
 
                     model.fit(data[train], labels[train], **train_parameters)
 

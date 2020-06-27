@@ -69,7 +69,7 @@ class ParameterSelectorEpigenomic:
         Return Decision Tree best parameters found using the Grid Search technique.
         It the parameters have been already calculated, they are loaded from disk
     """
-    def get_decision_tree_parameters_grid(self):
+    def get_decision_tree_parameters_grid(self, _):
         best_parameters = self.load_parameters_from_disk(DECISION_TREE_GRID)
 
         if len(best_parameters.keys()) == 0:
@@ -96,7 +96,7 @@ class ParameterSelectorEpigenomic:
         Return the Random Forest best parameters found using the Grid Search technique.
         It the parameters have been already calculated, they are loaded from disk
     """
-    def get_random_forest_parameters_grid(self):
+    def get_random_forest_parameters_grid(self, _):
         best_parameters = self.load_parameters_from_disk(RANDOM_FOREST_GRID)
 
         if len(best_parameters.keys()) == 0:
@@ -120,7 +120,7 @@ class ParameterSelectorEpigenomic:
             data.pop('best_score', None)
         return best_parameters
 
-    def get_perceptron_parameters(self):
+    def get_perceptron_parameters(self, _):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -137,7 +137,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {PERCEPTRON} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_perceptron_2_parameters(self):
+    def get_perceptron_2_parameters(self, _):
         parameters = dict(
              epochs=1000,
              batch_size=1024,
@@ -154,7 +154,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {PERCEPTRON_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_mlp_parameters(self):
+    def get_mlp_parameters(self, _):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -171,7 +171,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {MLP} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_mlp_2_parameters(self):
+    def get_mlp_2_parameters(self, _):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -188,7 +188,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {MLP_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_parameters(self):
+    def get_ffnn_parameters(self, _):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -205,7 +205,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_2_parameters(self):
+    def get_ffnn_2_parameters(self, _):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -222,7 +222,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_3_parameters(self):
+    def get_ffnn_3_parameters(self, _):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -239,7 +239,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_3} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_4_parameters(self):
+    def get_ffnn_4_parameters(self, _):
         parameters = dict(
             epochs=200,
             batch_size=1024,
@@ -256,7 +256,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_4} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_5_parameters(self):
+    def get_ffnn_5_parameters(self, _):
         parameters = dict(
             epochs=400,
             batch_size=1024,
@@ -273,10 +273,10 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_5} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_6_parameters(self):
+    def get_ffnn_6_parameters(self, _):
         parameters = dict(
             epochs=1000,
-            batch_size=1024,
+            batch_size=100,
             validation_split=0.1,
             shuffle=True,
             verbose=True,
@@ -289,37 +289,38 @@ class ParameterSelectorEpigenomic:
         for region, data in best_parameters.items():
             print(colored(f'Best {FFNN_6} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
-        return best_parameters
 
-    def get_ffnn_7_parameters(self):
-        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == False)
-        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1] == True)
-        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_PROMOTERS][1])
+    def get_ffnn_7_parameters(self, labels):
+        neg = len(labels == 0)
+        pos = len(labels == 1)
+        total = len(labels)
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        print(class_weight)
         parameters_promoters = dict(
             epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
-            verbose=False,
+            verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
+                EarlyStopping(monitor='val_pr', mode="max", patience=50, restore_best_weights=True),
             ],
             class_weight=class_weight
         )
 
-        neg = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == False)
-        pos = numpy.count_nonzero(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1] == True)
-        total = len(self._data.get_epigenomic_data_for_learning()[DataRetrieval.KEY_ENHANCERS][1])
+        neg = len(labels == 0)
+        pos = len(labels == 1)
+        total = len(labels)
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        print(class_weight)
         parameters_enhancers = dict(
             epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
-            verbose=False,
+            verbose=True,
             callbacks=[
-                EarlyStopping(monitor='val_loss', mode="max", patience=50, restore_best_weights=True),
+                EarlyStopping(monitor='val_pr', mode="max", patience=50, restore_best_weights=True),
             ],
             class_weight=class_weight
         )
