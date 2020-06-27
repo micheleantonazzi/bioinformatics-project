@@ -35,6 +35,14 @@ The feed forward neural network are used to analyze the epigenomic data related 
 | Layer 7 | Dense              | 16    | ReLu       | -    |
 | Layer 8 | Dense              | 1     | Sigmoid    | -    |
 
+| Parameter        | Value                             |
+| ---------------- | --------------------------------- |
+| Epochs           | 1000                              |
+| Batch size       | 1024                              |
+| Validation split | 0.1                               |
+| Shuffle          | true                              |
+| Early stopping   | monitor = val_loss, patience = 50 |
+
 The second feedforward neural network (FFNN_2) is similar to the first: it has only more Dropout layers with an higher rate to prevent the overfitting.
 
 | Layers   | Type               | Units | Activation | Rate |
@@ -50,7 +58,15 @@ The second feedforward neural network (FFNN_2) is similar to the first: it has o
 | Layer 9  | Dropout            | -     | -          | 0.5  |
 | Layer 10 | Dense              | 1     | Sigmoid    | -    |
 
-The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. 
+| Parameter        | Value                             |
+| ---------------- | --------------------------------- |
+| Epochs           | 1000                              |
+| Batch size       | 1024                              |
+| Validation split | 0.1                               |
+| Shuffle          | true                              |
+| Early stopping   | monitor = val_loss, patience = 50 |
+
+The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. First of all a bias is added to the last layer to reflect the class imbalance. Then, a particular parameter wchich specify the class weight is passed for the learning procedure.
 
 # Experimental setup
 
