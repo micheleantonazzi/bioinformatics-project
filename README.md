@@ -22,7 +22,35 @@ This project aims to predict if regulatory elements, such as promoters and enhan
 
 ## FFNN 
 
-The feed forward neural network are used to analyze the epigenomic data related to promoters and enhancers. Each region is characterized by a lot of feature, about 200, so the data have a high dimensionality. A FFNN is suitable for processing these data using more layers and neurons. In particular, in this project
+The feed forward neural network are used to analyze the epigenomic data related to promoters and enhancers. Each region is characterized by a lot of feature, about 200, so the data have a high dimensionality. A FFNN is suitable for processing these data using more layers and neurons. In particular, in this project three different types of FFNN are tested. The first model (called FFNN_1) is a classical model and it is set using amost standard parameters.
+
+| Layers  | Type               | Units | Activation | Rate |
+| ------- | ------------------ | ----- | ---------- | ---- |
+| Layer 1 | Dense              | 256   | ReLu       | -    |
+| Layer 2 | Dense              | 128   | ReLu       | -    |
+| Layer 3 | BatchNormalization | -     | ReLu       | -    |
+| Layer 4 | Dense              | 64    | ReLu       | -    |
+| Layer 5 | Dropout            | -     | -          | 0.3  |
+| Layer 6 | Dense              | 32    | ReLu       | -    |
+| Layer 7 | Dense              | 16    | ReLu       | -    |
+| Layer 8 | Dense              | 1     | Sigmoid    | -    |
+
+The second feedforward neural network (FFNN_2) is similar to the first: it has only more Dropout layers with an higher rate to prevent the overfitting.
+
+| Layers   | Type               | Units | Activation | Rate |
+| -------- | ------------------ | ----- | ---------- | ---- |
+| Layer 1  | Dense              | 256   | ReLu       | -    |
+| Layer 2  | Dropout            | -     | -          | 0.5  |
+| Layer 3  | BatchNormalization | -     | ReLu       | -    |
+| Layer 4  | Dense              | 128   | ReLu       | -    |
+| Layer 5  | Dropout            | -     | -          | 0.5  |
+| Layer 6  | Dense              | 32    | ReLu       | -    |
+| Layer 7  | Dropout            | -     | -          | 0.5  |
+| Layer 8  | Dense              | 16    | ReLu       | -    |
+| Layer 9  | Dropout            | -     | -          | 0.5  |
+| Layer 10 | Dense              | 1     | Sigmoid    | -    |
+
+The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. 
 
 # Experimental setup
 
