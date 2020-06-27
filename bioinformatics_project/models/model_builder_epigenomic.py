@@ -236,7 +236,7 @@ class ModelBuilderEpigenomic:
             Dense(32, activation="relu"),
             Dense(16, activation="relu"),
             Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
-        ], "FFNN")
+        ], "FFNN_7")
 
         ffnn.compile(
             optimizer="nadam",
