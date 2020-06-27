@@ -279,7 +279,7 @@ class ParameterSelectorEpigenomic:
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
-            verbose=False,
+            verbose=True,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
             ]
