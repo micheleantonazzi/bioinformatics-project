@@ -213,7 +213,7 @@ class ModelBuilderEpigenomic:
         ], FFNN_6)
 
         ffnn.compile(
-            optimizer=SGD(learning_rate=0.1, momentum=0.1, decay=0.01),
+            optimizer=SGD(learning_rate=0.1, decay=0.01),
             loss="binary_crossentropy"
         )
 
@@ -227,7 +227,6 @@ class ModelBuilderEpigenomic:
 
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation="relu"),
             Dense(128),
             BatchNormalization(),
@@ -237,10 +236,10 @@ class ModelBuilderEpigenomic:
             Dense(32, activation="relu"),
             Dense(16, activation="relu"),
             Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
-        ], FFNN_6)
+        ], "FFNN")
 
         ffnn.compile(
-            optimizer=SGD(learning_rate=0.1, momentum=0.1),
+            optimizer="nadam",
             loss="binary_crossentropy"
         )
 
