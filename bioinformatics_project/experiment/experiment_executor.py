@@ -166,7 +166,7 @@ class ExperimentExecutor:
         If the results for a specific model have been already calculated, they are loaded directly from disk.
         Finally the metrics are calculated and the relative graphs are plotted
     """
-    def execute_sequence_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 10):
+    def execute_sequence_experiment(self, data_retrieval: DataRetrieval, region: str, splits: int = 3):
         data_retrieval.load_genome_data()
         holdouts = self.get_holdouts(splits)
 
