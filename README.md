@@ -66,7 +66,40 @@ The second feedforward neural network (FFNN_2) is similar to the first: it has o
 | Shuffle          | true                              |
 | Early stopping   | monitor = val_loss, patience = 50 |
 
-The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. First of all a bias is added to the last layer to reflect the class imbalance. Then, a particular parameter wchich specify the class weight is passed for the learning procedure.
+The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. First of all a bias is added to the last layer to reflect the class imbalance. Then, a particular parameter which specify the class weight is passed for the learning procedure. This solution is taken from this official Tensorflow [guide](https://www.tensorflow.org/tutorials/structured_data/imbalanced_data). In this network is also set a different early stopping condition. which monitor the AUPRC metrics of validation and it restores the 
+
+| Layers  | Type               | Units | Activation | Rate | Notes            |
+| ------- | ------------------ | ----- | ---------- | ---- | ---------------- |
+| Layer 1 | Dense              | 256   | ReLu       | -    | -                |
+| Layer 2 | BatchNormalization | -     | ReLu       | -    | -                |
+| Layer 3 | Dense              | 128   | ReLu       | -    | -                |
+| Layer 4 | Dense              | 32    | ReLu       | -    | -                |
+| Layer 5 | Dropout            | -     | -          | 0.5  | -                |
+| Layer 6 | Dense              | 16    | ReLu       | -    | -                |
+| Layer 7 | Dropout            | -     | -          | 0.5  | -                |
+| Layer 8 | Dense              | 1     | Sigmoid    | -    | bias initializer |
+
+| Parameter        | Value                                                        |
+| ---------------- | ------------------------------------------------------------ |
+| Epochs           | 1000                                                         |
+| Batch size       | 1024                                                         |
+| Validation split | 0.1                                                          |
+| Shuffle          | true                                                         |
+| Early stopping   | monitor = val_aurpc, patience = 50, restore_best_weight = true |
+| Class weight     | dictionary with class weight                                 |
+
+The last model type (FFNN_4) is inspired by Bayesian-FFNN explained in [5], constructed using the Bayesian optimization method. The architecture composed by 3 hidden layer+
+
+| Layers  | Type               | Units | Activation | Rate | Notes            |
+| ------- | ------------------ | ----- | ---------- | ---- | ---------------- |
+| Layer 1 | Dense              | 256   | ReLu       | -    | -                |
+| Layer 2 | BatchNormalization | -     | ReLu       | -    | -                |
+| Layer 3 | Dense              | 128   | ReLu       | -    | -                |
+| Layer 4 | Dense              | 32    | ReLu       | -    | -                |
+| Layer 5 | Dropout            | -     | -          | 0.5  | -                |
+| Layer 6 | Dense              | 16    | ReLu       | -    | -                |
+| Layer 7 | Dropout            | -     | -          | 0.5  | -                |
+| Layer 8 | Dense              | 1     | Sigmoid    | -    | bias initializer |
 
 # Experimental setup
 
@@ -168,3 +201,5 @@ Multiple factor analysis (MFA) is used to view data organized into subgroups. Th
 [3] Kelley DR, Snoek J, Rinn JL. 2016. Basset: learning the regulatory code of the accessible genome with deep convolutional neural networks.
 
 [4] David R. Kelley, Yakir A. Reshef,2 Maxwell Bileschi, David Belanger, Cory Y. McLean, and Jasper Snoek. "Sequential regulatory activity prediction across chromosomes with convolutional neural networks"
+
+[5] Luca Cappelletti, Alessandro Petrini, Jessica Gliozzo, Elena Casiraghi, Max Schubach, Martin Kircher, Giorgio Valentini. "Bayesian optimization improves tissue-specific prediction of active regulatory regions with deep neural networks"
