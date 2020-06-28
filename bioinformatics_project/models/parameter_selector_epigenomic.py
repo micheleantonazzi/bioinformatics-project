@@ -96,7 +96,7 @@ class ParameterSelectorEpigenomic:
         Return the Random Forest best parameters found using the Grid Search technique.
         It the parameters have been already calculated, they are loaded from disk
     """
-    def get_random_forest_parameters_grid(self, _):
+    def get_random_forest_parameters_grid(self, _=None):
         best_parameters = self.load_parameters_from_disk(RANDOM_FOREST_GRID)
 
         if len(best_parameters.keys()) == 0:
@@ -120,7 +120,7 @@ class ParameterSelectorEpigenomic:
             data.pop('best_score', None)
         return best_parameters
 
-    def get_perceptron_parameters(self, _):
+    def get_perceptron_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -137,7 +137,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {PERCEPTRON} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_perceptron_2_parameters(self, _):
+    def get_perceptron_2_parameters(self, _=None):
         parameters = dict(
              epochs=1000,
              batch_size=1024,
@@ -154,7 +154,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {PERCEPTRON_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_mlp_parameters(self, _):
+    def get_mlp_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -171,7 +171,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {MLP} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_mlp_2_parameters(self, _):
+    def get_mlp_2_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -188,7 +188,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {MLP_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_parameters(self, _):
+    def get_ffnn_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -205,7 +205,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_2_parameters(self, _):
+    def get_ffnn_2_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -222,7 +222,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_3_parameters(self, _):
+    def get_ffnn_3_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -239,7 +239,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_3} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_4_parameters(self, _):
+    def get_ffnn_4_parameters(self, _=None):
         parameters = dict(
             epochs=200,
             batch_size=1024,
@@ -256,7 +256,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_4} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_5_parameters(self, _):
+    def get_ffnn_5_parameters(self, _=None):
         parameters = dict(
             epochs=400,
             batch_size=1024,
@@ -273,7 +273,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_5} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_6_parameters(self, _):
+    def get_ffnn_6_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
             batch_size=100,

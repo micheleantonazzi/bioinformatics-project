@@ -33,7 +33,7 @@ class ModelBuilderEpigenomic:
             FFNN_7: self.create_ffnn_7
         }
 
-    def create_decision_tree_grid(self, _, parameters, __):
+    def create_decision_tree_grid(self, _, parameters, __=None):
         return DecisionTreeClassifier(**parameters), {}
 
     def create_random_forest_grid(self, _, parameters, __):
@@ -51,7 +51,7 @@ class ModelBuilderEpigenomic:
         )
         return perceptron, parameters
 
-    def create_mlp(self, region, parameters, _):
+    def create_mlp(self, region, parameters, _=None):
         mlp = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation="relu"),
@@ -67,7 +67,7 @@ class ModelBuilderEpigenomic:
         )
         return mlp, parameters
 
-    def create_mlp_2(self, region, parameters, _):
+    def create_mlp_2(self, region, parameters, _=None):
         mlp = Sequential([
              Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
              Dense(128, activation="relu"),
@@ -82,7 +82,7 @@ class ModelBuilderEpigenomic:
         )
         return mlp, parameters
 
-    def create_ffnn(self, region, parameters, _):
+    def create_ffnn(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation="relu"),
@@ -103,7 +103,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_2(self, region, parameters, _):
+    def create_ffnn_2(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu'),
@@ -128,7 +128,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_3(self, region, parameters, _):
+    def create_ffnn_3(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu'),
@@ -153,7 +153,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_4(self, region, parameters, _):
+    def create_ffnn_4(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
@@ -179,7 +179,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_5(self, region, parameters, _):
+    def create_ffnn_5(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu', kernel_regularizer=l2(l=0.01)),
@@ -203,7 +203,7 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_6(self, region, parameters, _):
+    def create_ffnn_6(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu', kernel_regularizer=l2(0.001)),
