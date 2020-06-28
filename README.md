@@ -22,7 +22,7 @@ This project aims to predict if regulatory elements, such as promoters and enhan
 
 ## FFNN 
 
-The feed forward neural network are used to analyze the epigenomic data related to promoters and enhancers. Each region is characterized by a lot of feature, about 200, so the data have a high dimensionality. A FFNN is suitable for processing these data using more layers and neurons. In particular, in this project three different types of FFNN are tested. The first model (called FFNN_1) is a classical model and it is set using amost standard parameters.
+The feed-forward neural network is used to analyze the epigenomic data related to promoters and enhancers. Each region is characterized by a lot of features, about 200, so the data have high dimensionality. An FFNN is suitable for processing these data using more layers and neurons. In particular, in this project, three different types of FFNN are tested. The first model (called FFNN_1) has a classical architecture and it is set using almost standard parameters. Its purpose is to examine the network performance with the given dataset to build a better model.
 
 | Layers  | Type               | Units | Activation | Rate |
 | ------- | ------------------ | ----- | ---------- | ---- |
@@ -43,7 +43,7 @@ The feed forward neural network are used to analyze the epigenomic data related 
 | Shuffle          | true                              |
 | Early stopping   | monitor = val_loss, patience = 50 |
 
-The second feedforward neural network (FFNN_2) is similar to the first: it has only more Dropout layers with an higher rate to prevent the overfitting.
+The second feedforward neural network (FFNN_2) is similar to the first: it has only more Dropout layers with a higher rate to prevent overfitting.
 
 | Layers   | Type               | Units | Activation | Rate |
 | -------- | ------------------ | ----- | ---------- | ---- |
@@ -66,7 +66,7 @@ The second feedforward neural network (FFNN_2) is similar to the first: it has o
 | Shuffle          | true                              |
 | Early stopping   | monitor = val_loss, patience = 50 |
 
-The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. First of all a bias is added to the last layer to reflect the class imbalance. Then, a particular parameter which specify the class weight is passed for the learning procedure. This solution is taken from this official Tensorflow [guide](https://www.tensorflow.org/tutorials/structured_data/imbalanced_data). In this network is also set a different early stopping condition. which monitor the AUPRC metrics of validation and it restores the 
+The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. First of all, a bias is added to the last layer to reflect the class imbalance. Then, a particular parameter which specifies the class weight is passed for the learning procedure. This solution is taken from this official Tensorflow [guide](https://www.tensorflow.org/tutorials/structured_data/imbalanced_data). In this network is also set a different early stopping condition, which maximizes the AUPRC and restores the best weights after each epoch. 
 
 | Layers  | Type               | Units | Activation | Rate | Notes            |
 | ------- | ------------------ | ----- | ---------- | ---- | ---------------- |
@@ -88,18 +88,26 @@ The third learning machine (FFNN_3) tries to resolve the problem of data imbalan
 | Early stopping   | monitor = val_aurpc, patience = 50, restore_best_weight = true |
 | Class weight     | dictionary with class weight                                 |
 
-The last model type (FFNN_4) is inspired by Bayesian-FFNN explained in [5], constructed using the Bayesian optimization method. The architecture composed by 3 hidden layer+
+The last model type (FFNN_4) is inspired by Bayesian-FFNN explained in [5], constructed using the Bayesian optimization method. Its architecture is composed by 3 hidden layer with a l2 regularizer, which apply a penalty on the layer's kernel. 
 
-| Layers  | Type               | Units | Activation | Rate | Notes            |
-| ------- | ------------------ | ----- | ---------- | ---- | ---------------- |
-| Layer 1 | Dense              | 256   | ReLu       | -    | -                |
-| Layer 2 | BatchNormalization | -     | ReLu       | -    | -                |
-| Layer 3 | Dense              | 128   | ReLu       | -    | -                |
-| Layer 4 | Dense              | 32    | ReLu       | -    | -                |
-| Layer 5 | Dropout            | -     | -          | 0.5  | -                |
-| Layer 6 | Dense              | 16    | ReLu       | -    | -                |
-| Layer 7 | Dropout            | -     | -          | 0.5  | -                |
-| Layer 8 | Dense              | 1     | Sigmoid    | -    | bias initializer |
+| Layers  | Type  | Units | Activation | Regularizer l2 |
+| ------- | ----- | ----- | ---------- | -------------- |
+| Layer 1 | Dense | 256   | ReLu       | -              |
+| Layer 3 | Dense | 128   | ReLu       | -              |
+| Layer 4 | Dense | 64    | ReLu       | -              |
+| Layer 8 | Dense | 1     | Sigmoid    | -              |
+
+| Parameter        | Value                             |
+| ---------------- | --------------------------------- |
+| Epochs           | 1000                              |
+| Batch size       | 100                               |
+| Validation split | 0.1                               |
+| Shuffle          | true                              |
+| Early stopping   | monitor = val_loss, patience = 50 |
+
+## CNN
+
+The convolutional neural
 
 # Experimental setup
 
