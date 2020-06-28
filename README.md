@@ -14,7 +14,7 @@ Since some software handling coverages sometimes get slightly different results,
 
 # Introduction
 
-The phenotype is a term used in genetics to define the set of observable traits in an organism. It can be seen as the result of three factors: the expression of the genetic code of an organism, its interaction with the environment, and some casual events which can occur during its life. In particular, the main aspect is the gene expression, which is the process by which the information from a gene is used to synthesize all functional gene products, like RNA or proteins, essential for the life of all organisms and many viruses. The first step to define the gene expression is to study the DNA, which is the essential molecule that characterizes the organisms in general. It contains all the genetic instructions which regulate this process. Starting from its structure, the DNA is composed of two chains of nucleotides, combined together to compose a double helix. This molecule can be divided into subsequences of nucleotides and each of them has a specific task. These sequences can be grouped into two sets according to their main purpose: the coding and non-coding regions. The coding regions (the gene) contain the information to synthesize some gene products and the non-coding regions are responsible to help, regulate or modify the creation process of a specific gene product. The gene expression involves both these regions of the DNA and it is composed of two main processes: transcription and translation. Through the transcription process, a particular DNA coding region is copied inside the messenger RNA (mRNA) thanks to some proteins, the RNA polymerase and other transcription factors, specific for each gene product. In particular, RNA polymerase binds to a particular region of DNA, called the promoter, and activates the transcription process. The initial version of mRNA contains redundant information and it consists of alternating segments called exons (coding regions) and introns (redundant regions). The RNA splicing method is applied to remove the introns and to produce the final mRNA sequence. After that, the mRNA goes out from the cell nucleus, and then the translation process starts. The mRNA sequence is divided into small groups of 3 nucleotides. Each of these triplets, also known as codon, corresponds to a specific amino acid. The result sequence of amino acids forms the final gene product. It is important to specify that a single coding region can generate many different products and the non-coding region play a big role in gene expression. There are two main types of non-coding regions: trans-regulatory elements (TREs) and cis-regulatory elements (CREs). TREs are particular types of genes that may modify or regulate the expression of other genes, often encoding transcription factors. Other non-coding regions, the CREs, are close to the genes that they regulate by bindings to the transcription factor. In particular, enhancers and silencers interact with promoters, through RNA polymerase and other transcription factors, to influence or repress, respectively, the gene expression. There are hundreds of different cell types in an organism despite they share the same DNA. This means that the gene expression is different according to the cell line and the type of product to be synthesized. In particular, the DNA may be used by the cell in very different ways and its regions may be active or inactive, producing a different level of expression for each gene. Determine the activation of the regions is a very important task in biology, it can be useful to determine the phenotype expressed by an organism or to control the gene expression in a specific cell line or, again, to understand better the complex interaction between the DNA and the transcription factors. Besides, this technique can help during the diagnosis, to determine the current or future pathology or to find the best therapy according to the genetic characteristics of the patient. However, determine if a DNA region is active or not is very hard and expensive: the amount of data to collect is huge and its analysis is very complex. The new information technologies can help to simplify this task, supervised machine learning in particular. The idea is to train a learning machine using some examples, DNA regions labeled as active and inactive, so that it can predict the status of an unknown region considering only its specific features. In literature, a lot of methods are proposed. In [1] it is used a deep feedforward neural network to predict active enhancer, active promoter, active exon, inactive enhancer, inactive promoter, inactive exon, and uncharacterized regions. Another method, DeepEnhancer [2], uses CNN to find enhancers and specialize the learning process on the cell line using the transfer learning technique. Moreover, Basset [3] is an open-source system that applies CNN to learn simultaneously the relevant DNA sequence motifs and the regulatory logic to determine cell-specific DNA accessibility. Following work, Basenji [4], modify the previous system to identify promoters and the relative regulatory elements and synthesize their content to make more precise gene expression predictions.
+The phenotype is a term used in genetics to define the set of observable traits in an organism. It can be seen as the result of three factors: the expression of the genetic code of an organism, its interaction with the environment, and some casual events which can occur during its life. In particular, the main aspect is the gene expression, which is the process by which the information from a gene is used to synthesize all functional gene products, like RNA or proteins, essential for the life of all organisms and many viruses. The first step to define the gene expression is to study the DNA, which is the essential molecule that characterizes the organisms in general. It contains all the genetic instructions which regulate this process. Starting from its structure, the DNA is composed of two chains of nucleotides, combined to compose a double helix. This molecule can be divided into subsequences of nucleotides and each of them has a specific task. These sequences can be grouped into two sets according to their main purpose: the coding and non-coding regions. The coding regions (the gene) contain the information to synthesize some gene products and the non-coding regions are responsible to help, regulate or modify the creation process of a specific gene product. The gene expression involves both these regions of the DNA and it is composed of two main processes: transcription and translation. Through the transcription process, a particular DNA coding region is copied inside the messenger RNA (mRNA) thanks to some proteins, the RNA polymerase and other transcription factors, specific for each gene product. In particular, RNA polymerase binds to a particular region of DNA, called the promoter, and activates the transcription process. The initial version of mRNA contains redundant information and it consists of alternating segments called exons (coding regions) and introns (redundant regions). The RNA splicing method is applied to remove the introns and to produce the final mRNA sequence. After that, the mRNA goes out from the cell nucleus, and then the translation process starts. The mRNA sequence is divided into small groups of 3 nucleotides. Each of these triplets, also known as codon, corresponds to a specific amino acid. The result sequence of amino acids forms the final gene product. It is important to specify that a single coding region can generate many different products and the non-coding region play a big role in gene expression. There are two main types of non-coding regions: trans-regulatory elements (TREs) and cis-regulatory elements (CREs). TREs are particular types of genes that may modify or regulate the expression of other genes, often encoding transcription factors. Other non-coding regions, the CREs, are close to the genes that they regulate by bindings to the transcription factor. In particular, enhancers and silencers interact with promoters, through RNA polymerase and other transcription factors, to influence or repress, respectively, the gene expression. There are hundreds of different cell types in an organism despite they share the same DNA. This means that the gene expression is different according to the cell line and the type of product to be synthesized. In particular, the DNA may be used by the cell in very different ways and its regions may be active or inactive, producing a different level of expression for each gene. Determine the activation of the regions is a very important task in biology, it can be useful to determine the phenotype expressed by an organism or to control the gene expression in a specific cell line or, again, to understand better the complex interaction between the DNA and the transcription factors. Besides, this technique can help during the diagnosis, to determine the current or future pathology or to find the best therapy according to the genetic characteristics of the patient. However, determine if a DNA region is active or not is very hard and expensive: the amount of data to collect is huge and its analysis is very complex. The new information technologies can help to simplify this task, supervised machine learning in particular. The idea is to train a learning machine using some examples, DNA regions labeled as active and inactive, so that it can predict the status of an unknown region considering only its specific features. In the literature, a lot of methods are proposed. In [1] it is used a deep feedforward neural network to predict active enhancer, active promoter, active exon, inactive enhancer, inactive promoter, inactive exon, and uncharacterized regions. Another method, DeepEnhancer [2], uses CNN to find enhancers and specialize in the learning process on the cell line using the transfer learning technique. Moreover, Basset [3] is an open-source system that applies CNN to learn simultaneously the relevant DNA sequence motifs and the regulatory logic to determine cell-specific DNA accessibility. Following work, Basenji [4], modify the previous system to identify promoters and the relative regulatory elements and synthesize their content to make more precise gene expression predictions.
 
 # Models
 
@@ -22,18 +22,18 @@ This project aims to predict if regulatory elements, such as promoters and enhan
 
 ## FFNN 
 
-The feed-forward neural network is used to analyze the epigenomic data related to promoters and enhancers. Each region is characterized by a lot of features, about 200, so the data have high dimensionality. An FFNN is suitable for processing these data using more layers and neurons. In particular, in this project, three different types of FFNN are tested. The first model (called FFNN_1) has a classical architecture and it is set using almost standard parameters. Its purpose is to examine the network performance with the given dataset to build a better model.
+The feed-forward neural networks are used to analyze the epigenomic data related to promoters and enhancers. Each region is characterized by a lot of features, about 200, so the data have high dimensionality. An FFNN is suitable for processing these data using more layers and neurons. In particular, in this project, three different types of FFNN are tested. The first model (called FFNN_1) has a classical architecture and it is set using almost standard parameters. Its purpose is to examine the network performance with the given dataset to build a better model.
 
-| Layers  | Type               | Units | Activation | Rate |
-| ------- | ------------------ | ----- | ---------- | ---- |
-| Layer 1 | Dense              | 256   | ReLu       | -    |
-| Layer 2 | Dense              | 128   | ReLu       | -    |
-| Layer 3 | BatchNormalization | -     | ReLu       | -    |
-| Layer 4 | Dense              | 64    | ReLu       | -    |
-| Layer 5 | Dropout            | -     | -          | 0.3  |
-| Layer 6 | Dense              | 32    | ReLu       | -    |
-| Layer 7 | Dense              | 16    | ReLu       | -    |
-| Layer 8 | Dense              | 1     | Sigmoid    | -    |
+| Layers  | Type                | Units | Activation | Probability |
+| ------- | ------------------- | ----- | ---------- | ----------- |
+| Layer 1 | Dense               | 256   | ReLU       | -           |
+| Layer 2 | Dense               | 128   | ReLU       | -           |
+| Layer 3 | Batch Normalization | -     | ReLU       | -           |
+| Layer 4 | Dense               | 64    | ReLU       | -           |
+| Layer 5 | Dropout             | -     | -          | 0.3         |
+| Layer 6 | Dense               | 32    | ReLU       | -           |
+| Layer 7 | Dense               | 16    | ReLU       | -           |
+| Layer 8 | Dense               | 1     | Sigmoid    | -           |
 
 | Parameter        | Value                             |
 | ---------------- | --------------------------------- |
@@ -45,18 +45,18 @@ The feed-forward neural network is used to analyze the epigenomic data related t
 
 The second feedforward neural network (FFNN_2) is similar to the first: it has only more Dropout layers with a higher rate to prevent overfitting.
 
-| Layers   | Type               | Units | Activation | Rate |
-| -------- | ------------------ | ----- | ---------- | ---- |
-| Layer 1  | Dense              | 256   | ReLu       | -    |
-| Layer 2  | Dropout            | -     | -          | 0.5  |
-| Layer 3  | BatchNormalization | -     | ReLu       | -    |
-| Layer 4  | Dense              | 128   | ReLu       | -    |
-| Layer 5  | Dropout            | -     | -          | 0.5  |
-| Layer 6  | Dense              | 32    | ReLu       | -    |
-| Layer 7  | Dropout            | -     | -          | 0.5  |
-| Layer 8  | Dense              | 16    | ReLu       | -    |
-| Layer 9  | Dropout            | -     | -          | 0.5  |
-| Layer 10 | Dense              | 1     | Sigmoid    | -    |
+| Layers   | Type                | Units | Activation | Probability |
+| -------- | ------------------- | ----- | ---------- | ----------- |
+| Layer 1  | Dense               | 256   | ReLU       | -           |
+| Layer 2  | Dropout             | -     | -          | 0.5         |
+| Layer 3  | Batch Normalization | -     | ReLU       | -           |
+| Layer 4  | Dense               | 128   | ReLU       | -           |
+| Layer 5  | Dropout             | -     | -          | 0.5         |
+| Layer 6  | Dense               | 32    | ReLU       | -           |
+| Layer 7  | Dropout             | -     | -          | 0.5         |
+| Layer 8  | Dense               | 16    | ReLU       | -           |
+| Layer 9  | Dropout             | -     | -          | 0.5         |
+| Layer 10 | Dense               | 1     | Sigmoid    | -           |
 
 | Parameter        | Value                             |
 | ---------------- | --------------------------------- |
@@ -66,18 +66,18 @@ The second feedforward neural network (FFNN_2) is similar to the first: it has o
 | Shuffle          | true                              |
 | Early stopping   | monitor = val_loss, patience = 50 |
 
-The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. First of all, a bias is added to the last layer to reflect the class imbalance. Then, a particular parameter which specifies the class weight is passed for the learning procedure. This solution is taken from this official Tensorflow [guide](https://www.tensorflow.org/tutorials/structured_data/imbalanced_data). In this network is also set a different early stopping condition, which maximizes the AUPRC and restores the best weights after each epoch. 
+The third learning machine (FFNN_3) tries to resolve the problem of data imbalance. First of all, a bias is added to the last layer to reflect the class imbalance. Then, a particular parameter that specifies the class weight is passed for the learning procedure. This solution is taken from this official Tensorflow [guide](https://www.tensorflow.org/tutorials/structured_data/imbalanced_data). In this network is also set a different early stopping condition, which maximizes the AUPRC and restores the best weights after each epoch. 
 
-| Layers  | Type               | Units | Activation | Rate | Notes            |
-| ------- | ------------------ | ----- | ---------- | ---- | ---------------- |
-| Layer 1 | Dense              | 256   | ReLu       | -    | -                |
-| Layer 2 | BatchNormalization | -     | ReLu       | -    | -                |
-| Layer 3 | Dense              | 128   | ReLu       | -    | -                |
-| Layer 4 | Dense              | 32    | ReLu       | -    | -                |
-| Layer 5 | Dropout            | -     | -          | 0.5  | -                |
-| Layer 6 | Dense              | 16    | ReLu       | -    | -                |
-| Layer 7 | Dropout            | -     | -          | 0.5  | -                |
-| Layer 8 | Dense              | 1     | Sigmoid    | -    | bias initializer |
+| Layers  | Type                | Units | Activation | Probability | Notes            |
+| ------- | ------------------- | ----- | ---------- | ----------- | ---------------- |
+| Layer 1 | Dense               | 256   | ReLU       | -           | -                |
+| Layer 2 | Batch Normalization | -     | ReLU       | -           | -                |
+| Layer 3 | Dense               | 128   | ReLU       | -           | -                |
+| Layer 4 | Dense               | 32    | ReLU       | -           | -                |
+| Layer 5 | Dropout             | -     | -          | 0.5         | -                |
+| Layer 6 | Dense               | 16    | ReLU       | -           | -                |
+| Layer 7 | Dropout             | -     | -          | 0.5         | -                |
+| Layer 8 | Dense               | 1     | Sigmoid    | -           | bias initializer |
 
 | Parameter        | Value                                                        |
 | ---------------- | ------------------------------------------------------------ |
@@ -88,13 +88,13 @@ The third learning machine (FFNN_3) tries to resolve the problem of data imbalan
 | Early stopping   | monitor = val_aurpc, patience = 50, restore_best_weight = true |
 | Class weight     | dictionary with class weight                                 |
 
-The last model type (FFNN_4) is inspired by Bayesian-FFNN explained in [5], constructed using the Bayesian optimization method. Its architecture is composed by 3 hidden layer with a l2 regularizer, which apply a penalty on the layer's kernel. 
+The last model type (FFNN_4) is inspired by Bayesian-FFNN explained in [5], constructed using the Bayesian optimization method. Its architecture is composed of 3 hidden layers with an l2 regularizer, which apply a penalty on the layer's kernel. 
 
 | Layers  | Type  | Units | Activation | Regularizer l2 |
 | ------- | ----- | ----- | ---------- | -------------- |
-| Layer 1 | Dense | 256   | ReLu       | -              |
-| Layer 3 | Dense | 128   | ReLu       | -              |
-| Layer 4 | Dense | 64    | ReLu       | -              |
+| Layer 1 | Dense | 256   | ReLU       | -              |
+| Layer 3 | Dense | 128   | ReLU       | -              |
+| Layer 4 | Dense | 64    | ReLU       | -              |
 | Layer 8 | Dense | 1     | Sigmoid    | -              |
 
 | Parameter        | Value                             |
@@ -107,7 +107,119 @@ The last model type (FFNN_4) is inspired by Bayesian-FFNN explained in [5], cons
 
 ## CNN
 
-The convolutional neural
+The convolutional neural networks are used to analyze the sequence data because they can find patterns or motives which characterize this type of data. In the sequence data the features are hidden inside the sequence itself, so a CNN at first learns what are the data features using convolutional layers and subsequently uses these features to label the data thanks to fully connected layers. A feed-forward neural network uses only nucleotide locations as functionality but this information is too weak to effectively classify data. In this project are build and tested three different CNNs. The first network (CNN_1) is used to evaluate the performance of the network using the data related to the HEK293 cell line.
+
+| No. of Layers | Type    | Units | Kernel size | Activation | Notes             |
+| ------------- | ------- | ----- | ----------- | ---------- | ----------------- |
+| 1             | Reshape | -     | -           | -          | shape = 200, 4, 1 |
+| 2             | Conv2D  | 64    | 10, 2       | ReLU       | -                 |
+| 1             | Dropout | -     | -           | -          | Probability = 0.3 |
+| 1             | Conv2D  | 32    | 10, 2       | ReLU       | strides = 2, 1    |
+| 2             | Conv2D  | 32    | 10, 1       | ReLU       | -                 |
+| 1             | Dropout | -     | -           | -          | Probability = 0.3 |
+| 1             | Flatten | -     | -           | -          | -                 |
+| 1             | Dense   | 32    | -           | ReLU       | -                 |
+| 1             | Dense   | 16    | -           | ReLU       | -                 |
+| 1             | Dense   | 1     | -           | Sigmoid    | -                 |
+
+| Parameter  | Value |
+| ---------- | ----- |
+| Epochs     | 100   |
+| Batch size | 1024  |
+| Shuffle    | true  |
+
+The second network (CNN_2) has a different architecture. In particular, the convolutional layers have a larger unit number, to better find the patterns and features which characterized the data, and they apply a stride to reduce the parameter number. Besides, the dropout related to the fully-connected layer is increased to reduce overfitting.
+
+| No. of Layers | Type                | Units | Kernel size | Activation | Notes             |
+| ------------- | ------------------- | ----- | ----------- | ---------- | ----------------- |
+| 1             | Reshape             | -     | -           | -          | shape = 200, 4, 1 |
+| 1             | Conv2D              | 128   | 16, 4       | ReLU       | -                 |
+| 1             | Batch Normalization | -     | -           | ReLU       | -                 |
+| 1             | Max Pooling 1D      | -     | 5           | ReLU       | strides = 2, 1    |
+| 1             | Conv1D              | 64    | 12          | ReLU       | -                 |
+| 1             | Batch Normalization | -     | -           | ReLU       | -                 |
+| 1             | Max Pooling 1D      | -     | 4           | ReLU       | strides = 2, 1    |
+| 1             | Conv1D              | 32    | 5           | ReLU       | -                 |
+| 1             | Batch Normalization | -     | -           | ReLU       | -                 |
+| 1             | Max Pooling 1D      | -     | 2           | ReLU       | strides = 2, 1    |
+| 1             | Flatten             | -     | -           | -          | -                 |
+| 1             | Dense               | 64    | -           | ReLU       | -                 |
+| 1             | Dropout             | -     | -           | -          | Probability = 0.4 |
+| 1             | Dense               | 32    | -           | ReLU       | -                 |
+| 1             | Dropout             | -     | -           | -          | Probability = 0.4 |
+| 1             | Dense               | 16    | -           | ReLU       | -                 |
+| 1             | Dropout             | -     | -           | -          | Probability = 0.3 |
+| 1             | Dense               | 1     | -           | Sigmoid    | -                 |
+
+| Parameter  | Value |
+| ---------- | ----- |
+| Epochs     | 100   |
+| Batch size | 1024  |
+| Shuffle    | true  |
+
+The last model is inspired by Bayesian-CNN explained in [5]. Its architecture and parameters, written in the tables below, are optimized using the Bayesian method. Different from the previous CNNs, this network uses the data a single dimension. The tables below show their characteristics.
+
+| No. of Layers | Type                         | Units | Kernel size | Activation | Notes             |
+| ------------- | ---------------------------- | ----- | ----------- | ---------- | ----------------- |
+| 1             | Reshape                      | -     | -           | -          | shape = 800, 1    |
+| 3             | Conv1D + Batch Normalization | 64    | 5           | ReLU       | -                 |
+| 1             | Max Pooling 1D               | -     | 2           | -          | -                 |
+| 1             | Conv1D + Batch Normalization | 64    | 10          | ReLU       | -                 |
+| 1             | Max Pooling 1D               | -     | 2           | -          | -                 |
+| 1             | Flatten                      | -     | -           | -          | -                 |
+| 1             | Dense                        | 64    | -           | ReLU       | -                 |
+| 1             | Dropout                      | -     | -           | -          | Probability = 0.1 |
+| 1             | Dense                        | 64    | -           | ReLU       | -                 |
+| 1             | Dropout                      | -     | -           | -          | Probability = 0.1 |
+| 1             | Dense                        | 1     | -           | Sigmoid    | -                 |
+
+| Parameter  | Value |
+| ---------- | ----- |
+| Epochs     | 100   |
+| Batch size | 1024  |
+| Shuffle    | true  |
+
+## Comparison models
+
+To validate the results of feed-forward and convolutional neural netowrks is necessary to compare them with simpler models. In fact, it is necessary to justify the complexity introduced by FFNNs and CNNs and show that they perform better than other learning machines. If this is not verify or the perfomaces are similar, the use of simpler models is recommended. The comparison models are: decision tree, random forest, perceptron, and multi-layer perceptron.
+
+### Decision tree
+
+The hyper-parameters of decision tree are chosen using the Grid Search technique. This method consists into chose the parameters type, define a set of value for each parameter and iteratively explore all the possible combinations to find the best parameter configuration. This method is applied two times, both for promoters and enhancers, to increase the granularity and reduce the range of the parameter space. This learning machine is used only in the epigenomic experiments because it is unable to understand the complex structure of sequence data. In the table below are shown the parameters space and the best value found by Grid Search method for the first iteration.
+
+| Parameters   | Explored values                   | Best value for promoters | Best value for enhancers |
+| ------------ | --------------------------------- | ------------------------ | ------------------------ |
+| Max depth    | 2, 10, 20, 30 , 40 , 50, 100, 200 | 10                       | 10                       |
+| class weight | non-balanced, balanced            | balanced                 | balanced                 |
+
+Now the method is applied again with a more refined setting. The table below contains the values explored and the best choice for the two regions.
+
+| Parameters   | Explored values                    | Best values for promoters | Best value for enhancers |
+| ------------ | ---------------------------------- | ------------------------- | ------------------------ |
+| Max depth    | 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14 | 7                         | 6                        |
+| class weight | non-balanced, balanced             | balanced                  | balanced                 |
+
+### Random forest
+
+As in the case of decision tree, the random forest hyper-parameters are chosen using the Grid Search technique applied two times and this model is used only in the epigenomic experiments. The table below shows the parameters space and the best value for promoters and enhancers at the first iteration.
+
+| Parameters       | Explored values                   | Best value for promoters | Best value for enhancers |
+| ---------------- | --------------------------------- | ------------------------ | ------------------------ |
+| N. of estimators | 10, 20, 30, 40, 50, 100, 200, 500 | 100                      | 100                      |
+| Max depth        | 2, 10, 20, 30 , 40 , 50, 100      | 10                       | 10                       |
+| class weight     | non-balanced, balanced            | balanced                 | balanced                 |
+
+The table below shows final parameters chosen in a refined intervals.
+
+| Parameters       | Explored values                    | Best value for promoters | Best value for enhancers |
+| ---------------- | ---------------------------------- | ------------------------ | ------------------------ |
+| N. of estimators | 60, 70, 80, 90, 100, 120, 140, 160 | 90                       | 140                      |
+| Max depth        | 6, 8, 10, 12, 14, 16, 18, 20       | 8                        | 6                        |
+| class weight     | non-balanced, balanced             | balanced                 | balanced                 |
+
+### Percepetron and multi-layer perceptron
+
+The perceptron and multi-layer perceptron are included in the comparison models because they are the simpler version of FFNN 
 
 # Experimental setup
 
@@ -135,7 +247,7 @@ In some real dataset, especially in biology, there could be a strong imbalance b
 
 ### Constant feature
 
-In some dataset could be features with the same value for each sample. This situation doesn't help the learning machine and the these features can be removed. This is not the case of the data used in this projet. every features has different values in at most one sample.
+In some dataset could be features with the same value for each sample. This situation doesn't help the learning machine and the these features can be removed. This is not the case of the data used in this project. every features has different values in at most one sample.
 
 ### Z-scoring
 
