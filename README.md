@@ -219,7 +219,7 @@ The table below shows final parameters chosen in a refined intervals.
 
 ### Percepetron and multi-layer perceptron
 
-The perceptron and multi-layer perceptron are included in the comparison models because they are the simpler version of FFNN 
+The perceptron and multi-layer perceptron are included in the comparison models because they are the simpler version of feed-forward and convolutional neural network, so they are used both in epigenomic and sequence experiments. The model of perceptron is the simpler neural network, formed by an input layer and a single output neuron without any hidden layer. Its structure and the parameters are shown in the tables below. 
 
 # Experimental setup
 

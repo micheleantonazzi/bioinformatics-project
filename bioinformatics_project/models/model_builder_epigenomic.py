@@ -39,7 +39,7 @@ class ModelBuilderEpigenomic:
     def create_random_forest_grid(self, _, parameters, __):
         return RandomForestClassifier(**parameters, n_jobs=-1), {}
 
-    def create_perceptron(self, region, parameters):
+    def create_perceptron(self, region, parameters, _=None):
         perceptron = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(1, activation="sigmoid")
