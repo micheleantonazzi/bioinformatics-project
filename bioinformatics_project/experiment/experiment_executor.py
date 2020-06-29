@@ -108,6 +108,13 @@ class ExperimentExecutor:
             orientation="horizontal",
             path='experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/{feature}.png'
         )
+        models = results.model.unique()
+        run_types = results.run_type.unique()
+        for model in models:
+            for metric in ['Accuracy', 'AUROC', 'AUPRC']:
+                for run_type in run_types:
+                    res = results[(results['model'] == model) & (results['run_type'] == run_type)][metric].values
+                    print(f'For {region} {experiment_type} experiment, the {model} {metric} {run_type} mean is {numpy.mean(res)} and STD is {numpy.std(res)}')
 
     """
         Execute the experiments using epigenomic data.
@@ -199,7 +206,7 @@ class ExperimentExecutor:
                         "run_type": "train",
                         "holdout": i,
                         **{
-                            key: value
+                            sanitize_ml_labels(key): value
                             for key, value in scores.items()
                             if not key.startswith("val_")
                         }
@@ -210,7 +217,7 @@ class ExperimentExecutor:
                         "run_type": "test",
                         "holdout": i,
                         **{
-                            key[4:]: value
+                            sanitize_ml_labels(key[4:]): value
                             for key, value in scores.items()
                             if key.startswith("val_")
                         }
