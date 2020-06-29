@@ -227,7 +227,6 @@ class ParameterSelectorEpigenomic:
         pos = numpy.count_nonzero(labels == 1)
         total = len(labels)
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        print(class_weight)
         parameters_promoters = dict(
             epochs=1000,
             batch_size=1024,
@@ -244,7 +243,6 @@ class ParameterSelectorEpigenomic:
         pos = numpy.count_nonzero(labels == 1)
         total = len(labels)
         class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        print(class_weight)
         parameters_enhancers = dict(
             epochs=1000,
             batch_size=1024,
