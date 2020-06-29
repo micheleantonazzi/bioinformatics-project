@@ -39,6 +39,7 @@ class DataChecking:
         for axis, (region, y) in zip(axes.ravel(), self._data.get_labels().items()):
             y.hist(color='royalblue', ax=axis, bins=3)
             axis.set_title(f'Number of samples for {region}')
+            print(f'The rate between positive and negate samples is {(numpy.count_nonzero(y.values == 0) * 1.0) / numpy.count_nonzero(y.values == 1)} for {region}')
         fig.show()
 
     """
