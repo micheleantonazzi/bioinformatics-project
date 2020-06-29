@@ -5,6 +5,7 @@ from typing import Tuple
 import pandas
 from keras_bed_sequence import BedSequence
 from keras_mixed_sequence import MixedSequence
+from tabulate import tabulate
 from tqdm import tqdm
 from ucsc_genomes_downloader import Genome
 
@@ -108,13 +109,25 @@ class ExperimentExecutor:
             orientation="horizontal",
             path='experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/{feature}.png'
         )
+        open('experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/metrics_table.txt', 'w').close()
+        file = open('experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/metrics_table.txt', 'w')
         models = results.model.unique()
         run_types = results.run_type.unique()
-        for model in models:
-            for metric in ['Accuracy', 'AUROC', 'AUPRC']:
+        for metric in ['Accuracy', 'AUROC', 'AUPRC']:
+            temp = {run_type: [] for run_type in run_types}
+            for model in models:
                 for run_type in run_types:
                     res = results[(results['model'] == model) & (results['run_type'] == run_type)][metric].values
-                    print(f'For {region} {experiment_type} experiment, the {model} {metric} {run_type} mean is {numpy.mean(res)} and STD is {numpy.std(res)}')
+                    temp[run_type].append(f'mean = {round(numpy.mean(res), 4)}\nSTD = {round(numpy.std(res), 4)}')
+
+            df = pandas.DataFrame({
+                'Models': models,
+                'Training': temp['train'],
+                'Test': temp['test']
+            }).set_index('Models')
+            file.writelines(f'Table for {region} {experiment_type} experiment, metric {metric}\n')
+            file.writelines(tabulate(df, tablefmt="pipe", headers="keys") + '\n\n')
+        file.close()
 
     """
         Execute the experiments using epigenomic data.
