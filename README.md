@@ -102,9 +102,9 @@ The last model type (FFNN_4) is inspired by Bayesian-FFNN explained in [5], cons
 
 | Layers  | Type  | Units | Activation | Regularizer l2 |
 | ------- | ----- | ----- | ---------- | -------------- |
-| Layer 1 | Dense | 256   | ReLU       | -              |
-| Layer 3 | Dense | 128   | ReLU       | -              |
-| Layer 4 | Dense | 64    | ReLU       | -              |
+| Layer 1 | Dense | 256   | ReLU       | 0.001          |
+| Layer 3 | Dense | 128   | ReLU       | 0.001          |
+| Layer 4 | Dense | 64    | ReLU       | 0.001          |
 | Layer 8 | Dense | 1     | Sigmoid    | -              |
 
 | Parameter           | Value                             |
@@ -349,7 +349,7 @@ The principal component analysis (PCA) uses a simple idea: given a collection of
 
 ## Feature selection
 
-Since the epigenomic data has a large number of feature, it is important to apply methods to find those features which are unnecessary or dangerous for the learning machines and to remove them. In this project, three different types of feature selection techniques are used: 
+Since the epigenomic data has a large number of feature, it is important to apply methods to find those features which are unnecessary or dangerous for the learning machines and to remove them. Only he epigenomic data are treated using this procedure, while the sequence data are used as is. In this project, three different types of feature selection techniques are used: 
 
 - **Check of feature-output correlation:** the feature not correlated with output can be removed. In particular, the Person and Spearman methods are used to finding monotonic and linear correlation respectively and, subsequently, the uncorrelated features found using these methods are tested with the MIC algorithm to check non-linear correlation with output. In the end, those features whit no correlation with output (bot linear and non-linear) are removed. 
 - **Check of feature-feature correlation:** the pairs of feature strongly correlated are not necessary for the learning machine, because they express the "same concept". In this way, in a pair of correlated features, the one with less entropy can be removed. In this project are applied the Pearson and Spearman method to check feature-feature monotonic correlation.
@@ -394,20 +394,23 @@ To make the data less heavy, it is possible to find and remove tightly correlate
 
 ![Most correlated and uncorrelated features for promoters found with Spearman method](images/plot_spearman_promoters_correlated_uncorrelated.png)
 
-![Most correlated and uncorrelated features for enhancers found with Spearman method](/home/michele/myfiles/repository/bioinformatics-project/images/plot_spearman_enhancers_correlated_uncorrelated.png)
+![Most correlated and uncorrelated features for enhancers found with Spearman method](images/plot_spearman_enhancers_correlated_uncorrelated.png)
 
 ### Automatic feature selection: the Boruta method
 
 The feature selection is the process of finding the relevant features to use for learning a model. Indeed the data may have some irrelevant or redundant features, which can be removed without information loss to make the learning process easier. Until now the feature selection process was done using manual methods, based on the feature to feature and the feature to output correlation. These methods are certainly effective but there are not enough: the features are considered one or to at a time to find a linear or non-linear correlation between the output or another feature. Boruta, an automatic method for feature selection, considers the features as a whole and use a specific classification algorithm to find the irrelevant features. Boruta is a wrapper built around the random forest algorithm, chosen because it is relatively quick to compute and it usually can run without parameters specification. In fact, Boruta is an ensemble method in which classification is performed by voting of multiple decision trees, each of them is independently developed on different samples of the training set. The importance measure of an attribute is the loss of accuracy of classification, caused by random permutation of this attribute values in the various trees. 
 
+## Experiments execution
 
+After preprocessing and feature selection, the data are ready to pass to the learning models. The holdout technique are used for testing the models. This methods consists into split the dataset in two separate sets: the training set (used to train the leaning machine learn) and the test set (used to test test the model performances). In this case the split is 80% and 20% for training and test set. The experiments are executed over multiple holdouts, 50 for epigenomic data and 3 for sequence data, to make the models evaluation more robust. In particular, the StratifiedShuffleSplit of sklearn is used to make the holdouts. This methods randomly separates the training and test set indices, preserving the percentage of samples for each class. It is set with 42 as random_state parameter. 
 
-## Metrics
+The metrics used to evaluate the models are the following:
 
-* accurancy: is the ration between the correct predictions and the total number samples.
-* balaned accurancy: this metric is particularly useful when the test set in unbalanced. In particular, it is calculated as the average of the correct prediction for each class.
-* auPRC: the area under precision recall curve is a useful measure of success of prediction when the classes are very imbalanced. The precision-recall curve shows the tradeoff between precision and recall for different threshold. A high area under the curve represents both high recall and high precision, where high precision relates to a low false positive rate, and high recall relates to a low false negative rate. The auPRC value is between 0 and 1 and an high value denotes a good predictor.
-* auROC: the area under receiver operating characteristic is a metric specific for binary classification tasks. It indicates the fraction between the true positive rate and the false positive rates. Differently form auPRC, its values is between 0.5 and 1.
+* **accurancy**: is the ration between the correct predictions and the total number samples.
+* **auPRC**: the area under precision recall curve is a useful measure of success of prediction when the classes are imbalanced. The precision-recall curve shows the tradeoff between precision and recall for different threshold. A high area under the curve represents both high recall and high precision, where high precision relates to a low false positive rate, and high recall relates to a low false negative rate. The auPRC value is between 0 and 1 and an high value denotes a good predictor.
+* **auROC**: the area under receiver operating characteristic is a metric specific for binary classification tasks. It indicates the fraction between the true positive rate and the false positive rates. Differently form auPRC, its values is between 0.5 and 1.
+
+# Experimental results
 
 
 
