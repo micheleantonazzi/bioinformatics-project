@@ -96,7 +96,8 @@ class ExperimentExecutor:
         return []
 
     """
-        Plot the results in a specific folder based on experiment type, data version, region and model name
+        Plot the graphs of the results in a specific folder based on experiment type, data version, region and model name.
+        Write the markdown tables of the metric results in a file
     """
     def print_results(self, experiment_type: str, data_version: str, region: str, results: pandas.DataFrame):
         results = results.drop(columns=['holdout', 'region'])
@@ -109,6 +110,7 @@ class ExperimentExecutor:
             orientation="horizontal",
             path='experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/{feature}.png'
         )
+
         open('experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/metrics_table.txt', 'w').close()
         file = open('experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/metrics_table.txt', 'w')
         models = results.model.unique()
