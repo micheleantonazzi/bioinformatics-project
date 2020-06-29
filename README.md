@@ -444,6 +444,8 @@ In this section are reported the experiment results for active vs inactive promo
 
 ![Epigenomic results for promoters: accuracy](images/epigemomic_results/promoters/accuracy.png)
 
+Examining the accuracy metric, FFNN_3 seems to be the best model. The table below 
+
 **AUROC**
 
 | Models       | Training      | Test          |
@@ -562,6 +564,16 @@ In this section are reported the experiment results for active vs inactive enhan
 |              | STD = 0.0042  | STD = 0.011   |
 
 ![Epigenomic results for enhancers: AUPRC](images/epigemomic_results/enhancers/auprc.png)
+
+### Conclusion
+
+*1) 
+
+*1) DecisionTree and RandomForest perfom worst than other models:* the results show that DecisionTree and Random Forest perform worst than the other models according to all metrics, both for promoters and enhancers.
+
+*2) T 
+
+*3) The perceptron performance are comparable with more complex models:* perceptron is the simpler deep learning model but it performs 
 
 # Bibliography 
 

@@ -5,6 +5,7 @@ from typing import Tuple
 import pandas
 from keras_bed_sequence import BedSequence
 from keras_mixed_sequence import MixedSequence
+from scipy.stats import wilcoxon
 from tabulate import tabulate
 from tqdm import tqdm
 from ucsc_genomes_downloader import Genome
@@ -132,6 +133,31 @@ class ExperimentExecutor:
         file.close()
 
     """
+        Execute the Wilcoxon test to compare the models for each metrics and print the results in a file
+    """
+    def execute_wilcoxon_test(self, results, experiment_type: str, data_version: str, region: str, alpha: int = 0.01):
+        results = results[(results['run_type'] == 'test')]
+        models = results.model.unique()
+        open('experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/wilcoxon.txt', 'w').close()
+        file = open('experiment/' + experiment_type + '/plots_' + data_version + '/' + region + '/wilcoxon.txt', 'w')
+        for metric in ['Accuracy', 'AUROC', 'AUPRC']:
+            for model_a in models:
+                for model_b in models:
+                    if not model_a == model_b:
+                        model_a_values = results[results['model'] == model_a][metric]
+                        model_b_values = results[results['model'] == model_b][metric]
+                        stats, p_value = wilcoxon(model_a_values, model_b_values)
+                        if p_value > alpha:
+                            file.write(f"In {region} {experiment_type} experiment, for metric {metric}, {model_a} and {model_b} statistically identical, with a p_value of {p_value}\n")
+                        else:
+                            if model_a_values.mean() > model_b_values.mean():
+                                file.write(f"In {region} {experiment_type} experiment, for metric {metric}, {model_a} is BETTER than {model_b}, with a p_value of {p_value}\n")
+                            else:
+                                file.write(f"In {region} {experiment_type} experiment, for metric {metric}, {model_a} is WORST than {model_b}, with a p_value of {p_value}\n")
+
+            file.write('\n')
+
+    """
         Execute the experiments using epigenomic data.
         All models are runned for each holdout, the result are saved to disk.
         If the results for a specific model have been already calculated, they are loaded directly from disk.
@@ -180,6 +206,7 @@ class ExperimentExecutor:
 
         results = pandas.DataFrame(results)
         self.print_results('epigenomic', data_retrieval.get_data_version(), region, results)
+        self.execute_wilcoxon_test(results, 'epigenomic', data_retrieval.get_data_version(), region)
         return results
 
     """
@@ -245,5 +272,5 @@ class ExperimentExecutor:
 
         results = pandas.DataFrame(results)
         self.print_results('sequence', data_retrieval.get_data_version(), region, results)
-
+        self.execute_wilcoxon_test(results, 'sequence', data_retrieval.get_data_version(), region)
         return results
