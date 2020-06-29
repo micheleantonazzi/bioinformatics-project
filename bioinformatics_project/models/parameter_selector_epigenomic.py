@@ -31,7 +31,7 @@ class ParameterSelectorEpigenomic:
             PERCEPTRON_2: self.get_perceptron_2_parameters,
             MLP: self.get_mlp_parameters,
             MLP_2: self.get_mlp_2_parameters,
-            FFNN: self.get_ffnn_parameters,
+            FFNN_1: self.get_ffnn_1_parameters,
             FFNN_2: self.get_ffnn_2_parameters,
             FFNN_3: self.get_ffnn_3_parameters,
             FFNN_4: self.get_ffnn_4_parameters,
@@ -188,7 +188,7 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {MLP_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_parameters(self, _=None):
+    def get_ffnn_1_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
             batch_size=1024,
@@ -202,7 +202,7 @@ class ParameterSelectorEpigenomic:
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
-            print(colored(f'Best {FFNN} parameters for {region}: ' + str(data), 'green'))
+            print(colored(f'Best {FFNN_1} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
     def get_ffnn_2_parameters(self, _=None):
@@ -222,32 +222,55 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_2} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_3_parameters(self, _=None):
-        parameters = dict(
+    def get_ffnn_3_parameters(self, labels):
+        neg = numpy.count_nonzero(labels == 0)
+        pos = numpy.count_nonzero(labels == 1)
+        total = len(labels)
+        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        print(class_weight)
+        parameters_promoters = dict(
             epochs=1000,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
-            verbose=False,
+            verbose=True,
             callbacks=[
-                EarlyStopping(monitor="val_loss", mode="min", patience=50),
-            ]
+                EarlyStopping(monitor='val_pr', mode="max", patience=50, restore_best_weights=True),
+            ],
+            class_weight=class_weight
         )
 
-        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
+        neg = numpy.count_nonzero(labels == 0)
+        pos = numpy.count_nonzero(labels == 1)
+        total = len(labels)
+        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
+        print(class_weight)
+        parameters_enhancers = dict(
+            epochs=1000,
+            batch_size=1024,
+            validation_split=0.1,
+            shuffle=True,
+            verbose=True,
+            callbacks=[
+                EarlyStopping(monitor='val_pr', mode="max", patience=50, restore_best_weights=True),
+            ],
+            class_weight=class_weight
+        )
+
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters_promoters, DataRetrieval.KEY_ENHANCERS: parameters_enhancers}
         for region, data in best_parameters.items():
             print(colored(f'Best {FFNN_3} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
     def get_ffnn_4_parameters(self, _=None):
         parameters = dict(
-            epochs=200,
-            batch_size=1024,
+            epochs=1000,
+            batch_size=100,
             validation_split=0.1,
             shuffle=True,
-            verbose=False,
+            verbose=True,
             callbacks=[
-                EarlyStopping(monitor="auprc", mode="max", patience=10),
+                EarlyStopping(monitor="val_loss", mode="min", patience=50),
             ]
         )
 
@@ -276,10 +299,10 @@ class ParameterSelectorEpigenomic:
     def get_ffnn_6_parameters(self, _=None):
         parameters = dict(
             epochs=1000,
-            batch_size=100,
+            batch_size=1024,
             validation_split=0.1,
             shuffle=True,
-            verbose=True,
+            verbose=False,
             callbacks=[
                 EarlyStopping(monitor="val_loss", mode="min", patience=50),
             ]
@@ -290,43 +313,21 @@ class ParameterSelectorEpigenomic:
             print(colored(f'Best {FFNN_6} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_7_parameters(self, labels):
-        neg = len(labels == 0)
-        pos = len(labels == 1)
-        total = len(labels)
-        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        print(class_weight)
-        parameters_promoters = dict(
-            epochs=1000,
+    def get_ffnn_7_parameters(self, _):
+        parameters = dict(
+            epochs=200,
             batch_size=1024,
             validation_split=0.1,
             shuffle=True,
-            verbose=True,
+            verbose=False,
             callbacks=[
-                EarlyStopping(monitor='val_pr', mode="max", patience=50, restore_best_weights=True),
-            ],
-            class_weight=class_weight
+                EarlyStopping(monitor="auprc", mode="max", patience=10),
+            ]
         )
 
-        neg = len(labels == 0)
-        pos = len(labels == 1)
-        total = len(labels)
-        class_weight = {0: (1 / neg) * (total) / 2.0, 1: (1 / pos) * (total) / 2.0}
-        print(class_weight)
-        parameters_enhancers = dict(
-            epochs=1000,
-            batch_size=1024,
-            validation_split=0.1,
-            shuffle=True,
-            verbose=True,
-            callbacks=[
-                EarlyStopping(monitor='val_pr', mode="max", patience=50, restore_best_weights=True),
-            ],
-            class_weight=class_weight
-        )
-
-        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters_promoters, DataRetrieval.KEY_ENHANCERS: parameters_enhancers}
+        best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
             print(colored(f'Best {FFNN_7} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
+
 

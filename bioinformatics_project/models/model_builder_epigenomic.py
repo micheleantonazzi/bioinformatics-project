@@ -24,20 +24,21 @@ class ModelBuilderEpigenomic:
             RANDOM_FOREST_GRID: self.create_random_forest_grid,
             PERCEPTRON: self.create_perceptron,
             MLP: self.create_mlp,
-            FFNN: self.create_ffnn,
+            FFNN_1: self.create_ffnn_1,
             FFNN_2: self.create_ffnn_2,
             FFNN_3: self.create_ffnn_3,
-            FFNN_4: self.create_ffnn_4,
-            FFNN_5: self.create_ffnn_5,
-            FFNN_6: self.create_ffnn_6,
-            FFNN_7: self.create_ffnn_7
+            FFNN_4: self.create_ffnn_4
         }
 
     def create_decision_tree_grid(self, _, parameters, __=None):
-        return DecisionTreeClassifier(**parameters), {}
+        decision_tree = DecisionTreeClassifier(**parameters)
+        setattr(decision_tree, 'name', 'DecisionTree')
+        return decision_tree, {}
 
     def create_random_forest_grid(self, _, parameters, __):
-        return RandomForestClassifier(**parameters, n_jobs=-1), {}
+        random_forest = RandomForestClassifier(**parameters, n_jobs=-1)
+        setattr(random_forest, 'name', 'RandomForest')
+        return random_forest, {}
 
     def create_perceptron(self, region, parameters, _=None):
         perceptron = Sequential([
@@ -82,7 +83,7 @@ class ModelBuilderEpigenomic:
         )
         return mlp, parameters
 
-    def create_ffnn(self, region, parameters, _=None):
+    def create_ffnn_1(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation="relu"),
@@ -94,7 +95,7 @@ class ModelBuilderEpigenomic:
             Dense(32, activation="relu"),
             Dense(16, activation="relu"),
             Dense(1, activation="sigmoid")
-        ], "FFNN")
+        ], FFNN_1)
 
         ffnn.compile(
             optimizer="nadam",
@@ -107,17 +108,17 @@ class ModelBuilderEpigenomic:
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu'),
-            Dropout(0.3),
+            Dropout(0.5),
             BatchNormalization(),
             Activation("relu"),
             Dense(128, activation='relu'),
-            Dropout(0.3),
+            Dropout(0.5),
             Dense(64, activation="relu"),
-            Dropout(0.3),
+            Dropout(0.5),
             Dense(32, activation="relu"),
-            Dropout(0.3),
+            Dropout(0.5),
             Dense(16, activation="relu"),
-            Dropout(0.3),
+            Dropout(0.5),
             Dense(1, activation="sigmoid")
         ], FFNN_2)
 
@@ -128,27 +129,31 @@ class ModelBuilderEpigenomic:
 
         return ffnn, parameters
 
-    def create_ffnn_3(self, region, parameters, _=None):
+    def create_ffnn_3(self, region, parameters, learning_labels):
+        bias = numpy.log([numpy.count_nonzero(
+            learning_labels == 1) /
+                          numpy.count_nonzero(
+                              learning_labels == 0)])
+        print(bias)
+
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
             Dense(256, activation='relu'),
-            Dropout(0.5),
             BatchNormalization(),
             Activation("relu"),
             Dense(128, activation='relu'),
-            Dropout(0.5),
             Dense(64, activation="relu"),
-            Dropout(0.5),
             Dense(32, activation="relu"),
             Dropout(0.5),
             Dense(16, activation="relu"),
             Dropout(0.5),
-            Dense(1, activation="sigmoid")
+            Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
         ], FFNN_3)
 
         ffnn.compile(
             optimizer="nadam",
-            loss="binary_crossentropy"
+            loss="binary_crossentropy",
+            metrics=[AUC(curve='PR', name='pr')]
         )
 
         return ffnn, parameters
@@ -156,25 +161,15 @@ class ModelBuilderEpigenomic:
     def create_ffnn_4(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
-            Dropout(0.3),
-            BatchNormalization(),
-            Activation("relu"),
-            Dense(128, activation='relu', kernel_regularizer=l2(0.01)),
-            Dropout(0.3),
-            Dense(64, activation="relu", kernel_regularizer=l2(0.01)),
-            Dropout(0.3),
-            Dense(32, activation="relu", kernel_regularizer=l2(0.01)),
-            Dropout(0.3),
-            Dense(16, activation="relu", kernel_regularizer=l2(0.01)),
-            Dropout(0.3),
+            Dense(256, activation='relu', kernel_regularizer=l2(0.001)),
+            Dense(128, activation='relu', kernel_regularizer=l2(0.001)),
+            Dense(64, activation="relu", kernel_regularizer=l2(0.001)),
             Dense(1, activation="sigmoid")
         ], FFNN_4)
 
         ffnn.compile(
-            optimizer="nadam",
-            loss="binary_crossentropy",
-            metrics=[AUC(curve='PR', name='auprc')]
+            optimizer=SGD(learning_rate=0.1, decay=0.01),
+            loss="binary_crossentropy"
         )
 
         return ffnn, parameters
@@ -206,44 +201,50 @@ class ModelBuilderEpigenomic:
     def create_ffnn_6(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(256, activation='relu', kernel_regularizer=l2(0.001)),
-            Dense(128, activation='relu', kernel_regularizer=l2(0.001)),
-            Dense(64, activation="relu", kernel_regularizer=l2(0.001)),
+            Dense(256, activation='relu'),
+            Dropout(0.3),
+            BatchNormalization(),
+            Activation("relu"),
+            Dense(128, activation='relu'),
+            Dropout(0.3),
+            Dense(64, activation="relu"),
+            Dropout(0.3),
+            Dense(32, activation="relu"),
+            Dropout(0.3),
+            Dense(16, activation="relu"),
+            Dropout(0.3),
             Dense(1, activation="sigmoid")
         ], FFNN_6)
 
         ffnn.compile(
-            optimizer=SGD(learning_rate=0.1, decay=0.01),
+            optimizer="nadam",
             loss="binary_crossentropy"
         )
 
         return ffnn, parameters
 
-    def create_ffnn_7(self, region, parameters, learning_labels):
-        bias = numpy.log([numpy.count_nonzero(
-            learning_labels == 1) /
-                          numpy.count_nonzero(
-                              learning_labels == 0)])
-        print(bias)
-
+    def create_ffnn_7(self, region, parameters, _=None):
         ffnn = Sequential([
             Input(shape=(len(self._data.get_epigenomic_data()[region].columns), )),
-            Dense(256, activation='relu'),
+            Dense(256, activation='relu', kernel_regularizer=l2(0.01)),
+            Dropout(0.3),
             BatchNormalization(),
             Activation("relu"),
-            Dense(128, activation='relu'),
-            Dense(64, activation="relu"),
-            Dense(32, activation="relu"),
-            Dropout(0.5),
-            Dense(16, activation="relu"),
-            Dropout(0.5),
-            Dense(1, activation="sigmoid", bias_initializer=Constant(bias))
-        ], "FFNN_7")
+            Dense(128, activation='relu', kernel_regularizer=l2(0.01)),
+            Dropout(0.3),
+            Dense(64, activation="relu", kernel_regularizer=l2(0.01)),
+            Dropout(0.3),
+            Dense(32, activation="relu", kernel_regularizer=l2(0.01)),
+            Dropout(0.3),
+            Dense(16, activation="relu", kernel_regularizer=l2(0.01)),
+            Dropout(0.3),
+            Dense(1, activation="sigmoid")
+        ], FFNN_7)
 
         ffnn.compile(
             optimizer="nadam",
             loss="binary_crossentropy",
-            metrics=[AUC(curve='PR', name='pr')]
+            metrics=[AUC(curve='PR', name='auprc')]
         )
 
         return ffnn, parameters
