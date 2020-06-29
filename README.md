@@ -400,19 +400,168 @@ To make the data less heavy, it is possible to find and remove tightly correlate
 
 The feature selection is the process of finding the relevant features to use for learning a model. Indeed the data may have some irrelevant or redundant features, which can be removed without information loss to make the learning process easier. Until now the feature selection process was done using manual methods, based on the feature to feature and the feature to output correlation. These methods are certainly effective but there are not enough: the features are considered one or to at a time to find a linear or non-linear correlation between the output or another feature. Boruta, an automatic method for feature selection, considers the features as a whole and use a specific classification algorithm to find the irrelevant features. Boruta is a wrapper built around the random forest algorithm, chosen because it is relatively quick to compute and it usually can run without parameters specification. In fact, Boruta is an ensemble method in which classification is performed by voting of multiple decision trees, each of them is independently developed on different samples of the training set. The importance measure of an attribute is the loss of accuracy of classification, caused by random permutation of this attribute values in the various trees. 
 
-## Experiments execution
+## Experiments evaluation
 
-After preprocessing and feature selection, the data are ready to pass to the learning models. The holdout technique are used for testing the models. This methods consists into split the dataset in two separate sets: the training set (used to train the leaning machine learn) and the test set (used to test test the model performances). In this case the split is 80% and 20% for training and test set. The experiments are executed over multiple holdouts, 50 for epigenomic data and 3 for sequence data, to make the models evaluation more robust. In particular, the StratifiedShuffleSplit of sklearn is used to make the holdouts. This methods randomly separates the training and test set indices, preserving the percentage of samples for each class. It is set with 42 as random_state parameter. 
+After preprocessing and feature selection, the data are ready to pass to the learning models. The holdout technique is used for testing the models. This method consists into split the dataset in two separate sets: the training set (used to train the leaning machine to learn) and the test set (used to test the model performances). In this case, the split is 80% and 20% for training and test set. The experiments are executed over multiple holdouts, 50 for epigenomic data, and 3 for sequence data, to make the model's evaluation more robust. In particular, the StratifiedShuffleSplit of sklearn is used to make the holdouts. This method randomly separates the training and test set indices, preserving the percentage of samples for each class. It is set with 42 as random_state parameter. 
 
 The metrics used to evaluate the models are the following:
 
-* **accurancy**: is the ration between the correct predictions and the total number samples.
-* **auPRC**: the area under precision recall curve is a useful measure of success of prediction when the classes are imbalanced. The precision-recall curve shows the tradeoff between precision and recall for different threshold. A high area under the curve represents both high recall and high precision, where high precision relates to a low false positive rate, and high recall relates to a low false negative rate. The auPRC value is between 0 and 1 and an high value denotes a good predictor.
-* **auROC**: the area under receiver operating characteristic is a metric specific for binary classification tasks. It indicates the fraction between the true positive rate and the false positive rates. Differently form auPRC, its values is between 0.5 and 1.
+- **accuracy:** is the ration between the correct predictions and the total number of samples.
+- **auPRC**: the area under the precision-recall curve is a useful measure of success of prediction when the classes are imbalanced. The precision-recall curve shows the tradeoff between precision and recall of different thresholds. A high area under the curve represents both high recall and high precision, where high precision relates to a low false-positive rate, and high recall relates to a low false-negative rate. The auPRC value is between 0 and 1 and a high value denotes a good predictor.
+- **auROC**: the area under receiver operating characteristic is a metric specific for binary classification tasks. It indicates the fraction between the true positive rate and the false-positive rates. Differently, form auPRC, its values are between 0.5 and 1.
+
+Each metric is calculated for each model the final results are the mean and the standard deviation obtained through the various holdouts. These results are finally compared using the Wilcoxon signed-rank test with a p_value threshold of 0.01. It is a non-parametric statistical test to compare hypotheses made on repeated measures.
 
 # Experimental results
 
+## Epigenomic experiments
 
+### Promoters
+
+In this section are reported the experiment results for active vs inactive promoters task using epigenomic data. For each metric there are a table and a plot to confront the learning machine performance.
+
+**Accuracy**
+
+
+| Models       | Training      | Test          |
+|:-------------|:--------------|:--------------|
+| DecisionTree | mean = 0.7241 | mean = 0.7148 |
+|              | STD = 0.0124  | STD = 0.0123  |
+| RandomForest | mean = 0.7522 | mean = 0.7408 |
+|              | STD = 0.0014  | STD = 0.0022  |
+| Perceptron   | mean = 0.883  | mean = 0.882  |
+|              | STD = 0.0005  | STD = 0.0015  |
+| MLP          | mean = 0.9638 | mean = 0.8621 |
+|              | STD = 0.0041  | STD = 0.0057  |
+| FFNN_1       | mean = 0.956  | mean = 0.8634 |
+|              | STD = 0.0023  | STD = 0.0037  |
+| FFNN_2       | mean = 0.885  | mean = 0.8848 |
+|              | STD = 0.0002  | STD = 0.0002  |
+| FFNN_3       | mean = 0.8895 | mean = 0.8854 |
+|              | STD = 0.0038  | STD = 0.0007  |
+| FFNN_4       | mean = 0.8886 | mean = 0.884  |
+|              | STD = 0.0007  | STD = 0.0011  |
+
+![Epigenomic results for promoters: accuracy](images/epigemomic_results/promoters/accuracy.png)
+
+**AUROC**
+
+| Models       | Training      | Test          |
+|:-------------|:--------------|:--------------|
+| DecisionTree | mean = 0.8081 | mean = 0.7862 |
+|              | STD = 0.0019  | STD = 0.0033  |
+| RandomForest | mean = 0.8384 | mean = 0.8117 |
+|              | STD = 0.0008  | STD = 0.0027  |
+| Perceptron   | mean = 0.8674 | mean = 0.8638 |
+|              | STD = 0.0008  | STD = 0.0026  |
+| MLP          | mean = 0.9813 | mean = 0.8433 |
+|              | STD = 0.0014  | STD = 0.0054  |
+| FFNN_1       | mean = 0.9774 | mean = 0.8392 |
+|              | STD = 0.0016  | STD = 0.0057  |
+| FFNN_2       | mean = 0.9184 | mean = 0.8766 |
+|              | STD = 0.0039  | STD = 0.0028  |
+| FFNN_3       | mean = 0.9015 | mean = 0.8733 |
+|              | STD = 0.0103  | STD = 0.0042  |
+| FFNN_4       | mean = 0.8893 | mean = 0.8727 |
+|              | STD = 0.001   | STD = 0.0025  |
+
+![Epigenomic results for promoters: AUROC](images/epigemomic_results/promoters/auroc.png)
+
+**AUPRC**
+
+| Models       | Training      | Test          |
+|:-------------|:--------------|:--------------|
+| DecisionTree | mean = 0.2703 | mean = 0.2531 |
+|              | STD = 0.0046  | STD = 0.0037  |
+| RandomForest | mean = 0.3018 | mean = 0.2784 |
+|              | STD = 0.0011  | STD = 0.0023  |
+| Perceptron   | mean = 0.3953 | mean = 0.3867 |
+|              | STD = 0.0022  | STD = 0.0077  |
+| MLP          | mean = 0.8998 | mean = 0.3524 |
+|              | STD = 0.0089  | STD = 0.011   |
+| FFNN_1       | mean = 0.878  | mean = 0.3459 |
+|              | STD = 0.0082  | STD = 0.0082  |
+| FFNN_2       | mean = 0.496  | mean = 0.4245 |
+|              | STD = 0.0145  | STD = 0.009   |
+| FFNN_3       | mean = 0.5009 | mean = 0.4146 |
+|              | STD = 0.0384  | STD = 0.0092  |
+| FFNN_4       | mean = 0.4632 | mean = 0.4047 |
+|              | STD = 0.0053  | STD = 0.0076  |
+
+![Epigenomic results for promoters: AUPRC](images/epigemomic_results/promoters/auprc.png)
+
+### Enhancers
+
+In this section are reported the experiment results for active vs inactive enhancers task using epigenomic data. For each metric there are a table and a plot to confront the learning machine performance.
+
+**Accuracy**
+
+| Models       | Training      | Test          |
+|:-------------|:--------------|:--------------|
+| DecisionTree | mean = 0.7417 | mean = 0.7316 |
+|              | STD = 0.0303  | STD = 0.0297  |
+| RandomForest | mean = 0.8248 | mean = 0.8144 |
+|              | STD = 0.0023  | STD = 0.0037  |
+| Perceptron   | mean = 0.8978 | mean = 0.897  |
+|              | STD = 0.0003  | STD = 0.0009  |
+| MLP          | mean = 0.9793 | mean = 0.8545 |
+|              | STD = 0.0142  | STD = 0.0108  |
+| FFNN_1       | mean = 0.9784 | mean = 0.8501 |
+|              | STD = 0.0014  | STD = 0.0046  |
+| FFNN_2       | mean = 0.8964 | mean = 0.8958 |
+|              | STD = 0.0012  | STD = 0.0009  |
+| FFNN_3       | mean = 0.8991 | mean = 0.8971 |
+|              | STD = 0.0015  | STD = 0.0009  |
+| FFNN_4       | mean = 0.9021 | mean = 0.8978 |
+|              | STD = 0.0004  | STD = 0.001   |
+
+![Epigenomic results for enhancers: accuracy](images/epigemomic_results/enhancers/accuracy.png)
+
+**AUROC**
+
+| Models       | Training      | Test          |
+|:-------------|:--------------|:--------------|
+| DecisionTree | mean = 0.6453 | mean = 0.6168 |
+|              | STD = 0.0029  | STD = 0.0067  |
+| RandomForest | mean = 0.6521 | mean = 0.626  |
+|              | STD = 0.0017  | STD = 0.006   |
+| Perceptron   | mean = 0.6903 | mean = 0.6796 |
+|              | STD = 0.002   | STD = 0.0071  |
+| MLP          | mean = 0.9608 | mean = 0.6097 |
+|              | STD = 0.0263  | STD = 0.0109  |
+| FFNN_1       | mean = 0.9652 | mean = 0.6136 |
+|              | STD = 0.0017  | STD = 0.0083  |
+| FFNN_2       | mean = 0.8646 | mean = 0.6703 |
+|              | STD = 0.0124  | STD = 0.008   |
+| FFNN_3       | mean = 0.7462 | mean = 0.6833 |
+|              | STD = 0.0206  | STD = 0.0062  |
+| FFNN_4       | mean = 0.7284 | mean = 0.6816 |
+|              | STD = 0.0027  | STD = 0.0068  |
+
+![Epigenomic results for enhancers: AUROC](images/epigemomic_results/enhancers/auroc.png)
+
+**AUPRC**
+
+| Models       | Training      | Test          |
+|:-------------|:--------------|:--------------|
+| DecisionTree | mean = 0.1617 | mean = 0.1464 |
+|              | STD = 0.0045  | STD = 0.004   |
+| RandomForest | mean = 0.184  | mean = 0.1636 |
+|              | STD = 0.0012  | STD = 0.004   |
+| Perceptron   | mean = 0.2964 | mean = 0.2852 |
+|              | STD = 0.0029  | STD = 0.0103  |
+| MLP          | mean = 0.9059 | mean = 0.1867 |
+|              | STD = 0.0803  | STD = 0.0137  |
+| FFNN_1       | mean = 0.9187 | mean = 0.1726 |
+|              | STD = 0.0039  | STD = 0.0088  |
+| FFNN_2       | mean = 0.452  | mean = 0.2824 |
+|              | STD = 0.0255  | STD = 0.0118  |
+| FFNN_3       | mean = 0.3494 | mean = 0.2901 |
+|              | STD = 0.0202  | STD = 0.0116  |
+| FFNN_4       | mean = 0.3558 | mean = 0.2858 |
+|              | STD = 0.0042  | STD = 0.011   |
+
+![Epigenomic results for enhancers: AUPRC](images/epigemomic_results/enhancers/auprc.png)
 
 # Bibliography 
 
