@@ -17,7 +17,7 @@ class ParameterSelectorSequence:
         return {
             PERCEPTRON_SEQUENCE: self.get_perceptron_parameters,
             MLP_SEQUENCE: self.get_mlp_parameters,
-            FFNN_SEQUENCE: self.get_ffnn_parameters,
+            FFNN_1_SEQUENCE: self.get_ffnn_1_parameters,
             CNN: self.get_cnn_parameters,
             CNN_2: self.get_cnn_2_parameters,
             CNN_3: self.get_cnn_3_parameters
@@ -49,7 +49,7 @@ class ParameterSelectorSequence:
             print(colored(f'Best {MLP_SEQUENCE} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
-    def get_ffnn_parameters(self):
+    def get_ffnn_1_parameters(self):
         parameters = dict(
             epochs=100,
             batch_size=1024,
@@ -59,7 +59,7 @@ class ParameterSelectorSequence:
 
         best_parameters = {DataRetrieval.KEY_PROMOTERS: parameters, DataRetrieval.KEY_ENHANCERS: parameters}
         for region, data in best_parameters.items():
-            print(colored(f'Best {FFNN_SEQUENCE} parameters for {region}: ' + str(data), 'green'))
+            print(colored(f'Best {FFNN_1_SEQUENCE} parameters for {region}: ' + str(data), 'green'))
         return best_parameters
 
     def get_cnn_parameters(self):

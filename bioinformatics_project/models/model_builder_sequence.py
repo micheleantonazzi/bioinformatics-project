@@ -16,7 +16,7 @@ class ModelBuilderSequence:
         return {
             PERCEPTRON_SEQUENCE: self.create_perceptron,
             MLP_SEQUENCE: self.create_mlp,
-            FFNN_SEQUENCE: self.create_ffnn,
+            FFNN_1_SEQUENCE: self.create_1_ffnn,
             CNN: self.create_cnn,
             CNN_2: self.create_cnn_2,
             CNN_3: self.create_cnn_3
@@ -60,7 +60,7 @@ class ModelBuilderSequence:
         )
         return mlp
 
-    def create_ffnn(self):
+    def create_1_ffnn(self):
         ffnn = Sequential([
             Input(shape=(200, 4)),
             Flatten(),
@@ -72,7 +72,7 @@ class ModelBuilderSequence:
             Dense(32, activation="relu"),
             Dense(16, activation="relu"),
             Dense(1, activation="sigmoid")
-        ], FFNN_SEQUENCE)
+        ], FFNN_1_SEQUENCE)
 
         ffnn.compile(
             optimizer="nadam",
@@ -118,44 +118,6 @@ class ModelBuilderSequence:
     def create_cnn_2(self):
         cnn = Sequential([
             Input(shape=(200, 4)),
-            Reshape((800, 1)),
-            Conv1D(64, kernel_size=5, activation="relu"),
-            BatchNormalization(),
-            Activation('relu'),
-            Conv1D(64, kernel_size=5, activation="relu"),
-            BatchNormalization(),
-            Activation('relu'),
-            Conv1D(64, kernel_size=5, activation="relu"),
-            BatchNormalization(),
-            Activation('relu'),
-            MaxPool1D(pool_size=2),
-            Conv1D(64, kernel_size=10, activation="relu"),
-            BatchNormalization(),
-            Activation('relu'),
-            MaxPool1D(pool_size=2),
-            Flatten(),
-            Dense(64, activation="relu"),
-            Dropout(0.1),
-            Dense(64, activation="relu"),
-            Dropout(0.1),
-            Dense(1, activation="sigmoid")
-        ], CNN_2)
-
-        cnn.compile(
-            optimizer=Nadam(learning_rate=0.002),
-            loss="binary_crossentropy",
-            metrics=[
-                "accuracy",
-                AUC(curve="ROC", name="auroc"),
-                AUC(curve="PR", name="auprc")
-            ]
-        )
-
-        return cnn
-
-    def create_cnn_3(self):
-        cnn = Sequential([
-            Input(shape=(200, 4)),
             Reshape((200, 4, 1)),
             Conv2D(128, kernel_size=(16, 4), activation="relu"),
             BatchNormalization(),
@@ -177,10 +139,48 @@ class ModelBuilderSequence:
             Dense(16, activation="relu"),
             Dropout(0.3),
             Dense(1, activation="sigmoid")
-        ], CNN_3)
+        ], CNN_2)
 
         cnn.compile(
             optimizer="nadam",
+            loss="binary_crossentropy",
+            metrics=[
+                "accuracy",
+                AUC(curve="ROC", name="auroc"),
+                AUC(curve="PR", name="auprc")
+            ]
+        )
+
+        return cnn
+
+    def create_cnn_3(self):
+        cnn = Sequential([
+            Input(shape=(200, 4)),
+            Reshape((800, 1)),
+            Conv1D(64, kernel_size=5, activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            Conv1D(64, kernel_size=5, activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            Conv1D(64, kernel_size=5, activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool1D(pool_size=2),
+            Conv1D(64, kernel_size=10, activation="relu"),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPool1D(pool_size=2),
+            Flatten(),
+            Dense(64, activation="relu"),
+            Dropout(0.1),
+            Dense(64, activation="relu"),
+            Dropout(0.1),
+            Dense(1, activation="sigmoid")
+        ], CNN_3)
+
+        cnn.compile(
+            optimizer=Nadam(learning_rate=0.002),
             loss="binary_crossentropy",
             metrics=[
                 "accuracy",
