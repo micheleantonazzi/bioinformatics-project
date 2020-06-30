@@ -8,6 +8,8 @@ import tensorflow
 data_retrieval = DataRetrieval()
 DataPreprocessingPipeline(data_retrieval).execute_v2()
 
-ret = ExperimentExecutor().execute_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_PROMOTERS, 2)
-ret = ExperimentExecutor().execute_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_ENHANCERS, 2)
+ExperimentExecutor().execute_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_PROMOTERS)
+ExperimentExecutor().execute_epigenomic_experiment(data_retrieval, DataRetrieval.KEY_ENHANCERS)
 
+ExperimentExecutor().execute_sequence_experiment(data_retrieval, DataRetrieval.KEY_PROMOTERS)
+ExperimentExecutor().execute_sequence_experiment(data_retrieval, DataRetrieval.KEY_ENHANCERS)
