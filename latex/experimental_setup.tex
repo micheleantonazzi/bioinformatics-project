@@ -101,9 +101,9 @@ is not the case of this dataset because the rate between negative and
 positive example is 7.68 for promoters and 8.41 for enhancers as shown
 in the figure.
 
-\begin{figure}[b]
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.6\linewidth]{../images/plot_class_imbalance.png}
+\includegraphics[width=0.7\linewidth]{../images/plot_class_imbalance.png}
 \caption{Data imbalance for promoters and enhancers}
 \end{figure}
 
@@ -310,7 +310,7 @@ applied for feature selection:
   Apply the Boruta method to remove the features useless for the random
   forest. The random forest classifier is set using the following
   parameters:
-\item
+
   \begin{itemize}
   \item
     n\_estimators = auto
@@ -373,13 +373,13 @@ show the two most correlated and uncorrelated features found with
 Spearman method. The blue and orange colors refers to inactive and
 active region respectively.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.98\linewidth]{../images/plot_pearson_promoters_correlated_uncorrelated.png}
 \caption{Most correlated and uncorrelated feature with output for promoters found with Pearson method}
 \end{figure}
 \newpage
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.98\linewidth]{../images/plot_pearson_enhancers_correlated_uncorrelated.png}
 \caption{Most correlated and uncorrelated feature with output for enhancers found with Pearson method}
