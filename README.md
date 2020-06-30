@@ -55,11 +55,13 @@ The second feedforward neural network (FFNN_2) is similar to the first: it has o
 | Layer 3  | Batch Normalization | -     | ReLU       | -           |
 | Layer 4  | Dense               | 128   | ReLU       | -           |
 | Layer 5  | Dropout             | -     | -          | 0.5         |
-| Layer 6  | Dense               | 32    | ReLU       | -           |
+| Layer 6  | Dense               | 64    | ReLU       | -           |
 | Layer 7  | Dropout             | -     | -          | 0.5         |
-| Layer 8  | Dense               | 16    | ReLU       | -           |
+| Layer 8  | Dense               | 32    | ReLU       | -           |
 | Layer 9  | Dropout             | -     | -          | 0.5         |
-| Layer 10 | Dense               | 1     | Sigmoid    | -           |
+| Layer 10 | Dense               | 16    | ReLU       | -           |
+| Layer 11 | Dropout             | -     | -          | 0.5         |
+| Layer 12 | Dense               | 1     | Sigmoid    | -           |
 
 | Parameter        | Value                             |
 | ---------------- | --------------------------------- |
@@ -402,7 +404,7 @@ The feature selection is the process of finding the relevant features to use for
 
 ## Experiments evaluation
 
-After preprocessing and feature selection, the data are ready to pass to the learning models. The holdout technique is used for testing the models. This method consists into split the dataset in two separate sets: the training set (used to train the leaning machine to learn) and the test set (used to test the model performances). In this case, the split is 80% and 20% for training and test set. The experiments are executed over multiple holdouts, 50 for epigenomic data, and 3 for sequence data, to make the model's evaluation more robust. In particular, the StratifiedShuffleSplit of sklearn is used to make the holdouts. This method randomly separates the training and test set indices, preserving the percentage of samples for each class. It is set with 42 as random_state parameter. 
+After preprocessing and feature selection, the data are ready to pass to the learning models. The holdout technique is used for testing the models. This method consists into split the dataset in two separate sets: the training set (used to train the leaning machine to learn) and the test set (used to test the model performances). In this case, the split is 80% and 20% for training and test set. The experiments are executed over multiple holdouts, 50 for epigenomic data, and 3 for sequence data, to make the models' evaluation more robust. In particular, the StratifiedShuffleSplit of sklearn is used to make the holdouts. This method randomly separates the training and test set indices, preserving the percentage of samples for each class. It is set with 42 as random_state parameter. 
 
 The metrics used to evaluate the models are the following:
 
@@ -417,6 +419,8 @@ Each metric is calculated for each model the final results are the mean and the 
 ## Epigenomic experiments
 
 ### Promoters
+
+#### Results
 
 In this section are reported the experiment results for active vs inactive promoters task using epigenomic data. For each metric there are a table and a plot to confront the learning machine performance.
 
@@ -492,7 +496,23 @@ Examining the accuracy metric, FFNN_3 seems to be the best model. The table belo
 
 ![Epigenomic results for promoters: AUPRC](images/epigemomic_results/promoters/auprc.png)
 
+#### Observations
+
+*1) DecisionTree and RandomForest perform worst than other models.* The results show that DecisionTree and Random Forest perform worst than the other models according to all metrics, both for promoters and enhancers.
+
+*2) There is a big problem of overfitting with complex deep networks.* The data decomposition graphs show that the promoters' epigenomic data are not clearly separable and the complex models tend to learn data without generalizing. This happens in particular with the MLP and FFNN_1 and it is visible in the AUPRC metric.
+
+*3) The perceptron performance is comparable with more complex models.* This model indeed does not overfit because of its very simple structure and it can better generalize. In particular, according to the Wilcoxon test, the perceptron performs better than DecisionTree, RandomForest, MLP, and FFNN_1 in all metrics.
+
+*4) The FFNN_3 does not improve the performance despite trying to resolve the class imbalance problem.* The measures adopted have only prevented overfitting but the test result is not the best. Besides, FFNN_3 has the largest STD in the training results according to all metrics.
+
+*5) FFNN_2 is the best model.* According to the Wilcoxon test, this model performs better than the others in all metrics, except for the FFNN_3 according to the accuracy. This model has a complex architecture, composed of 5 hidden layers and a big dropout for each of them. This strategy allows the network to learn the data without overfitting.
+
+*6) All models fail to recognize the positive samples.* The accuracy and AUROC are high and they hide the real model performances. This is because the dataset is unbalanced (the positive samples represent the minority class) and these metrics do not capture the fact that the model correctly classifies only a few part of the positive samples. Thanks to the AUPRC, it is evident that the models produce a lot of false-negative because this metric is always less than 0.5.
+
 ### Enhancers
+
+#### Results
 
 In this section are reported the experiment results for active vs inactive enhancers task using epigenomic data. For each metric there are a table and a plot to confront the learning machine performance.
 
@@ -565,15 +585,152 @@ In this section are reported the experiment results for active vs inactive enhan
 
 ![Epigenomic results for enhancers: AUPRC](images/epigemomic_results/enhancers/auprc.png)
 
-### Conclusion
+#### Observations
 
-*1) 
+*1) DecisionTree and RandomForest perform worst than other models.* The results show that DecisionTree and Random Forest perform worst than the other models according to all metrics, both for promoters and enhancers.
 
-*1) DecisionTree and RandomForest perfom worst than other models:* the results show that DecisionTree and Random Forest perform worst than the other models according to all metrics, both for promoters and enhancers.
+*2) The overfitting problem is more pronounced than promoters.* The data decomposition graphs show that the enhancers' epigenomic data are not clearly separable and the complex models tend to learn data without generalizing. This happens in particular with the MLP and FFNN_1 and it is visible in the AUPRC metric.
 
-*2) T 
+*3) The perceptron performance is comparable with more complex models.* This model indeed does not overfit because of its very simple structure and it can better generalize. In particular, according to the Wilcoxon test, the perceptron performs better than DecisionTree, RandomForest, MLP, and FFNN_1. Also, the FFNN_2 is worst than perceptron according to accuracy and AUROC, while for AUPRC these two models are statistically identical.
 
-*3) The perceptron performance are comparable with more complex models:* perceptron is the simpler deep learning model but it performs 
+*4) The reduction of overfitting does not improve performance.* Unlike promoters' experiments, the networks are not able to better generalize despite the reduction of the training metrics values. The enhancers' epigenomic data are less separable than promoters' ones, as shown by PCA and TSNE data decomposition graphs. Besides, the enhancers have fewer samples than the promoters and the data imbalance is more pronounced.
+
+*5) There isn't the best model.* The deep networks tested for enhancers win and loose according to various metrics. For accuracy, the best model is the FFNN_4. Despite according to the AUROC, the models that perform better are FFNN_3 and FFNN_4: they are statistically identical. Finally, for AUPRC, the FFNN_3 is the best model.
+
+## Sequence experiments
+
+### Promoters
+
+**Accuracy**
+
+
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.8848 | mean = 0.8847 |
+|            | STD = 0.0     | STD = 0.0     |
+| MLP        | mean = 0.983  | mean = 0.8    |
+|            | STD = 0.0132  | STD = 0.0071  |
+| FFNN_1     | mean = 0.9984 | mean = 0.8188 |
+|            | STD = 0.0001  | STD = 0.0006  |
+| CNN_1      | mean = 0.9719 | mean = 0.8381 |
+|            | STD = 0.0008  | STD = 0.0017  |
+| CNN_2      | mean = 0.9918 | mean = 0.807  |
+|            | STD = 0.0021  | STD = 0.0187  |
+| CNN_3      | mean = 0.956  | mean = 0.8641 |
+|            | STD = 0.0504  | STD = 0.0146  |
+
+![Sequence results for promoters: accuracy](images/sequence_results/promoters/accuracy.png)
+
+**AUROC**
+
+
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.5622 | mean = 0.5031 |
+|            | STD = 0.0027  | STD = 0.0024  |
+| MLP        | mean = 0.9933 | mean = 0.5049 |
+|            | STD = 0.0079  | STD = 0.005   |
+| FFNN_1     | mean = 0.9998 | mean = 0.5039 |
+|            | STD = 0.0     | STD = 0.003   |
+| CNN_1      | mean = 0.9893 | mean = 0.4914 |
+|            | STD = 0.0008  | STD = 0.0076  |
+| CNN_2      | mean = 0.9973 | mean = 0.5003 |
+|            | STD = 0.0006  | STD = 0.0052  |
+| CNN_3      | mean = 0.8313 | mean = 0.5006 |
+|            | STD = 0.2349  | STD = 0.0035  |
+
+![Sequence results for promoters: AUROC](images/sequence_results/promoters/auroc.png)
+
+**AUPRC**
+
+
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.14   | mean = 0.116  |
+|            | STD = 0.0026  | STD = 0.0013  |
+| MLP        | mean = 0.9697 | mean = 0.1176 |
+|            | STD = 0.0345  | STD = 0.0014  |
+| FFNN_1     | mean = 0.9991 | mean = 0.1175 |
+|            | STD = 0.0001  | STD = 0.001   |
+| CNN_1      | mean = 0.9472 | mean = 0.1126 |
+|            | STD = 0.0031  | STD = 0.0026  |
+| CNN_2      | mean = 0.9843 | mean = 0.1155 |
+|            | STD = 0.0025  | STD = 0.0017  |
+| CNN_3      | mean = 0.6925 | mean = 0.1153 |
+|            | STD = 0.4083  | STD = 0.0012  |
+
+![Sequence results for promoters: AUPRC](images/sequence_results/promoters/auprc.png)
+
+### Enhancers
+
+**Accuracy**
+
+
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.8937 | mean = 0.8938 |
+|            | STD = 0.0     | STD = 0.0     |
+| MLP        | mean = 1.0    | mean = 0.8245 |
+|            | STD = 0.0     | STD = 0.0022  |
+| FFNN_1     | mean = 0.9991 | mean = 0.8424 |
+|            | STD = 0.0006  | STD = 0.0033  |
+| CNN_1      | mean = 0.987  | mean = 0.8504 |
+|            | STD = 0.0013  | STD = 0.0175  |
+| CNN_2      | mean = 0.9916 | mean = 0.8146 |
+|            | STD = 0.0047  | STD = 0.0489  |
+| CNN_3      | mean = 0.9948 | mean = 0.8667 |
+|            | STD = 0.0001  | STD = 0.0028  |
+
+![Sequence results for enhancers: accuracy](images/sequence_results/enhancers/accuracy.png)
+
+**AUROC**
+
+
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.5865 | mean = 0.5017 |
+|            | STD = 0.0012  | STD = 0.0032  |
+| MLP        | mean = 1.0    | mean = 0.4973 |
+|            | STD = 0.0     | STD = 0.0047  |
+| FFNN_1     | mean = 0.9999 | mean = 0.4976 |
+|            | STD = 0.0     | STD = 0.0026  |
+| CNN_1      | mean = 0.9969 | mean = 0.5071 |
+|            | STD = 0.0006  | STD = 0.0008  |
+| CNN_2      | mean = 0.9966 | mean = 0.4949 |
+|            | STD = 0.0022  | STD = 0.0028  |
+| CNN_3      | mean = 0.9988 | mean = 0.4976 |
+|            | STD = 0.0002  | STD = 0.0023  |
+
+![Sequence results for enhancers: AUROC](images/sequence_results/enhancers/auroc.png)
+
+**AUPRC**
+
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.1413 | mean = 0.1068 |
+|            | STD = 0.0013  | STD = 0.0017  |
+| MLP        | mean = 1.0    | mean = 0.1046 |
+|            | STD = 0.0     | STD = 0.0023  |
+| FFNN_1     | mean = 0.9997 | mean = 0.1046 |
+|            | STD = 0.0002  | STD = 0.0008  |
+| CNN_1      | mean = 0.9831 | mean = 0.1076 |
+|            | STD = 0.0028  | STD = 0.0001  |
+| CNN_2      | mean = 0.9839 | mean = 0.1041 |
+|            | STD = 0.0112  | STD = 0.0015  |
+| CNN_3      | mean = 0.9906 | mean = 0.1051 |
+|            | STD = 0.0015  | STD = 0.0012  |
+
+![Sequence results for enhancers: AUPRC](images/sequence_results/enhancers/auprc.png)
+
+### Observations
+
+*1) The sequence data are insufficient to execute all the tasks.* The accuracy metrics show that the models have good performances but the AUPRC and AUROC metrics reveal the opposite, both for promoters and enhancers. In particular, the AUROC is closed to its minimum values in all experiments, like the AUPRC. This means that the models return casual values. These results are confirmed by the data decomposition graphs, that highlight a total data inseparability. The CNNs, which should learn automatically the hidden features of the data, can't improve the performances.
+
+*2) The overfitting problem has not been resolved.* The AUPRC and AUROC metrics show that the models are not able to generalize and the high value of accuracy is caused by the data imbalance.
+
+# Conclusions
+
+Using the HEK293 cell line, the experiments results, validated with the Wilcoxon tests, shows that the feed-forward neural networks improve can predict the active and inactive regulatory region more accurately than the other models using the epigenomic data. However, given the data complexity, this is true if the networks prevent the overfitting, otherwise the models aren't able to generalize. This is confirmed by the perceptron's results, which works similarly to more complex networks. Instead using the sequence data, the tasks to determine active and inactive regulatory region do not obtain good results. The models, including the CNNs, aren't able to learn the complex distribution of data  
 
 # Bibliography 
 
