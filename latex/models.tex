@@ -1,0 +1,478 @@
+\section{Models}
+
+This project aims to predict if regulatory elements, such as promoters
+and enhancers, are active or inactive in a specific cell line using
+supervised deep learning methods. More precisely, the tasks are two:
+predict the activity or inactivity of the promoters and predict the
+activity or inactivity of enhancers in a specific cell line, the HEK293.
+As mentioned in the introduction, the DNA is the same in all the cells
+of an organism but the gene expression changes according to the cell
+type and its function. This process, which is really complex and largely
+still unknown, is heavily influenced by the activity of the CREs.
+However, locate the active DNA region is a very complex and expensive
+task in Biology and Computer Science can help to predict active
+regulatory elements using features that characterize them. The type of
+data related to the regulatory region (promoters and enhancers) are two:
+the epigenomic and sequence data. The two tasks described before (to
+distinguish active and inactive enhancers and promoters) are performed
+using both epigenomic and sequence data. To do this, supervised machine
+learning methods are used. In particular, given the diversity of the two
+types of data, two different models are used in his project: FFNN
+(feedforward neural network) and CNN (convolutional neural network),
+respectively for epigenomic and sequence data. These models are very
+complicated, not easy to set up, and computationally hard to execute. To
+verify the performance of these models, their results are compared with
+those of simpler learning machines: decision tree, random forest,
+perceptron, and multilayer perceptron (MLP).
+
+\subsection{FFNN}
+
+The feed-forward neural networks are used to analyze the epigenomic data
+related to promoters and enhancers. Each region is characterized by a
+lot of features, about 200, so the data have high dimensionality. An
+FFNN is suitable for processing these data using more layers and
+neurons. In particular, in this project, three different types of FFNN
+are tested. The first model (called FFNN\_1) has a classical
+architecture and it is set using almost standard parameters. Its purpose
+is to examine the network performance with the given dataset to build a
+better model.
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\textbf{Layers} & \textbf{Type} & \textbf{Units} & \textbf{Activation} & \textbf{Probability}\tabularnewline
+\midrule
+\endhead
+Layer 1 & Dense & 256 & ReLU & -\tabularnewline
+Layer 2 & Dense & 128 & ReLU & -\tabularnewline
+Layer 3 & Batch Normalization & - & ReLU & -\tabularnewline
+Layer 4 & Dense & 64 & ReLU & -\tabularnewline
+Layer 5 & Dropout & - & - & 0.3\tabularnewline
+Layer 6 & Dense & 32 & ReLU & -\tabularnewline
+Layer 7 & Dense & 16 & ReLU & -\tabularnewline
+Layer 8 & Dense & 1 & Sigmoid & -\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & nadam\tabularnewline
+Learning rate & 0.001\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 1000\tabularnewline
+Batch size & 1024\tabularnewline
+Validation split & 0.1\tabularnewline
+Shuffle & true\tabularnewline
+Early stopping & monitor = val\_loss, patience = 50\tabularnewline
+\bottomrule
+\end{longtable}
+
+The second feedforward neural network (FFNN\_2) is similar to the first:
+it has only more Dropout layers with a higher rate to prevent
+overfitting.
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\textbf{Layers} & \textbf{Type} & \textbf{Units} & \textbf{Activation} & \textbf{Probability}\tabularnewline
+\midrule
+\endhead
+Layer 1 & Dense & 256 & ReLU & -\tabularnewline
+Layer 2 & Dropout & - & - & 0.5\tabularnewline
+Layer 3 & Batch Normalization & - & ReLU & -\tabularnewline
+Layer 4 & Dense & 128 & ReLU & -\tabularnewline
+Layer 5 & Dropout & - & - & 0.5\tabularnewline
+Layer 6 & Dense & 64 & ReLU & -\tabularnewline
+Layer 7 & Dropout & - & - & 0.5\tabularnewline
+Layer 8 & Dense & 32 & ReLU & -\tabularnewline
+Layer 9 & Dropout & - & - & 0.5\tabularnewline
+Layer 10 & Dense & 16 & ReLU & -\tabularnewline
+Layer 11 & Dropout & - & - & 0.5\tabularnewline
+Layer 12 & Dense & 1 & Sigmoid & -\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & nadam\tabularnewline
+Learning rate & 0.001\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 1000\tabularnewline
+Batch size & 1024\tabularnewline
+Validation split & 0.1\tabularnewline
+Shuffle & true\tabularnewline
+Early stopping & monitor = val\_loss, patience = 50\tabularnewline
+\bottomrule
+\end{longtable}
+
+\newpage
+The third learning machine (FFNN\_3) tries to resolve the problem of
+data imbalance. First of all, a bias is added to the last layer to
+reflect the class imbalance. Then, a particular parameter that specifies
+the class weight is passed for the learning procedure. This solution is
+taken from this official Tensorflow \href{https://www.tensorflow.org/tutorials/structured_data/imbalanced_data}{guide}.
+In this network is also set a different early stopping condition, which
+maximizes the AUPRC and restores the best weights after each epoch.
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule
+\textbf{Layers} & \textbf{Type} & \textbf{Units} & \textbf{Activation} & \textbf{Probability} & \textbf{Notes}\tabularnewline
+\midrule
+\endhead
+Layer 1 & Dense & 256 & ReLU & - & -\tabularnewline
+Layer 2 & Batch Normalization & - & ReLU & - & -\tabularnewline
+Layer 3 & Dense & 128 & ReLU & - & -\tabularnewline
+Layer 4 & Dense & 64 & ReLU & - & -\tabularnewline
+Layer 5 & Dense & 32 & ReLU & - & -\tabularnewline
+Layer 6 & Dropout & - & - & 0.5 & -\tabularnewline
+Layer 7 & Dense & 16 & ReLU & - & -\tabularnewline
+Layer 8 & Dropout & - & - & 0.5 & -\tabularnewline
+Layer 9 & Dense & 1 & Sigmoid & - & bias initializer\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & nadam\tabularnewline
+Learning rate & 0.001\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 1000\tabularnewline
+Batch size & 1024\tabularnewline
+Validation split & 0.1\tabularnewline
+Shuffle & true\tabularnewline
+Early stopping & monitor = val\emph{aurpc, patience = 50,
+restore}best\_weight = true\tabularnewline
+Class weight & dictionary with class weight\tabularnewline
+\bottomrule
+\end{longtable}
+
+The last model type (FFNN\_4) is inspired by Bayesian-FFNN explained in
+{[}5{]}, constructed using the Bayesian optimization method. Its
+architecture is composed of 3 hidden layers with an l2 regularizer,
+which apply a penalty on the layer's kernel.
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\textbf{Layers} &\textbf{Type} & \textbf{Units} & \textbf{Activation} & \textbf{Regularizer l2}\tabularnewline
+\midrule
+\endhead
+Layer 1 & Dense & 256 & ReLU & 0.001\tabularnewline
+Layer 3 & Dense & 128 & ReLU & 0.001\tabularnewline
+Layer 4 & Dense & 64 & ReLU & 0.001\tabularnewline
+Layer 8 & Dense & 1 & Sigmoid & -\tabularnewline
+\bottomrule
+\end{longtable}
+
+\newpage
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & SGD\tabularnewline
+Learning rate & 0.1\tabularnewline
+learning rate decay & 0.01\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 1000\tabularnewline
+Batch size & 100\tabularnewline
+Validation split & 0.1\tabularnewline
+Shuffle & true\tabularnewline
+Early stopping & monitor = val\_loss, patience = 50\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{CNN}\label{header-n371}
+
+The convolutional neural networks are used to analyze the sequence data
+because they can find patterns or motives which characterize this type
+of data. In the sequence data the features are hidden inside the
+sequence itself, so a CNN at first learns what are the data features
+using convolutional layers and subsequently uses these features to label
+the data thanks to fully connected layers. A feed-forward neural network
+uses only nucleotide locations as functionality but this information is
+too weak to effectively classify data. In this project are build and
+tested three different CNNs. The first network (CNN\_1) is used to
+evaluate the performance of the network using the data related to the
+HEK293 cell line.
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule
+\textbf{No. of Layers} & \textbf{Type} & \textbf{Units} & \textbf{Kernel size} & \textbf{Activation} &
+\textbf{Notes}\tabularnewline
+\midrule
+\endhead
+1 & Reshape & - & - & - & shape = 200, 4, 1\tabularnewline
+2 & Conv2D & 64 & 10, 2 & ReLU & -\tabularnewline
+1 & Dropout & - & - & - & Probability = 0.3\tabularnewline
+1 & Conv2D & 32 & 10, 2 & ReLU & strides = 2, 1\tabularnewline
+2 & Conv2D & 32 & 10, 1 & ReLU & -\tabularnewline
+1 & Dropout & - & - & - & Probability = 0.3\tabularnewline
+1 & Flatten & - & - & - & -\tabularnewline
+1 & Dense & 32 & - & ReLU & -\tabularnewline
+1 & Dense & 16 & - & ReLU & -\tabularnewline
+1 & Dense & 1 & - & Sigmoid & -\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & nadam\tabularnewline
+Learning rate & 0.001\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 100\tabularnewline
+Batch size & 1024\tabularnewline
+Shuffle & true\tabularnewline
+\bottomrule
+\end{longtable}
+
+The second network (CNN\_2) has a different architecture. In particular,
+the convolutional layers have a larger unit number, to better find the
+patterns and features which characterized the data, and they apply a
+stride to reduce the parameter number. Besides, the dropout related to
+the fully-connected layer is increased to reduce overfitting.
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule
+\textbf{No. of Layers} & \textbf{Type} & \textbf{Units} & \textbf{Kernel size} & \textbf{Activation} &
+\textbf{Notes}\tabularnewline
+\midrule
+\endhead
+1 & Reshape & - & - & - & shape = 200, 4, 1\tabularnewline
+1 & Conv2D & 128 & 16, 4 & ReLU & -\tabularnewline
+1 & Batch Normalization & - & - & ReLU & -\tabularnewline
+1 & Max Pooling 1D & - & 5 & ReLU & strides = 2, 1\tabularnewline
+1 & Conv1D & 64 & 12 & ReLU & -\tabularnewline
+1 & Batch Normalization & - & - & ReLU & -\tabularnewline
+1 & Max Pooling 1D & - & 4 & ReLU & strides = 2, 1\tabularnewline
+1 & Conv1D & 32 & 5 & ReLU & -\tabularnewline
+1 & Batch Normalization & - & - & ReLU & -\tabularnewline
+1 & Max Pooling 1D & - & 2 & ReLU & strides = 2, 1\tabularnewline
+1 & Flatten & - & - & - & -\tabularnewline
+1 & Dense & 64 & - & ReLU & -\tabularnewline
+1 & Dropout & - & - & - & Probability = 0.4\tabularnewline
+1 & Dense & 32 & - & ReLU & -\tabularnewline
+1 & Dropout & - & - & - & Probability = 0.4\tabularnewline
+1 & Dense & 16 & - & ReLU & -\tabularnewline
+1 & Dropout & - & - & - & Probability = 0.3\tabularnewline
+1 & Dense & 1 & - & Sigmoid & -\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & nadam\tabularnewline
+Learning rate & 0.001\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 100\tabularnewline
+Batch size & 1024\tabularnewline
+Shuffle & true\tabularnewline
+\bottomrule
+\end{longtable}
+
+\newpage
+The last model is inspired by Bayesian-CNN explained in {[}5{]}. Its
+architecture and parameters, written in the tables below, are optimized
+using the Bayesian method. Different from the previous CNNs, this
+network uses the data a single dimension. The tables below show their
+characteristics.
+
+\begin{longtable}[]{@{}lp{4.2cm}llll@{}}
+\toprule
+\textbf{No. of Layers} & \textbf{Type} & \textbf{Units} & \textbf{Kernel size} & \textbf{Activation} &
+\textbf{Probability}\tabularnewline
+\midrule
+\endhead
+1 & Reshape & - & - & - & shape = 800, 1\tabularnewline
+3 & Conv1D +\newline Batch Normalization & 64 & 5 & ReLU & -\tabularnewline
+1 & Max Pooling 1D & - & 2 & - & -\tabularnewline
+1 & Conv1D +\newline Batch Normalization & 64 & 10 & ReLU & -\tabularnewline
+1 & Max Pooling 1D & - & 2 & - & -\tabularnewline
+1 & Flatten & - & - & - & -\tabularnewline
+1 & Dense & 64 & - & ReLU & -\tabularnewline
+1 & Dropout & - & - & - & 0.1\tabularnewline
+1 & Dense & 64 & - & ReLU & -\tabularnewline
+1 & Dropout & - & - & - & 0.1\tabularnewline
+1 & Dense & 1 & - & Sigmoid & -\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & nadam\tabularnewline
+Learning rate & 0.002\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 100\tabularnewline
+Batch size & 1024\tabularnewline
+Shuffle & true\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{Comparison models}\label{header-n738}
+
+To validate the results of feed-forward and convolutional neural
+networks is necessary to compare them with simpler models. It is
+necessary to justify the complexity introduced by FFNNs and CNNs and
+show that they perform better than other learning machines. If this is
+not verified or the performances are similar, the use of simpler models
+is recommended. The comparison models are decision tree, random forest,
+perceptron, and multi-layer perceptron.
+
+\subsubsection{Decision tree}\label{header-n740}
+
+The hyper-parameters of the decision tree are chosen using the Grid
+Search technique. This method consists of choosing the type of
+parameters, define a set of values for each parameter, and iteratively
+explore all the possible combinations to find the best parameter
+configuration. This method is applied two times, both for promoters and
+enhancers, to increase the granularity and reduce the range of the
+parameter space. This learning machine is used only in the epigenomic
+experiments because it is unable to understand the complex structure of
+sequence data. In the table below are shown the parameters space and the
+best value found by the Grid Search method for the first iteration.
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\textbf{Parameters} & \textbf{Explored values} & \textbf{Promoters best value} & \textbf{Enhancers best value}\tabularnewline
+\midrule
+\endhead
+Max depth & 2, 10, 20, 30 , 40 , 50, 100, 200 & 10 & 10\tabularnewline
+class weight & non-balanced, balanced & balanced &
+balanced\tabularnewline
+\bottomrule
+\end{longtable}
+
+Now the method is applied again with a more refined setting. The table
+below contains the values explored and the best choice for the two
+regions.
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\textbf{Parameters} & \textbf{Explored values} & \textbf{Promoters best value} & \textbf{Enhancers best value}\tabularnewline
+\midrule
+\endhead
+Max depth & 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14 & 7 & 6\tabularnewline
+class weight & non-balanced, balanced & balanced &
+balanced\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Random forest}\label{header-n775}
+
+As in the case of the decision tree, the random forest hyper-parameters
+are chosen using the Grid Search technique applied two times and this
+model is used only in the epigenomic experiments. The table below shows
+the parameters space and the best value for promoters and enhancers at
+the first iteration.
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\textbf{Parameters} & \textbf{Explored values} & \textbf{Promoters best value} & \textbf{Enhancers best value}\tabularnewline
+\midrule
+\endhead
+N. of estimators & 10, 20, 30, 40, 50, 100, 200, 500 & 100 &
+100\tabularnewline
+Max depth & 2, 10, 20, 30 , 40 , 50, 100 & 10 & 10\tabularnewline
+class weight & non-balanced, balanced & balanced &
+balanced\tabularnewline
+\bottomrule
+\end{longtable}
+
+The table below shows the final parameters chosen in refined intervals.
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\textbf{Parameters} & \textbf{Explored values} & \textbf{Promoters best value} & \textbf{Enhancers best value}\tabularnewline
+\midrule
+\endhead
+N. of estimators & 60, 70, 80, 90, 100, 120, 140, 160 & 90 &
+140\tabularnewline
+Max depth & 6, 8, 10, 12, 14, 16, 18, 20 & 8 & 6\tabularnewline
+class weight & non-balanced, balanced & balanced &
+balanced\tabularnewline
+\bottomrule
+\end{longtable}
+
+\newpage
+\subsubsection{Percepetron and multi-layer
+perceptron}\label{header-n820}
+
+The perceptron and multi-layer perceptron are included in the comparison
+models because they are the simpler version of feed-forward and
+convolutional neural network, so they are used both in epigenomic and
+sequence experiments. The model of the perceptron is the simpler neural
+network, formed by an input layer and a single output neuron without any
+hidden layer. Its structure and the parameters are shown in the tables
+below.
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\textbf{Layers} & \textbf{Type} & \textbf{Units} & \textbf{Activation}\tabularnewline
+\midrule
+\endhead
+Layer 1 & Dense & 1 & ReLU\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & nadam\tabularnewline
+Learning rate & 0.001\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 1000\tabularnewline
+Batch size & 1024\tabularnewline
+Validation split & 0.1\tabularnewline
+Shuffle & true\tabularnewline
+Early stopping & monitor = val\_loss, patience = 50\tabularnewline
+\bottomrule
+\end{longtable}
+
+The multi-layer perceptron has some hidden layers between the input and
+output layers. The tables below contain their structure and learning
+parameters.
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\textbf{Layers} & \textbf{Type} & \textbf{Units} & \textbf{Activation} & \textbf{Probability}\tabularnewline
+\midrule
+\endhead
+Layer 1 & Dense & 256 & ReLU & -\tabularnewline
+Layer 4 & Dense & 128 & ReLU & -\tabularnewline
+Layer 6 & Dense & 32 & ReLU & -\tabularnewline
+Layer 10 & Dense & 1 & Sigmoid & -\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value}\tabularnewline
+\midrule
+\endhead
+Weight estimator & nadam\tabularnewline
+Learning rate & 0.001\tabularnewline
+Loss function & binary crossentropy\tabularnewline
+Epochs & 1000\tabularnewline
+Batch size & 1024\tabularnewline
+Validation split & 0.1\tabularnewline
+Shuffle & true\tabularnewline
+Early stopping & monitor = val\_loss, patience = 50\tabularnewline
+\bottomrule
+\end{longtable}

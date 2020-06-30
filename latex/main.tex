@@ -1,0 +1,75 @@
+\documentclass[letterpaper,12pt]{article}
+\usepackage{tabularx} % extra features for tabular environment
+\usepackage{amsmath}  % improve math presentation
+\usepackage{graphicx} % takes care of graphic including machinery
+\usepackage[margin=1in,letterpaper]{geometry} % decreases margins
+\usepackage{cite} % takes care of citations
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage[final]{hyperref} % adds hyper links inside the generated pdf file
+\hypersetup{
+	colorlinks=true,       % false: boxed links; true: colored links
+	linkcolor=blue,        % color of internal links
+	citecolor=blue,        % color of links to bibliography
+	filecolor=magenta,     % color of file links
+	urlcolor=blue         
+}
+\usepackage{blindtext}
+%++++++++++++++++++++++++++++++++++++++++
+
+
+\begin{document}
+
+\title{Predict Active Regulatory Regions Using Deep Learning Models in HEK293 cell line}
+\author{Michele Antonazzi}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+In this work, we studied the prediction of active and inactive regulatory regions (promoters and enhancers) in the HEK293 cell line. 
+The aim is to prove the effectiveness of deep learning models using both epigenomic and sequence data. In particular, the deep models tested are feed-forward neural network (FFNN) and convolutional neural networks (CNN), which are used on the epigenomic and sequence data respectively.
+\end{abstract}
+
+\input{introduction.tex}
+\newpage
+
+\input{models.tex}
+
+\newpage
+
+\input{experimental_setup.tex}
+
+\input{experimental_results.tex}
+\newpage
+\begin{thebibliography}{99}
+
+\bibitem{}
+Yifeng Li, Wenqiang Shi, and Wyeth W. Wasserman. \textit{"Genome-wide
+prediction of cis-regulatory regions using supervised deep learning
+methods"}
+
+\bibitem{}
+Xu Min, Wanwen Zeng, Shengquan Chen, Ning Chen, Ting Chen, Rui Jiang \textit{"Predicting enhancers with deep convolutional
+neural networks"}
+
+\bibitem{}
+Kelley DR, Snoek J, Rinn JL. 2016. \textit{Basset: learning the
+regulatory code of the accessible genome with deep convolutional neural
+networks.}
+
+\bibitem{}
+ David R. Kelley, Yakir A. Reshef, Maxwell Bileschi, David
+Belanger, Cory Y. McLean, and Jasper Snoek. \textit{"Sequential regulatory
+activity prediction across chromosomes with convolutional neural
+networks"}
+
+\bibitem{}
+Luca Cappelletti, Alessandro Petrini, Jessica Gliozzo, Elena
+Casiraghi, Max Schubach, Martin Kircher, Giorgio Valentini. \textit{"Bayesian
+optimization improves tissue-specific prediction of active regulatory
+regions with deep neural networks"}
+
+\end{thebibliography}
+
+
+\end{document}
