@@ -1,0 +1,48 @@
+Table for enhancers sequence experiment, metric Accuracy
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.8937 | mean = 0.8938 |
+|            | STD = 0.0     | STD = 0.0     |
+| MLP        | mean = 1.0    | mean = 0.8245 |
+|            | STD = 0.0     | STD = 0.0022  |
+| FFNN_1     | mean = 0.9991 | mean = 0.8424 |
+|            | STD = 0.0006  | STD = 0.0033  |
+| CNN_1      | mean = 0.987  | mean = 0.8504 |
+|            | STD = 0.0013  | STD = 0.0175  |
+| CNN_2      | mean = 0.9916 | mean = 0.8146 |
+|            | STD = 0.0047  | STD = 0.0489  |
+| CNN_3      | mean = 0.9948 | mean = 0.8667 |
+|            | STD = 0.0001  | STD = 0.0028  |
+
+Table for enhancers sequence experiment, metric AUROC
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.5865 | mean = 0.5017 |
+|            | STD = 0.0012  | STD = 0.0032  |
+| MLP        | mean = 1.0    | mean = 0.4973 |
+|            | STD = 0.0     | STD = 0.0047  |
+| FFNN_1     | mean = 0.9999 | mean = 0.4976 |
+|            | STD = 0.0     | STD = 0.0026  |
+| CNN_1      | mean = 0.9969 | mean = 0.5071 |
+|            | STD = 0.0006  | STD = 0.0008  |
+| CNN_2      | mean = 0.9966 | mean = 0.4949 |
+|            | STD = 0.0022  | STD = 0.0028  |
+| CNN_3      | mean = 0.9988 | mean = 0.4976 |
+|            | STD = 0.0002  | STD = 0.0023  |
+
+Table for enhancers sequence experiment, metric AUPRC
+| Models     | Training      | Test          |
+|:-----------|:--------------|:--------------|
+| Perceptron | mean = 0.1413 | mean = 0.1068 |
+|            | STD = 0.0013  | STD = 0.0017  |
+| MLP        | mean = 1.0    | mean = 0.1046 |
+|            | STD = 0.0     | STD = 0.0023  |
+| FFNN_1     | mean = 0.9997 | mean = 0.1046 |
+|            | STD = 0.0002  | STD = 0.0008  |
+| CNN_1      | mean = 0.9831 | mean = 0.1076 |
+|            | STD = 0.0028  | STD = 0.0001  |
+| CNN_2      | mean = 0.9839 | mean = 0.1041 |
+|            | STD = 0.0112  | STD = 0.0015  |
+| CNN_3      | mean = 0.9906 | mean = 0.1051 |
+|            | STD = 0.0015  | STD = 0.0012  |
+
