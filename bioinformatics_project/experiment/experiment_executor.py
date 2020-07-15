@@ -159,7 +159,7 @@ class ExperimentExecutor:
 
     """
         Execute the experiments using epigenomic data.
-        All models are runned for each holdout, the result are saved to disk.
+        All models are executed for each holdout, the result are saved to disk.
         If the results for a specific model have been already calculated, they are loaded directly from disk.
         Finally the metrics are calculated and the relative graphs are plotted
     """
