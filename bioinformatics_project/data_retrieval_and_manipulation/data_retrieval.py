@@ -18,7 +18,7 @@ class DataRetrieval:
     KEY_ENHANCERS: str = 'enhancers'
     KEY_LABELS: str = 'labels'
 
-    def __init__(self, cell_line: str = 'HEK293', window_size: int = 200):
+    def __init__(self, cell_line: str = 'HEK293', window_size: int = 256):
         self._cell_line: str = cell_line
         self._window_size: int = window_size
         self._promoters_data: Dict[str, pandas.DataFrame] = {DataRetrieval.KEY_EPIGENOMIC: None,
@@ -38,7 +38,7 @@ class DataRetrieval:
         promoters_epigenomic_data, promoters_labels = load_epigenomes(
             cell_line=self._cell_line,
             dataset="fantom",
-            regions="promoters",
+            region="promoters",
             window_size=self._window_size
         )
         self._promoters_data[DataRetrieval.KEY_EPIGENOMIC] = promoters_epigenomic_data
@@ -56,7 +56,7 @@ class DataRetrieval:
         promoters_enhancers_data, enhancers_labels = load_epigenomes(
             cell_line=self._cell_line,
             dataset='fantom',
-            regions='enhancers',
+            region='enhancers',
             window_size=self._window_size
         )
         self._enhancers_data[DataRetrieval.KEY_EPIGENOMIC] = promoters_enhancers_data
