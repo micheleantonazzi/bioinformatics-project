@@ -24,7 +24,7 @@ class ModelBuilderSequence:
 
     def create_perceptron(self):
         perceptron = Sequential([
-            Input(shape=(200, 4)),
+            Input(shape=(256, 4)),
             Flatten(),
             Dense(1, activation="sigmoid")
         ], PERCEPTRON_SEQUENCE)
@@ -42,7 +42,7 @@ class ModelBuilderSequence:
 
     def create_mlp(self):
         mlp = Sequential([
-            Input(shape=(200, 4)),
+            Input(shape=(256, 4)),
             Flatten(),
             Dense(64, activation="relu"),
             Dense(32, activation="relu"),
@@ -62,7 +62,7 @@ class ModelBuilderSequence:
 
     def create_1_ffnn(self):
         ffnn = Sequential([
-            Input(shape=(200, 4)),
+            Input(shape=(256, 4)),
             Flatten(),
             Dense(128, activation="relu"),
             Dense(64, activation="relu"),
@@ -88,8 +88,8 @@ class ModelBuilderSequence:
 
     def create_cnn(self):
         cnn = Sequential([
-            Input(shape=(200, 4)),
-            Reshape((200, 4, 1)),
+            Input(shape=(256, 4)),
+            Reshape((256, 4, 1)),
             Conv2D(64, kernel_size=(10, 2), activation="relu"),
             Conv2D(64, kernel_size=(10, 2), activation="relu"),
             Dropout(0.3),
@@ -117,8 +117,8 @@ class ModelBuilderSequence:
 
     def create_cnn_2(self):
         cnn = Sequential([
-            Input(shape=(200, 4)),
-            Reshape((200, 4, 1)),
+            Input(shape=(256, 4)),
+            Reshape((256, 4, 1)),
             Conv2D(128, kernel_size=(16, 4), activation="relu"),
             BatchNormalization(),
             Activation('relu'),
@@ -155,8 +155,8 @@ class ModelBuilderSequence:
 
     def create_cnn_3(self):
         cnn = Sequential([
-            Input(shape=(200, 4)),
-            Reshape((800, 1)),
+            Input(shape=(256, 4)),
+            Reshape((256 * 4, 1)),
             Conv1D(64, kernel_size=5, activation="relu"),
             BatchNormalization(),
             Activation('relu'),

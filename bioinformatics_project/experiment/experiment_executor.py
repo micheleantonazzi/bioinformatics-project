@@ -4,7 +4,7 @@ from typing import Tuple
 
 import pandas
 from keras_bed_sequence import BedSequence
-from keras_mixed_sequence import MixedSequence
+from keras_mixed_sequence import MixedSequence, VectorSequence
 from scipy.stats import wilcoxon
 from tabulate import tabulate
 from tqdm import tqdm
@@ -34,19 +34,17 @@ class ExperimentExecutor:
 
     """
         Return the sequence holdout specified by parameters.
-        In particular, it is returned a tuple containing two MixedSequence that load seqauence data for both training and test sets
+        In particular, it is returned a tuple containing two MixedSequence that load sequence data for both training and test sets
     """
     def get_sequence_holdout(self, train: numpy.ndarray, test: numpy.ndarray, bed: pandas.DataFrame, labels: numpy.ndarray, genome: Genome, batch_size: int = 1024) -> Tuple[Sequence, Sequence]:
         return (
             MixedSequence(
                 x=BedSequence(genome, bed.iloc[train], batch_size=batch_size),
-                y=labels[train],
-                batch_size=batch_size
+                y=VectorSequence(labels[train], batch_size=batch_size),
             ),
             MixedSequence(
                 x=BedSequence(genome, bed.iloc[test], batch_size=batch_size),
-                y=labels[test],
-                batch_size=batch_size
+                y=VectorSequence(labels[test], batch_size=batch_size),
             )
         )
 
@@ -233,6 +231,8 @@ class ExperimentExecutor:
                     self.load_results('sequence', data_retrieval.get_data_version(), region, model_name)
                 ))
                 if len(model_results) == 0:
+                    print(model_name)
+                    print('####################################')
                     model = builder()
                     history = model.fit(
                             train,
